@@ -17,22 +17,11 @@ import (
 )
 
 var (
-	debug   bool
-	host    string
-	port    string
 	cfgPath string
 	prefork bool
 )
 
 func init() {
-	flag.BoolVar(&debug, "debug", false, "Run the app as DEBUG mode")
-	flag.BoolVar(&debug, "d", false, "Run the app as DEBUG mode")
-
-	flag.StringVar(&host, "host", "127.0.0.1", "The http server's host")
-	flag.StringVar(&host, "h", "127.0.0.1", "The http server's host")
-
-	flag.StringVar(&port, "port", "5000", "The http server's port")
-	flag.StringVar(&port, "p", "5000", "The http server's port")
 
 	flag.StringVar(&cfgPath, "config", "./configs/.env", "The application configurations")
 	flag.StringVar(&cfgPath, "c", "./configs/.env", "The application configurations")
@@ -71,11 +60,12 @@ func main() {
 	})
 
 	server := server.New(webserver, db, logger, &server.Config{
-		AppName: config.GetString("APP_NAME", "twitter-clone"),
 		Version: version.Version,
-		Host:    host,
-		Port:    port,
+		BuildID: version.BuildID,
+		AppName: config.GetString("APP_NAME", "twitter-clone"),
+		Host:    config.GetString("APP_HOST", "127.0.0.1"),
+		Port:    config.GetString("APP_PORT", "5000"),
 	})
 
-	server.Listen(fmt.Sprintf("%s:%s", host, port))
+	server.Listen()
 }

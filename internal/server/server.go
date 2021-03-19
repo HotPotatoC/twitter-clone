@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+
 	"github.com/HotPotatoC/twitter-clone/internal/modules/user"
 	"github.com/HotPotatoC/twitter-clone/pkg/database"
 	"github.com/HotPotatoC/twitter-clone/pkg/webserver"
@@ -25,10 +27,10 @@ func New(webserver webserver.WebServer, db database.Database, log *zap.SugaredLo
 	}
 }
 
-func (s *Server) Listen(addr string) {
+func (s *Server) Listen() {
 	s.initRoutes()
 	s.log.Infof("Starting up %s %s:%s", s.config.AppName, s.config.Version, s.config.BuildID)
-	if err := s.webserver.Listen(addr); err != nil {
+	if err := s.webserver.Listen(fmt.Sprintf("%s:%s", s.config.Host, s.config.Port)); err != nil {
 		s.log.Error(err)
 	}
 }
