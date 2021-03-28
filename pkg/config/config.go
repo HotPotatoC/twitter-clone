@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -44,6 +45,14 @@ func GetInt(key string, fallback int) int {
 func GetBool(key string, fallback bool) bool {
 	value := lookup(key, "")
 	if value, err := strconv.ParseBool(value); err == nil {
+		return value
+	}
+	return fallback
+}
+
+func GetDuration(key string, fallback time.Duration) time.Duration {
+	value := lookup(key, "")
+	if value, err := time.ParseDuration(value); err == nil {
 		return value
 	}
 	return fallback

@@ -1,13 +1,14 @@
 package user
 
 import (
-	"github.com/HotPotatoC/twitter-clone/internal/modules/user/action"
-	"github.com/HotPotatoC/twitter-clone/internal/modules/user/service"
+	"github.com/HotPotatoC/twitter-clone/internal/module/user/action"
+	"github.com/HotPotatoC/twitter-clone/internal/module/user/service"
+	"github.com/HotPotatoC/twitter-clone/pkg/cache"
 	"github.com/HotPotatoC/twitter-clone/pkg/database"
 	"github.com/gofiber/fiber/v2"
 )
 
-func Routes(r fiber.Router, db database.Database) {
+func Routes(r fiber.Router, db database.Database, cache cache.Cache) {
 	r.Post("/register", buildRegisterHandler(db))
 }
 

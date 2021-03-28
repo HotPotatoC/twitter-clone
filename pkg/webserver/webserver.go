@@ -1,15 +1,13 @@
 package webserver
 
 import (
-	"os"
-	"os/signal"
-	"syscall"
-
 	"github.com/gofiber/fiber/v2"
 )
 
 type WebServer interface {
 	Listen(addr string) error
+	ListenTLS(addr string, certFile string, keyFile string) error
+	Shutdown() error
 	Engine() *fiber.App
 }
 
@@ -19,27 +17,22 @@ type webserver struct {
 
 // New creates a new instance of a fiber web server
 func New(config ...fiber.Config) WebServer {
-	return &webserver{
-		engine: fiber.New(config...),
-	}
+	return &webserver{engine: fiber.New(config...)}
 }
 
 // Listen starts the webserver
 func (s *webserver) Listen(addr string) error {
-	go func(addr string) error {
-		if err := s.engine.Listen(addr); err != nil {
-			return err
-		}
-		return nil
-	}(addr)
+	return s.engine.Listen(addr)
+}
 
-	ch := make(chan os.Signal, 2)
-	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
-	<-ch
-	if err := s.engine.Shutdown(); err != nil {
-		return err
-	}
-	return nil
+// ListenTLS starts the webserver in https
+func (s *webserver) ListenTLS(addr string, certFile string, keyFile string) error {
+	return s.engine.ListenTLS(addr, certFile, keyFile)
+}
+
+// Shutdown stop the server
+func (s *webserver) Shutdown() error {
+	return s.engine.Shutdown()
 }
 
 func (s *webserver) Engine() *fiber.App {
