@@ -11,6 +11,7 @@ require (
 	github.com/jackc/pgx/v4 v4.10.1
 	github.com/joho/godotenv v1.3.0
 	github.com/leodido/go-urn v1.2.1 // indirect
+	github.com/matoous/go-nanoid/v2 v2.0.0 // indirect
 	github.com/mattn/go-colorable v0.1.8
 	github.com/pkg/errors v0.8.1
 	go.uber.org/zap v1.16.0

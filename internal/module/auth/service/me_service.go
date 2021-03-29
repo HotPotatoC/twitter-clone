@@ -24,7 +24,7 @@ func NewMeService(db database.Database) MeService {
 func (s meService) Execute(accessToken string) (*entity.User, error) {
 	claims, err := token.VerifyAccessToken(accessToken)
 	if err != nil {
-		return nil, errors.Wrap(err, "service.loginService.Execute")
+		return nil, errors.Wrap(err, "service.meService.Execute")
 	}
 
 	var id int64
@@ -33,7 +33,7 @@ func (s meService) Execute(accessToken string) (*entity.User, error) {
 	err = s.db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", claims["userID"]).Scan(&id, &name, &email)
 
 	if err != nil {
-		return nil, errors.Wrap(err, "service.loginService.Execute")
+		return nil, errors.Wrap(err, "service.meService.Execute")
 	}
 
 	return entity.NewUser(id, name, email, "", time.Now()), nil

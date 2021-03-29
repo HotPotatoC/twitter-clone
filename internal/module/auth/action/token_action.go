@@ -1,8 +1,6 @@
 package action
 
 import (
-	"fmt"
-
 	"github.com/HotPotatoC/twitter-clone/internal/module"
 	"github.com/HotPotatoC/twitter-clone/internal/module/auth/service"
 	"github.com/HotPotatoC/twitter-clone/pkg/config"
@@ -19,9 +17,14 @@ func NewTokenAction(service service.TokenService) module.Action {
 
 func (a tokenAction) Execute(c *fiber.Ctx) error {
 	rt := c.Cookies("refresh_token")
+	if rt == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Please login to continue",
+		})
+	}
+
 	accessToken, err := a.service.Execute(rt)
 	if err != nil {
-		fmt.Println(err)
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "Please login to continue",
 		})

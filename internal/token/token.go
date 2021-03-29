@@ -6,6 +6,7 @@ import (
 	"github.com/HotPotatoC/twitter-clone/pkg/config"
 	"github.com/HotPotatoC/twitter-clone/pkg/jwt"
 	jwtgo "github.com/dgrijalva/jwt-go"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 type AccessToken struct {
@@ -14,6 +15,11 @@ type AccessToken struct {
 }
 
 func NewAccessToken(claims jwtgo.MapClaims) (*AccessToken, error) {
+	id, err := gonanoid.New()
+	if err != nil {
+		return nil, err
+	}
+	claims["id"] = id
 	claims["iat"] = time.Now().Unix()
 	claims["exp"] = config.GetDuration("ACCESS_TOKEN_DURATION",
 		time.Duration(time.Now().Add(time.Minute*15).Unix()))
@@ -58,6 +64,11 @@ type RefreshToken struct {
 }
 
 func NewRefreshToken(claims jwtgo.MapClaims) (*RefreshToken, error) {
+	id, err := gonanoid.New()
+	if err != nil {
+		return nil, err
+	}
+	claims["id"] = id
 	claims["iat"] = time.Now().Unix()
 	claims["exp"] = config.GetDuration("REFRESH_TOKEN_DURATION",
 		time.Duration(time.Now().Add(time.Hour*24*7).Unix()))

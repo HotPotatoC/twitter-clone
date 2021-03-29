@@ -11,12 +11,13 @@ import (
 
 func Routes(r fiber.Router, db database.Database, cache cache.Cache) {
 	authMiddleware := middleware.NewAuthMiddleware()
-	r.Post("/login", buildLoginHandler(db))
-	r.Get("/me", authMiddleware.Execute(), buildMeHandler(db))
-	r.Get("/token", buildTokenHandler(db))
+	r.Post("/login", makeLoginHandler(db))
+	r.Get("/me", authMiddleware.Execute(), makeMeHandler(db))
+	r.Get("/token", makeTokenHandler(db, cache))
+	r.Post("/logout", makeLogoutHandler(cache))
 }
 
-func buildLoginHandler(db database.Database) fiber.Handler {
+func makeLoginHandler(db database.Database) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		service := service.NewLoginService(db)
 		action := action.NewLoginAction(service)
@@ -25,7 +26,7 @@ func buildLoginHandler(db database.Database) fiber.Handler {
 	}
 }
 
-func buildMeHandler(db database.Database) fiber.Handler {
+func makeMeHandler(db database.Database) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		service := service.NewMeService(db)
 		action := action.NewMeAction(service)
@@ -34,10 +35,19 @@ func buildMeHandler(db database.Database) fiber.Handler {
 	}
 }
 
-func buildTokenHandler(db database.Database) fiber.Handler {
+func makeTokenHandler(db database.Database, cache cache.Cache) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		service := service.NewTokenService(db)
+		service := service.NewTokenService(db, cache)
 		action := action.NewTokenAction(service)
+
+		return action.Execute(c)
+	}
+}
+
+func makeLogoutHandler(cache cache.Cache) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		service := service.NewLogoutService(cache)
+		action := action.NewLogoutAction(service)
 
 		return action.Execute(c)
 	}
