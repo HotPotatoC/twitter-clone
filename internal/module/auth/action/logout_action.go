@@ -1,8 +1,6 @@
 package action
 
 import (
-	"fmt"
-
 	"github.com/HotPotatoC/twitter-clone/internal/module"
 	"github.com/HotPotatoC/twitter-clone/internal/module/auth/service"
 	"github.com/gofiber/fiber/v2"
@@ -26,7 +24,6 @@ func (a logoutAction) Execute(c *fiber.Ctx) error {
 
 	err := a.service.Execute(rt)
 	if err != nil {
-		fmt.Println(err)
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "Please login to continue",
 		})
