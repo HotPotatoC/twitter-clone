@@ -56,8 +56,8 @@ func (s *Server) ListenTLS(certFile string, keyFile string) {
 func (s *Server) initMiddlewares() {
 	s.webserver.Engine().Use(cors.New())
 	s.webserver.Engine().Use(limiter.New(limiter.Config{
-		Max:      60,
-		Duration: 1 * time.Minute,
+		Max:        60,
+		Expiration: 1 * time.Minute,
 	}))
 }
 
