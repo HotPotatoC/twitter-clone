@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/HotPotatoC/twitter-clone/internal/module/auth"
+	"github.com/HotPotatoC/twitter-clone/internal/module/tweet"
 	"github.com/HotPotatoC/twitter-clone/internal/module/user"
 	"github.com/HotPotatoC/twitter-clone/pkg/cache"
 	"github.com/HotPotatoC/twitter-clone/pkg/database"
@@ -67,6 +68,6 @@ func (s *Server) initRoutes() {
 	followersGroup := s.webserver.Engine().Group("/followers")
 	auth.Routes(authGroup, s.db, s.cache)
 	user.Routes(usersGroup, s.db, s.cache)
-	_ = tweetsGroup
+	tweet.Routes(tweetsGroup, s.db, s.cache)
 	_ = followersGroup
 }
