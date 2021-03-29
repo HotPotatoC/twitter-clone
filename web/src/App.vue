@@ -1,6 +1,6 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <h1 class="text-6xl">Twitter Clone</h1>
+  <p>By HotPotatoC</p>
 </template>
 
 <script lang="ts">
@@ -10,8 +10,8 @@ import HelloWorld from './components/HelloWorld.vue'
 export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld
-  }
+    HelloWorld,
+  },
 })
 </script>
 
