@@ -1,5 +1,5 @@
 BEGIN;
-CREATE TABLE "tweets"(
+CREATE TABLE IF NOT EXISTS "tweets"(
     "id" BIGINT GENERATED ALWAYS AS IDENTITY,
     "content" VARCHAR(255) NULL,
     "user_id" INTEGER NULL,

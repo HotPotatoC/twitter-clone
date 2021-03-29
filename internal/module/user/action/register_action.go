@@ -49,7 +49,7 @@ func (a registerAction) Execute(c *fiber.Ctx) error {
 		Expires:  refreshToken.ExpiresAt(),
 		HTTPOnly: true,
 		Secure:   true,
-		Path:     "/api",
+		Path:     "/",
 		Domain:   config.GetString("APP_DOMAIN", ""),
 	})
 
@@ -59,7 +59,7 @@ func (a registerAction) Execute(c *fiber.Ctx) error {
 		Expires:  accessToken.ExpiresAt(),
 		HTTPOnly: true,
 		Secure:   true,
-		Path:     "/api",
+		Path:     "/",
 		Domain:   config.GetString("APP_DOMAIN", ""),
 	})
 

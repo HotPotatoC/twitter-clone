@@ -1,5 +1,5 @@
 BEGIN;
-CREATE TABLE "follows"(
+CREATE TABLE IF NOT EXISTS "follows"(
     "id" BIGINT GENERATED ALWAYS AS IDENTITY,
     "follower_id" INTEGER NULL,
     "followed_id" INTEGER NULL,

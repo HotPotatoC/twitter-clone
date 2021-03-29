@@ -30,11 +30,11 @@ func (s listTweetService) Execute() ([]ListTweetOutput, error) {
 	rows, err := s.db.Query(`
 	SELECT tweets.id,
 		tweets.content,
-		tweets.user_id,
+		tweets.id_user,
 		tweets.created_at,
 		users.name
 	FROM tweets
-    INNER JOIN users ON tweets.user_id = users.id
+    INNER JOIN users ON tweets.id_user = users.id
 	`)
 	if err != nil {
 		return []ListTweetOutput{}, errors.Wrap(err, "service.listTweetService.Execute")

@@ -29,7 +29,7 @@ func NewCreateTweetService(db database.Database) CreateTweetService {
 }
 
 func (s createTweetService) Execute(input CreateTweetInput, userID int64) error {
-	_, err := s.db.Exec("INSERT INTO tweets(content, user_id, created_at) VALUES($1, $2, $3)",
+	_, err := s.db.Exec("INSERT INTO tweets(content, id_user, created_at) VALUES($1, $2, $3)",
 		input.Content, userID, time.Now())
 	if err != nil {
 		return errors.Wrap(err, "service.createTweetService.Execute")
