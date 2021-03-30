@@ -6,7 +6,7 @@ function run_force_migrations() {
     local db_url="$1"
     local version="$2"
 
-    migrate -database "$db_url" -path database force "$version"
+    migrate -database "$db_url" -path database/migrations force "$version"
 }
 
 if [ -z "${1-}" ]; then

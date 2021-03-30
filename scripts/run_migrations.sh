@@ -6,7 +6,7 @@ function run_migrations() {
     local db_url="$1"
     local method="$2"
 
-    migrate -database "$db_url" -path database "$method"
+    migrate -database "$db_url" -path database/migrations "$method"
 }
 
 if [ -z "${1-}" ]; then

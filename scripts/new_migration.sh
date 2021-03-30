@@ -5,7 +5,7 @@ set -euo pipefail
 function create_migration() {
     local name="$1"
 
-    migrate create -ext sql -dir database -seq $name
+    migrate create -ext sql -dir database/migrations -seq $name
 }
 
 if [ -z "${1-}" ]; then
