@@ -5,20 +5,20 @@ import (
 	"strconv"
 
 	"github.com/HotPotatoC/twitter-clone/internal/module"
-	"github.com/HotPotatoC/twitter-clone/internal/module/relationship/service"
 	"github.com/HotPotatoC/twitter-clone/internal/module/user/entity"
+	"github.com/HotPotatoC/twitter-clone/internal/module/user/service"
 	"github.com/gofiber/fiber/v2"
 )
 
-type listFollowingsAction struct {
-	service service.ListFollowingsService
+type getUserAction struct {
+	service service.GetUserService
 }
 
-func NewListFollowingsAction(service service.ListFollowingsService) module.Action {
-	return listFollowingsAction{service: service}
+func NewGetUserAction(service service.GetUserService) module.Action {
+	return getUserAction{service: service}
 }
 
-func (a listFollowingsAction) Execute(c *fiber.Ctx) error {
+func (a getUserAction) Execute(c *fiber.Ctx) error {
 	userID, err := strconv.ParseInt(c.Params("userID"), 10, 64)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -26,7 +26,7 @@ func (a listFollowingsAction) Execute(c *fiber.Ctx) error {
 		})
 	}
 
-	followings, err := a.service.Execute(userID)
+	user, err := a.service.Execute(userID)
 	if err != nil {
 		if errors.Is(err, entity.ErrUserDoesNotExist) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -38,8 +38,5 @@ func (a listFollowingsAction) Execute(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"total_items": len(followings),
-		"items":       followings,
-	})
+	return c.Status(fiber.StatusOK).JSON(user)
 }
