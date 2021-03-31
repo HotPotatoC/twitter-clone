@@ -66,6 +66,10 @@ func main() {
 		Password: config.GetString("REDIS_PASSWORD", ""),
 	})
 
+	if err := cache.Ping(); err != nil {
+		log.Fatal(err)
+	}
+
 	logger := logger.NewLogger(config.GetBool("DEBUG", false))
 	webserver := webserver.New(fiber.Config{
 		Prefork: prefork,
