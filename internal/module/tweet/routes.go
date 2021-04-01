@@ -15,6 +15,7 @@ func Routes(r fiber.Router, db database.Database, cache cache.Cache) {
 	r.Post("/", authMiddleware.Execute(), buildCreateTweetHandler(db))
 	r.Get("/:tweetID/replies", buildListTweetRepliesHandler(db))
 	r.Post("/:tweetID/reply", authMiddleware.Execute(), buildCreateReplyHandler(db))
+	r.Post("/:tweetID/favorite", authMiddleware.Execute(), buildFavoriteTweetHandler(db))
 }
 
 func buildListTweetHandler(db database.Database) fiber.Handler {
@@ -48,6 +49,15 @@ func buildCreateReplyHandler(db database.Database) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		service := service.NewCreateReplyService(db)
 		action := action.NewCreateReplyAction(service)
+
+		return action.Execute(c)
+	}
+}
+
+func buildFavoriteTweetHandler(db database.Database) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		service := service.NewFavoriteTweetService(db)
+		action := action.NewFavoriteTweetAction(service)
 
 		return action.Execute(c)
 	}
