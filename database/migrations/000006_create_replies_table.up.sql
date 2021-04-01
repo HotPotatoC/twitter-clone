@@ -1,13 +1,13 @@
 BEGIN;
 CREATE TABLE IF NOT EXISTS "replies"(
-    "id" BIGINT GENERATED ALWAYS AS IDENTITY,
-    "id_tweet" INTEGER NULL
+    "id_reply" BIGINT,
+    "id_tweet" INTEGER NOT NULL
 );
 ALTER TABLE "replies"
-ADD CONSTRAINT "replies_id_tweet_unique" UNIQUE("id_tweet");
+ADD CONSTRAINT "replies_id_reply_unique" UNIQUE("id_reply");
 ALTER TABLE "replies"
 ADD CONSTRAINT "replies_id_tweet_foreign" FOREIGN KEY ("id_tweet") REFERENCES "tweets"("id") MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE "replies"
-ADD PRIMARY KEY("id");
+ADD PRIMARY KEY("id_reply");
 CREATE INDEX "replies_id_tweet_index" ON "replies"("id_tweet");
 COMMIT;
