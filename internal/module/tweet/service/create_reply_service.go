@@ -41,7 +41,7 @@ func (s createReplyService) Execute(input CreateReplyInput, userID int64, tweetI
 		if err = tx.Rollback(); err != nil {
 			return errors.Wrap(err, "service.createReplyService.Execute")
 		}
-		return errors.Wrap(err, "service.listFollowersService.Execute")
+		return errors.Wrap(err, "service.createReplyService.Execute")
 	}
 
 	if !tweetExists {

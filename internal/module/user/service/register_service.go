@@ -69,14 +69,14 @@ func (s registerService) Execute(input RegisterInput) (*token.AccessToken, *toke
 		"email":  input.Email,
 	})
 	if err != nil {
-		return nil, nil, errors.Wrap(err, "service.loginService.Execute")
+		return nil, nil, errors.Wrap(err, "service.registerService.Execute")
 	}
 
 	rt, err := token.NewRefreshToken(jwt.MapClaims{
 		"userID": id,
 	})
 	if err != nil {
-		return nil, nil, errors.Wrap(err, "service.loginService.Execute")
+		return nil, nil, errors.Wrap(err, "service.registerService.Execute")
 	}
 
 

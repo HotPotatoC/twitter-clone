@@ -32,7 +32,7 @@ func (s getUserService) Execute(userID int64) (GetUserOutput, error) {
 	var userExists bool
 	err := s.db.QueryRow("SELECT EXISTS (SELECT 1 FROM users WHERE id = $1)", userID).Scan(&userExists)
 	if err != nil {
-		return GetUserOutput{}, errors.Wrap(err, "service.followUserService.Execute")
+		return GetUserOutput{}, errors.Wrap(err, "service.getUserService.Execute")
 	}
 
 	if !userExists {
@@ -56,7 +56,7 @@ func (s getUserService) Execute(userID int64) (GetUserOutput, error) {
 	GROUP BY u.id
 	`, userID).Scan(&id, &name, &joinedAt, &followingsCount, &followersCount)
 	if err != nil {
-		return GetUserOutput{}, errors.Wrap(err, "service.followUserService.Execute")
+		return GetUserOutput{}, errors.Wrap(err, "service.getUserService.Execute")
 	}
 
 	return GetUserOutput{
