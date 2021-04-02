@@ -3,7 +3,6 @@ package action
 import (
 	"github.com/HotPotatoC/twitter-clone/internal/module"
 	"github.com/HotPotatoC/twitter-clone/internal/module/auth/service"
-	"github.com/HotPotatoC/twitter-clone/pkg/config"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -29,16 +28,6 @@ func (a tokenAction) Execute(c *fiber.Ctx) error {
 			"message": "Please login to continue",
 		})
 	}
-
-	c.Cookie(&fiber.Cookie{
-		Name:     "access_token",
-		Value:    accessToken.String(),
-		Expires:  accessToken.ExpiresAt(),
-		HTTPOnly: true,
-		Secure:   true,
-		Path:     "/",
-		Domain:   config.GetString("APP_DOMAIN", ""),
-	})
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"access_token": accessToken.String(),

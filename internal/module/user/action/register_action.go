@@ -53,19 +53,8 @@ func (a registerAction) Execute(c *fiber.Ctx) error {
 		Domain:   config.GetString("APP_DOMAIN", ""),
 	})
 
-	c.Cookie(&fiber.Cookie{
-		Name:     "access_token",
-		Value:    accessToken.String(),
-		Expires:  accessToken.ExpiresAt(),
-		HTTPOnly: true,
-		Secure:   true,
-		Path:     "/",
-		Domain:   config.GetString("APP_DOMAIN", ""),
-	})
-
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message":       "Successfully registered a new account",
-		"access_token":  accessToken.String(),
-		"refresh_token": refreshToken.String(),
+		"message":      "Successfully registered a new account",
+		"access_token": accessToken.String(),
 	})
 }
