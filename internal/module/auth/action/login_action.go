@@ -48,7 +48,7 @@ func (a loginAction) Execute(c *fiber.Ctx) error {
 		Expires:  refreshToken.ExpiresAt(),
 		HTTPOnly: true,
 		Secure:   true,
-		Path:     "/",
+		Path:     "/auth/token",
 		Domain:   config.GetString("APP_DOMAIN", ""),
 	})
 

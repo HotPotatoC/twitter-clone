@@ -49,7 +49,7 @@ func (a registerAction) Execute(c *fiber.Ctx) error {
 		Expires:  refreshToken.ExpiresAt(),
 		HTTPOnly: true,
 		Secure:   true,
-		Path:     "/",
+		Path:     "/action/token",
 		Domain:   config.GetString("APP_DOMAIN", ""),
 	})
 
