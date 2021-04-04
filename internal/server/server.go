@@ -13,6 +13,7 @@ import (
 	"github.com/HotPotatoC/twitter-clone/pkg/webserver"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"go.uber.org/zap"
 )
 
@@ -55,11 +56,16 @@ func (s *Server) ListenTLS(certFile string, keyFile string) {
 }
 
 func (s *Server) initMiddlewares() {
-	s.webserver.Engine().Use(cors.New())
+	s.webserver.Engine().Use(cors.New(cors.Config{
+		AllowOrigins:     "*",
+		AllowCredentials: true,
+		AllowHeaders:     "Content-Type",
+	}))
 	s.webserver.Engine().Use(limiter.New(limiter.Config{
 		Max:        60,
 		Expiration: 1 * time.Minute,
 	}))
+	s.webserver.Engine().Use(logger.New())
 }
 
 func (s *Server) initRoutes() {
