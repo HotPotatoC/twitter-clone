@@ -29,39 +29,9 @@
       class="w-full p-4 border-b dark:border-light dark:border-opacity-25 hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
     >
       <div class="w-full">
-        <div class="flex items-center w-full">
-          <p class="font-semibold dark:text-white">{{ tweet.name }}</p>
-          <p class="text-sm text-dark dark:text-light ml-2">
-            @{{ tweet.name }} ·
-          </p>
-          <p class="text-sm text-dark dark:text-light ml-2">
-            {{ tweet.createdAt }}
-          </p>
-          <font-awesome
-            :icon="['fas', 'angle-down']"
-            class="text-dark ml-auto"
-          />
-        </div>
-        <p class="py-2 dark:text-white">
-          {{ tweet.content }}
-        </p>
-        <div class="flex items-center justify-between w-full">
-          <div class="flex items-center text-sm text-dark dark:text-light">
-            <font-awesome :icon="['fas', 'comment']" class="mr-3" />
-            <p>{{ tweet.repliesCount }}</p>
-          </div>
-          <div class="flex items-center text-sm text-dark" dark:text-light>
-            <font-awesome :icon="['fas', 'retweet']" class="mr-3" />
-            <p>{{ tweet.repliesCount }}</p>
-          </div>
-          <div class="flex items-center text-sm text-dark dark:text-light">
-            <font-awesome :icon="['fas', 'heart']" class="mr-3" />
-            <p>{{ tweet.favoritesCount }}</p>
-          </div>
-          <div class="flex items-center text-sm text-dark dark:text-light">
-            <font-awesome :icon="['fas', 'share-square']" class="mr-3" />
-          </div>
-        </div>
+        <router-link :to="`/${tweet.name}/status/${tweet.id}`">
+          <tweet-card :tweet="tweet" />
+        </router-link>
       </div>
     </div>
   </div>
@@ -72,12 +42,14 @@ import { computed, defineComponent, onMounted, reactive, Ref, ref } from 'vue'
 import axios from '../../services/axios'
 import { useStore } from '../../store'
 import { ActionTypes } from '../../store/tweets/actions'
+import TweetCard from '../../components/common/TweetCard.vue'
 
 interface NewTweet {
   content: string | Ref<string>
 }
 
 export default defineComponent({
+  components: { TweetCard },
   name: 'Home',
   setup() {
     const store = useStore()
@@ -98,7 +70,12 @@ export default defineComponent({
       ready.value = true
     })
 
-    const tweets = computed(() => store.getters['getTweetsFeed'])
+    const tweets = computed(() =>
+      store.getters['getTweetsFeed'].sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      )
+    )
 
     return { ready, tweets, newTweet, addNewTweet }
   },

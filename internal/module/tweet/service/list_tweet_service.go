@@ -50,7 +50,6 @@ func (s listTweetService) Execute() ([]ListTweetOutput, error) {
 			FROM replies
 				INNER JOIN tweets as t ON t.id = replies.id_tweet
 				INNER JOIN users ON users.id = t.id_user
-			WHERE replies.id_tweet = t.id
 		) as sq ON sq.id_reply = tweets.id
 		LEFT JOIN favorites as f ON f.id_tweet = tweets.id
 		LEFT JOIN replies as r1 ON r1.id_tweet = tweets.id

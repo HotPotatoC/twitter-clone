@@ -6,6 +6,7 @@ import { store } from './store'
 import { library as fontAwesomeLibrary } from '@fortawesome/fontawesome-svg-core'
 import {
   faPlus,
+  faArrowLeft,
   faAngleDown,
   faCheck,
   faStar,
@@ -31,6 +32,7 @@ import './assets/tailwind.css'
 
 fontAwesomeLibrary.add(
   faPlus,
+  faArrowLeft,
   faAngleDown,
   faCheck,
   faStar,

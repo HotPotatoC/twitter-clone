@@ -14,6 +14,10 @@ export const router = createRouter({
           path: '/home',
           component: Home,
         },
+        {
+          path: '/:name/status/:tweetId',
+          component: () => import('./pages/profile/status/index.vue'),
+        },
       ],
     },
     {

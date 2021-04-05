@@ -9,25 +9,25 @@
         <font-awesome :icon="['fab', 'twitter']" />
       </button>
       <div>
-        <button
-          v-for="tab in tabs"
-          :key="tab.id"
-          @click="selectedTab = tab.id"
-          class="flex items-center mr-auto mb-3 py-2 px-4 rounded-full hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 hover:text-blue focus:outline-none"
-          :class="
-            selectedTab === tab.id
-              ? 'text-blue dark:text-blue'
-              : 'dark:text-light'
-          "
-        >
-          <font-awesome
-            :icon="[tab.iconPrefix, tab.icon]"
-            class="text-left text-2xl mr-4"
-          />
-          <p class="text-left text-lg font-semibold hidden lg:block">
-            {{ tab.label }}
-          </p>
-        </button>
+        <router-link v-for="tab in tabs" :key="tab.id" :to="tab.to">
+          <button
+            @click="selectedTab = tab.id"
+            class="flex items-center mr-auto mb-3 py-2 px-4 rounded-full hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 hover:text-blue focus:outline-none"
+            :class="
+              selectedTab === tab.id
+                ? 'text-blue dark:text-blue'
+                : 'dark:text-light'
+            "
+          >
+            <font-awesome
+              :icon="[tab.iconPrefix, tab.icon]"
+              class="text-left text-2xl mr-4"
+            />
+            <p class="text-left text-lg font-semibold hidden lg:block">
+              {{ tab.label }}
+            </p>
+          </button>
+        </router-link>
         <button
           class="text-white bg-blue rounded-full font-semibold focus:outline-none w-12 h-12 lg:w-full lg:h-auto p-3 hover:bg-darkblue"
         >
@@ -96,6 +96,7 @@ interface Tab {
   icon: string
   iconPrefix: string
   label: string
+  to: string
 }
 
 export default defineComponent({
@@ -107,48 +108,56 @@ export default defineComponent({
         icon: 'home',
         iconPrefix: 'fas',
         label: 'Home',
+        to: '/home',
       },
       {
         id: 'explore',
         icon: 'hashtag',
         iconPrefix: 'fas',
         label: 'Explore',
+        to: '/home',
       },
       {
         id: 'notifications',
         icon: 'bell',
         iconPrefix: 'fas',
         label: 'Notifications',
+        to: '/home',
       },
       {
         id: 'messages',
         icon: 'envelope',
         iconPrefix: 'fas',
         label: 'Messages',
+        to: '/home',
       },
       {
         id: 'bookmarks',
         icon: 'bookmark',
         iconPrefix: 'fas',
         label: 'Bookmarks',
+        to: '/home',
       },
       {
         id: 'lists',
         icon: 'clipboard-list',
         iconPrefix: 'fas',
         label: 'Lists',
+        to: '/home',
       },
       {
         id: 'profile',
         icon: 'user',
         iconPrefix: 'fas',
         label: 'Profile',
+        to: '/home',
       },
       {
         id: 'more',
         icon: 'ellipsis-h',
         iconPrefix: 'fas',
         label: 'More',
+        to: '/home',
       },
     ]
 

@@ -1,4 +1,4 @@
-export interface TweetsFeed {
+export interface Tweet {
   id: number
   content: string
   name: string
@@ -10,9 +10,21 @@ export interface TweetsFeed {
 }
 
 export interface State {
-  tweetsFeed: TweetsFeed[]
+  tweetsFeed: Tweet[]
+  tweetStatus: Tweet & { replies: Tweet[] }
 }
 
 export const state: State = {
   tweetsFeed: [],
+  tweetStatus: {
+    id: 0,
+    content: '',
+    name: '',
+    repliedToTweet: 0,
+    repliedToName: '',
+    favoritesCount: 0,
+    repliesCount: 0,
+    createdAt: '',
+    replies: [],
+  },
 }
