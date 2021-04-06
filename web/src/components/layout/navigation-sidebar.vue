@@ -29,7 +29,7 @@
           </button>
         </router-link>
         <button
-          class="text-white bg-blue rounded-full font-semibold focus:outline-none w-12 h-12 lg:w-full lg:h-auto p-3 hover:bg-darkblue"
+          class="text-lightest bg-blue rounded-full font-semibold focus:outline-none w-12 h-12 lg:w-full lg:h-auto p-3 hover:bg-darkblue"
         >
           <p class="hidden lg:block">Tweet</p>
           <font-awesome :icon="['fas', 'plus']" class="lg:hidden" />

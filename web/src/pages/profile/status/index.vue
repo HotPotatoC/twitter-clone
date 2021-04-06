@@ -3,7 +3,7 @@
     class="px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25 flex items-center justify-start space-x-6"
   >
     <font-awesome :icon="['fas', 'arrow-left']" class="text-xl text-blue" />
-    <h1 class="text-2xl font-bold dark:text-white">Tweet</h1>
+    <h1 class="text-2xl font-bold dark:text-lightest">Tweet</h1>
   </div>
   <div
     class="px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25"

@@ -2,7 +2,7 @@
   <div
     class="px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25 flex items-center justify-between"
   >
-    <h1 class="text-xl font-bold dark:text-white">Home</h1>
+    <h1 class="text-xl font-bold dark:text-lightest">Home</h1>
     <font-awesome :icon="['fas', 'star']" class="text-xl text-blue" />
   </div>
   <div
@@ -16,7 +16,7 @@
       />
       <button
         type="submit"
-        class="h-10 px-4 text-white font-semibold bg-blue hover:bg-darkblue focus:outline-none rounded-full absolute bottom-0 right-0"
+        class="h-10 px-4 text-lightest font-semibold bg-blue hover:bg-darkblue focus:outline-none rounded-full absolute bottom-0 right-0"
       >
         Tweet
       </button>
