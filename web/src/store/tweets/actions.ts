@@ -63,21 +63,23 @@ export const actions: ActionTree<State, State> & Actions = {
       const repliesResponse = await axios.get<TweetsJSONSchema>(
         `/tweets/${tweetId}/replies`
       )
-
       commit(MutationTypes.SET_TWEET_STATUS, {
         repliedToTweet: tweetResponse.data.replied_to_tweet,
         repliedToName: tweetResponse.data.created_at,
         favoritesCount: tweetResponse.data.favorites_count,
         repliesCount: tweetResponse.data.replies_count,
         createdAt: tweetResponse.data.created_at,
-        replies: repliesResponse.data.items.map((item) => ({
-          repliedToTweet: item.replied_to_tweet,
-          repliedToName: item.created_at,
-          favoritesCount: item.favorites_count,
-          repliesCount: item.replies_count,
-          createdAt: item.created_at,
-          ...item,
-        })),
+        replies:
+          repliesResponse.data.items !== null
+            ? repliesResponse.data.items.map((item) => ({
+                repliedToTweet: item.replied_to_tweet,
+                repliedToName: item.created_at,
+                favoritesCount: item.favorites_count,
+                repliesCount: item.replies_count,
+                createdAt: item.created_at,
+                ...item,
+              }))
+            : [],
         ...tweetResponse.data,
       })
     } catch (error) {
