@@ -15,20 +15,6 @@ export default defineComponent({
     const store = useStore()
     const router = useRouter()
 
-    store
-      .dispatch(ActionTypes.REFRESH_AUTH_TOKEN)
-      .then(() => {
-        if (!store.getters['isLoggedIn']) {
-          router.push('/login')
-        }
-      })
-      .then(async () => {
-        await store.dispatch(ActionTypes.GET_USER_DATA)
-        if (!store.getters['isLoggedIn']) {
-          router.push('/login')
-        }
-      })
-
     const interceptor = axios.interceptors.response.use(
       (res) => {
         return res
