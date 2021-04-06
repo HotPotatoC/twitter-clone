@@ -9,9 +9,13 @@ export interface Tweet {
   createdAt: string
 }
 
+export interface TweetAndReplies extends Tweet {
+  replies: Tweet[]
+}
+
 export interface State {
   tweetsFeed: Tweet[]
-  tweetStatus: Tweet & { replies: Tweet[] }
+  tweetStatus: TweetAndReplies
 }
 
 export const state: State = {

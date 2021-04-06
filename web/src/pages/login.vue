@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../store'
 import { ActionTypes } from '../store/auth/actions'
 
@@ -51,6 +51,7 @@ export default defineComponent({
   name: 'Login',
   setup() {
     const store = useStore()
+    const route = useRoute()
     const router = useRouter()
 
     const email = ref<string>('')
@@ -61,7 +62,11 @@ export default defineComponent({
     async function authenticate() {
       await store.dispatch(ActionTypes.AUTHENTICATE_USER, input)
       if (store.getters['isLoggedIn']) {
-        router.push('/home')
+        if (route.query && route.query.redirectTo) {
+          router.push(route.query.redirectTo as string)
+        } else {
+          router.push('/home')
+        }
       }
     }
 

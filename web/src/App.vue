@@ -37,6 +37,7 @@ export default defineComponent({
         if (error.response.status === 401) {
           axios.interceptors.response.eject(interceptor)
 
+          await store.dispatch(ActionTypes.REFRESH_AUTH_TOKEN)
           await store.dispatch(ActionTypes.GET_USER_DATA)
           if (!store.getters['isLoggedIn']) {
             router.push('/login')

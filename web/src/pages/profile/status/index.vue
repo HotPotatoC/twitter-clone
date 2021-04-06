@@ -69,10 +69,11 @@
 
 <script lang="ts">
 import dayjs from 'dayjs'
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../../../store'
 import { ActionTypes } from '../../../store/tweets/actions'
+import { TweetAndReplies } from '../../../store/tweets/state'
 import TweetCard from '../../../components/common/TweetCard.vue'
 
 export default defineComponent({
@@ -82,14 +83,21 @@ export default defineComponent({
     const store = useStore()
     const route = useRoute()
     const ready = ref<boolean>(false)
+    const tweet = ref<TweetAndReplies | null>(null)
 
-    onMounted(async () => {
-      await store.dispatch(ActionTypes.GET_TWEET_STATUS, route.params.tweetId)
+    const getTweetStatus = async (tweetId: string | string[]) => {
+      await store.dispatch(ActionTypes.GET_TWEET_STATUS, tweetId)
 
       ready.value = true
+      tweet.value = store.getters['getTweetStatus']
+    }
+
+    onMounted(async () => {
+      await getTweetStatus(route.params.tweetId)
     })
 
-    const tweet = computed(() => store.getters['getTweetStatus'])
+    watch(() => route.params.tweetId, getTweetStatus, { flush: 'post' })
+
     const parsedCreatedAt = computed(() =>
       dayjs(store.getters['getTweetStatus'].createdAt).format(
         'h:mm A · MMM D, YYYY'

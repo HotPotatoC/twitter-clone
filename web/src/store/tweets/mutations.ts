@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { State, Tweet } from './state'
+import { State, Tweet, TweetAndReplies } from './state'
 
 export enum MutationTypes {
   SET_TWEETS_FEED = 'SET_TWEETS_FEED',
@@ -10,7 +10,7 @@ export interface Mutations<S = State> {
   [MutationTypes.SET_TWEETS_FEED](state: S, payload: Tweet[]): void
   [MutationTypes.SET_TWEET_STATUS](
     state: S,
-    payload: Tweet & { replies: Tweet[] }
+    payload: TweetAndReplies
   ): void
 }
 
