@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
+import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from './services/axios'
 import { useStore } from './store'
