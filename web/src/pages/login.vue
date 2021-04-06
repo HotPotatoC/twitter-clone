@@ -28,11 +28,11 @@
           type="submit"
           class="bg-blue text-lightest text-lg rounded-full font-semibold focus:outline-none w-full h-auto p-4"
           :class="
-            input.email === '' || input.password === ''
+            inputEmpty
               ? 'opacity-50 cursor-default'
               : 'cursor-pointer hover:bg-darkblue'
           "
-          :disabled="input.email === '' || input.password === ''"
+          :disabled="inputEmpty"
         >
           Log in
         </button>
@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { computed, defineComponent, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../store'
 import { ActionTypes } from '../store/auth/actions'
@@ -65,7 +65,11 @@ export default defineComponent({
       }
     }
 
-    return { input, authenticate }
+    const inputEmpty = computed(
+      () => input.email === '' || input.password === ''
+    )
+
+    return { input, authenticate, inputEmpty }
   },
 })
 </script>
