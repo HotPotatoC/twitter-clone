@@ -60,9 +60,15 @@ export default defineComponent({
     })
 
     async function addNewTweet() {
-      await axios.post('/tweets', {
-        content: newTweet.content,
-      })
+      try {
+        ready.value = false
+        await store.dispatch(ActionTypes.NEW_TWEET, newTweet.content)
+        await store.dispatch(ActionTypes.GET_TWEETS_FEED)
+        ready.value = true
+        newTweet.content = ''
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     onMounted(async () => {

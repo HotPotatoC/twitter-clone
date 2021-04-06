@@ -8,6 +8,7 @@ import axios from '../../services/axios'
 export enum ActionTypes {
   GET_TWEETS_FEED = 'GET_TWEETS_FEED',
   GET_TWEET_STATUS = 'GET_TWEET_STATUS',
+  NEW_TWEET = 'NEW_TWEET',
 }
 
 export interface Actions {
@@ -15,6 +16,10 @@ export interface Actions {
     commit,
   }: AugmentedActionContext<Mutations, State>): Promise<any>
   [ActionTypes.GET_TWEET_STATUS](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    payload: string | string[]
+  ): Promise<any>
+  [ActionTypes.NEW_TWEET](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: string | string[]
   ): Promise<any>
@@ -82,6 +87,13 @@ export const actions: ActionTree<State, State> & Actions = {
             : [],
         ...tweetResponse.data,
       })
+    } catch (error) {
+      return error
+    }
+  },
+  async [ActionTypes.NEW_TWEET]({ commit }, content): Promise<any> {
+    try {
+      await axios.post<TweetsJSONSchema>('/tweets', { content })
     } catch (error) {
       return error
     }
