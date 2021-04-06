@@ -39,7 +39,6 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, Ref, ref } from 'vue'
-import axios from '../../services/axios'
 import { useStore } from '../../store'
 import { ActionTypes } from '../../store/tweets/actions'
 import TweetCard from '../../components/common/TweetCard.vue'
