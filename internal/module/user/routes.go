@@ -3,14 +3,17 @@ package user
 import (
 	"github.com/HotPotatoC/twitter-clone/internal/module/user/action"
 	"github.com/HotPotatoC/twitter-clone/internal/module/user/service"
+	"github.com/HotPotatoC/twitter-clone/internal/server/middleware"
 	"github.com/HotPotatoC/twitter-clone/pkg/cache"
 	"github.com/HotPotatoC/twitter-clone/pkg/database"
 	"github.com/gofiber/fiber/v2"
 )
 
 func Routes(r fiber.Router, db database.Database, cache cache.Cache) {
+	authMiddleware := middleware.NewAuthMiddleware()
 	r.Post("/register", buildRegisterHandler(db))
 	r.Get("/:userID", buildGetUserHandler(db))
+	r.Patch("/profile", authMiddleware.Execute(), buildUpdateUserHandler(db))
 }
 
 func buildRegisterHandler(db database.Database) fiber.Handler {
@@ -26,6 +29,15 @@ func buildGetUserHandler(db database.Database) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		service := service.NewGetUserService(db)
 		action := action.NewGetUserAction(service)
+
+		return action.Execute(c)
+	}
+}
+
+func buildUpdateUserHandler(db database.Database) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		service := service.NewUpdateUserService(db)
+		action := action.NewUpdateUserAction(service)
 
 		return action.Execute(c)
 	}

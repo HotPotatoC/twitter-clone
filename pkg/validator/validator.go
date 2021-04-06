@@ -1,6 +1,6 @@
 package validator
 
-import "github.com/go-playground/validator"
+import "github.com/go-playground/validator/v10"
 
 type ValidationError struct {
 	FailedField string
