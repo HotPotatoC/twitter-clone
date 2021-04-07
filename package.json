@@ -5,5 +5,10 @@
   "license": "MIT",
   "scripts": {
     "web-dev": "cd web && yarn dev"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "faker": "^5.5.2",
+    "pg": "^8.5.1"
   }
 }
