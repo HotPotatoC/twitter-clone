@@ -2,11 +2,16 @@ package service
 
 import (
 	"database/sql"
+	"strings"
 	"time"
 
 	"github.com/HotPotatoC/twitter-clone/internal/module/tweet/entity"
 	"github.com/HotPotatoC/twitter-clone/pkg/database"
 	"github.com/pkg/errors"
+)
+
+var (
+	ErrInvalidCursor = errors.New("invalid cursor")
 )
 
 type ListTweetOutput struct {
@@ -19,7 +24,7 @@ type ListTweetOutput struct {
 }
 
 type ListTweetService interface {
-	Execute() ([]ListTweetOutput, error)
+	Execute(createdAtCursor string) ([]ListTweetOutput, error)
 }
 
 type listTweetService struct {
@@ -30,33 +35,30 @@ func NewListTweetService(db database.Database) ListTweetService {
 	return listTweetService{db: db}
 }
 
-func (s listTweetService) Execute() ([]ListTweetOutput, error) {
+func (s listTweetService) Execute(createdAtCursor string) ([]ListTweetOutput, error) {
 	var tweets []ListTweetOutput
-	rows, err := s.db.Query(`
-	SELECT tweets.id,
-		tweets.content,
-		tweets.created_at,
-		(ARRAY_AGG(users.name))[1],
-		(ARRAY_AGG(sq.id_tweet))[1],
-		(ARRAY_AGG(sq.name))[1],
-		COUNT(f.*),
-		COUNT(r1.*)
-	FROM tweets
-		LEFT JOIN users ON users.id = tweets.id_user
-		LEFT JOIN (
-			SELECT replies.id_reply,
-				replies.id_tweet,
-				users.name
-			FROM replies
-				INNER JOIN tweets as t ON t.id = replies.id_tweet
-				INNER JOIN users ON users.id = t.id_user
-		) as sq ON sq.id_reply = tweets.id
-		LEFT JOIN favorites as f ON f.id_tweet = tweets.id
-		LEFT JOIN replies as r1 ON r1.id_tweet = tweets.id
-	GROUP BY tweets.id
-	ORDER BY tweets.created_at DESC`)
-	if err != nil {
-		return []ListTweetOutput{}, errors.Wrap(err, "service.listTweetService.Execute")
+
+	var rows database.Rows
+	var err error
+
+	withCursor := createdAtCursor != ""
+	query := s.buildSQLQuery(withCursor)
+
+	if withCursor {
+		cursor, err := time.Parse(time.RFC3339, createdAtCursor)
+		if err != nil {
+			return []ListTweetOutput{}, ErrInvalidCursor
+		}
+
+		rows, err = s.db.Query(query, cursor)
+		if err != nil {
+			return []ListTweetOutput{}, errors.Wrap(err, "service.listTweetService.Execute")
+		}
+	} else {
+		rows, err = s.db.Query(query)
+		if err != nil {
+			return []ListTweetOutput{}, errors.Wrap(err, "service.listTweetService.Execute")
+		}
 	}
 	defer rows.Close()
 
@@ -92,4 +94,47 @@ func (s listTweetService) Execute() ([]ListTweetOutput, error) {
 	}
 
 	return tweets, nil
+}
+
+func (s listTweetService) buildSQLQuery(withCursor bool) string {
+	var queryBuilder strings.Builder
+
+	queryBuilder.WriteString(`
+	SELECT
+		tweets.id,
+		tweets.content,
+		tweets.created_at,
+		(ARRAY_AGG(users.name))[1],
+		(ARRAY_AGG(sq.id_tweet))[1],
+		(ARRAY_AGG(sq.name))[1],
+		COUNT(f.*),
+		COUNT(r1.*)
+	FROM
+		tweets
+		LEFT JOIN users ON users.id = tweets.id_user
+		LEFT JOIN (
+			SELECT
+				replies.id_reply,
+				replies.id_tweet,
+				users.name
+			FROM
+				replies
+				INNER JOIN tweets AS t ON t.id = replies.id_tweet
+				INNER JOIN users ON users.id = t.id_user) AS sq ON sq.id_reply = tweets.id
+		LEFT JOIN favorites AS f ON f.id_tweet = tweets.id
+		LEFT JOIN replies AS r1 ON r1.id_tweet = tweets.id
+	`)
+
+	if withCursor {
+		queryBuilder.WriteString("WHERE tweets.created_at < $1")
+	}
+
+	queryBuilder.WriteString(`
+	GROUP BY
+		tweets.id
+	ORDER BY
+		tweets.created_at DESC
+	LIMIT 20`)
+
+	return queryBuilder.String()
 }

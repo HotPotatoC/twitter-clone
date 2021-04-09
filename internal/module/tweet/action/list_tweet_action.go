@@ -1,6 +1,8 @@
 package action
 
 import (
+	"errors"
+
 	"github.com/HotPotatoC/twitter-clone/internal/module"
 	"github.com/HotPotatoC/twitter-clone/internal/module/tweet/service"
 	"github.com/gofiber/fiber/v2"
@@ -15,8 +17,14 @@ func NewListTweetAction(service service.ListTweetService) module.Action {
 }
 
 func (a listTweetAction) Execute(c *fiber.Ctx) error {
-	tweets, err := a.service.Execute()
+	createdAtCursor := c.Query("cursor")
+	tweets, err := a.service.Execute(createdAtCursor)
 	if err != nil {
+		if errors.Is(err, service.ErrInvalidCursor) {
+			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+				"message": "Invalid cursor",
+			})
+		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "There was a problem on our side",
 		})
