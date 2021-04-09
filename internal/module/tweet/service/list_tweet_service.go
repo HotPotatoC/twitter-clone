@@ -134,7 +134,7 @@ func (s listTweetService) buildSQLQuery(withCursor bool) string {
 		tweets.id
 	ORDER BY
 		tweets.created_at DESC
-	LIMIT 20`)
+	LIMIT 10`)
 
 	return queryBuilder.String()
 }
