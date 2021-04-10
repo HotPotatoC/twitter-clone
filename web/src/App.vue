@@ -59,11 +59,23 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-y-scroll::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-x::-webkit-scrollbar,
+.overflow-x-scroll::-webkit-scrollbar,
+.overflow-y::-webkit-scrollbar,
 .hide-scrollbar::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* Chrome/Safari/Webkit */
 }
 
+.overflow-y-auto,
+.overflow-y-scroll,
+.overflow-x-auto,
+.overflow-x,
+.overflow-x-scroll,
+.overflow-y,
 .hide-scrollbar {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */

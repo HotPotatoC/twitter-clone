@@ -7,6 +7,7 @@ import axios from '../../services/axios'
 
 export enum ActionTypes {
   GET_TWEETS_FEED = 'GET_TWEETS_FEED',
+  LOAD_MORE_TWEETS = 'LOAD_MORE_TWEETS',
   GET_TWEET_STATUS = 'GET_TWEET_STATUS',
   NEW_TWEET = 'NEW_TWEET',
 }
@@ -15,6 +16,10 @@ export interface Actions {
   [ActionTypes.GET_TWEETS_FEED]({
     commit,
   }: AugmentedActionContext<Mutations, State>): Promise<any>
+  [ActionTypes.LOAD_MORE_TWEETS](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    cursor: string
+  ): Promise<any>
   [ActionTypes.GET_TWEET_STATUS](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: string | string[]
@@ -44,7 +49,7 @@ interface TweetsJSONSchema {
 export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.GET_TWEETS_FEED]({ commit }): Promise<any> {
     try {
-      const response = await axios.get<TweetsJSONSchema>('/tweets')
+      const response = await axios.get<TweetsJSONSchema>(`/tweets`)
 
       const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
         repliedToTweet: item.replied_to_tweet,
@@ -56,6 +61,26 @@ export const actions: ActionTree<State, State> & Actions = {
       }))
 
       commit(MutationTypes.SET_TWEETS_FEED, tweetsFeed)
+    } catch (error) {
+      return error
+    }
+  },
+  async [ActionTypes.LOAD_MORE_TWEETS]({ commit }, cursor): Promise<any> {
+    try {
+      const response = await axios.get<TweetsJSONSchema>(
+        `/tweets${cursor ? `?cursor=${cursor}` : ''}`
+      )
+
+      const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
+        repliedToTweet: item.replied_to_tweet,
+        repliedToName: item.created_at,
+        favoritesCount: item.favorites_count,
+        repliesCount: item.replies_count,
+        createdAt: item.created_at,
+        ...item,
+      }))
+
+      commit(MutationTypes.PUSH_TWEET_FEED, tweetsFeed)
     } catch (error) {
       return error
     }

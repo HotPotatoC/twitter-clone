@@ -1,11 +1,7 @@
 <template>
   <div class="flex container mx-auto px-12 h-screen w-full font-sans">
     <navigation-sidebar />
-    <main
-      class="w-full h-full overflow-y-scroll hide-scrollbar border-r border-lighter dark:border-light dark:border-opacity-25"
-    >
-      <router-view />
-    </main>
+    <router-view />
   </div>
 </template>
 
