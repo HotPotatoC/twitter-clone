@@ -5,6 +5,7 @@ export interface Getters {
   getTweetsFeed(state: State): Tweet[]
   getLastTweetFeedItem(state: State): Tweet
   getTweetStatus(state: State): TweetAndReplies
+  getLastStatusReplyItem(state: State): Tweet
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -16,5 +17,8 @@ export const getters: GetterTree<State, State> & Getters = {
   },
   getTweetStatus(state): TweetAndReplies {
     return state.tweetStatus
+  },
+  getLastStatusReplyItem(state: State): Tweet {
+    return state.tweetStatus.replies[state.tweetStatus.replies.length - 1]
   },
 }

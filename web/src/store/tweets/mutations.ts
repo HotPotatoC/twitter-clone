@@ -5,12 +5,14 @@ export enum MutationTypes {
   SET_TWEETS_FEED = 'SET_TWEETS_FEED',
   PUSH_TWEET_FEED = 'PUSH_TWEET_FEED',
   SET_TWEET_STATUS = 'SET_TWEET_STATUS',
+  PUSH_REPLIES_TO_TWEET_STATUS = 'PUSH_REPLIES_TO_TWEET_STATUS',
 }
 
 export interface Mutations<S = State> {
   [MutationTypes.SET_TWEETS_FEED](state: S, payload: Tweet[]): void
   [MutationTypes.PUSH_TWEET_FEED](state: S, payload: Tweet[]): void
   [MutationTypes.SET_TWEET_STATUS](state: S, payload: TweetAndReplies): void
+  [MutationTypes.PUSH_REPLIES_TO_TWEET_STATUS](state: S, payload: Tweet[]): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -22,5 +24,8 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.SET_TWEET_STATUS](state, payload) {
     state.tweetStatus = payload
+  },
+  [MutationTypes.PUSH_REPLIES_TO_TWEET_STATUS](state, payload) {
+    state.tweetStatus.replies.push(...payload)
   },
 }

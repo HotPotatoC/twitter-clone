@@ -9,6 +9,7 @@ export enum ActionTypes {
   GET_TWEETS_FEED = 'GET_TWEETS_FEED',
   LOAD_MORE_TWEETS = 'LOAD_MORE_TWEETS',
   GET_TWEET_STATUS = 'GET_TWEET_STATUS',
+  LOAD_MORE_REPLIES = 'LOAD_MORE_REPLIES',
   NEW_TWEET = 'NEW_TWEET',
 }
 
@@ -23,6 +24,10 @@ export interface Actions {
   [ActionTypes.GET_TWEET_STATUS](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: string | string[]
+  ): Promise<any>
+  [ActionTypes.LOAD_MORE_REPLIES](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    payload: { tweetId: string | string[]; cursor: string }
   ): Promise<any>
   [ActionTypes.NEW_TWEET](
     { commit }: AugmentedActionContext<Mutations, State>,
@@ -53,7 +58,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
       const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
         repliedToTweet: item.replied_to_tweet,
-        repliedToName: item.created_at,
+        repliedToName: item.replied_to_name,
         favoritesCount: item.favorites_count,
         repliesCount: item.replies_count,
         createdAt: item.created_at,
@@ -73,7 +78,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
       const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
         repliedToTweet: item.replied_to_tweet,
-        repliedToName: item.created_at,
+        repliedToName: item.replied_to_name,
         favoritesCount: item.favorites_count,
         repliesCount: item.replies_count,
         createdAt: item.created_at,
@@ -93,9 +98,10 @@ export const actions: ActionTree<State, State> & Actions = {
       const repliesResponse = await axios.get<TweetsJSONSchema>(
         `/tweets/${tweetId}/replies`
       )
+
       commit(MutationTypes.SET_TWEET_STATUS, {
         repliedToTweet: tweetResponse.data.replied_to_tweet,
-        repliedToName: tweetResponse.data.created_at,
+        repliedToName: tweetResponse.data.replied_to_name,
         favoritesCount: tweetResponse.data.favorites_count,
         repliesCount: tweetResponse.data.replies_count,
         createdAt: tweetResponse.data.created_at,
@@ -112,6 +118,31 @@ export const actions: ActionTree<State, State> & Actions = {
             : [],
         ...tweetResponse.data,
       })
+    } catch (error) {
+      return error
+    }
+  },
+  async [ActionTypes.LOAD_MORE_REPLIES](
+    { commit },
+    { tweetId, cursor }
+  ): Promise<any> {
+    try {
+      const response = await axios.get<TweetsJSONSchema>(
+        `/tweets/${tweetId}/replies${cursor ? `?cursor=${cursor}` : ''}`
+      )
+
+      if (response.data.items === null) {
+        return
+      }
+
+      const replies: Tweet[] = response.data.items.map((item) => ({
+        favoritesCount: item.favorites_count,
+        repliesCount: item.replies_count,
+        createdAt: item.created_at,
+        ...item,
+      }))
+
+      commit(MutationTypes.PUSH_REPLIES_TO_TWEET_STATUS, replies)
     } catch (error) {
       return error
     }

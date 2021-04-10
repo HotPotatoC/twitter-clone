@@ -2,8 +2,8 @@ export interface Tweet {
   id: number
   content: string
   name: string
-  repliedToTweet: number
-  repliedToName: string
+  repliedToTweet?: number
+  repliedToName?: string
   favoritesCount: number
   repliesCount: number
   createdAt: string

@@ -1,6 +1,8 @@
 <template>
   <main
     class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-light dark:border-opacity-25"
+    ref="elRef"
+    @scroll="handleScroll"
   >
     <div
       class="px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25 flex items-center justify-start space-x-6"
@@ -11,7 +13,7 @@
     <div
       class="px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25"
     >
-      <div v-if="ready" class="w-full">
+      <div v-if="initialLoadDone" class="w-full">
         <div class="flex items-center w-full">
           <div class="block">
             <p class="font-semibold dark:text-lightest">{{ tweet.name }}</p>
@@ -58,7 +60,7 @@
         </div>
       </div>
     </div>
-    <div v-if="ready && tweet.replies.length > 0">
+    <div v-if="initialLoadDone && tweet.replies.length > 0">
       <div
         v-for="reply in tweet.replies"
         :key="reply.id"
@@ -70,37 +72,70 @@
           </router-link>
         </div>
       </div>
+      <div
+        v-show="tweet.replies.length > 0 && loadNextBatch"
+        class="w-full p-4 border-b dark:border-light dark:border-opacity-25 hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+      >
+        <div class="w-full text-center">
+          <loading-spinner />
+        </div>
+      </div>
     </div>
   </main>
 </template>
 
 <script lang="ts">
 import dayjs from 'dayjs'
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, onBeforeMount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../../../store'
 import { ActionTypes } from '../../../store/tweets/actions'
 import { TweetAndReplies } from '../../../store/tweets/state'
 import TweetCard from '../../../components/common/TweetCard.vue'
+import LoadingSpinner from '../../../components/common/LoadingSpinner.vue'
 
 export default defineComponent({
-  components: { TweetCard },
+  components: { TweetCard, LoadingSpinner },
   name: 'Status',
   setup() {
     const store = useStore()
     const route = useRoute()
-    const ready = ref<boolean>(false)
+    const elRef = ref<Element>(null)
+    const initialLoadDone = ref<boolean>(false)
+    const loadNextBatch = ref<boolean>(false)
     const tweet = ref<TweetAndReplies | null>(null)
 
-    const getTweetStatus = async (tweetId: string | string[]) => {
+    async function getTweetStatus(tweetId: string | string[]) {
       await store.dispatch(ActionTypes.GET_TWEET_STATUS, tweetId)
 
-      ready.value = true
       tweet.value = store.getters['getTweetStatus']
     }
 
-    onMounted(async () => {
+    async function loadMoreReplies(tweetId: string | string[]) {
+      if (
+        initialLoadDone.value &&
+        store.getters['getTweetStatus'].replies.length > 0
+      ) {
+        const cursor = store.getters['getLastStatusReplyItem'].createdAt
+        await store.dispatch(ActionTypes.LOAD_MORE_REPLIES, { tweetId, cursor })
+      }
+    }
+
+    async function handleScroll(e: Event) {
+      const element = elRef.value
+      if (
+        !loadNextBatch.value &&
+        element.scrollTop + element.clientHeight + 1 >= element.scrollHeight
+      ) {
+        loadNextBatch.value = true
+        await loadMoreReplies(route.params.tweetId)
+        loadNextBatch.value = false
+      }
+    }
+
+    onBeforeMount(async () => {
       await getTweetStatus(route.params.tweetId)
+      initialLoadDone.value = true
     })
 
     watch(() => route.params.tweetId, getTweetStatus, { flush: 'post' })
@@ -111,7 +146,14 @@ export default defineComponent({
       )
     )
 
-    return { ready, tweet, parsedCreatedAt }
+    return {
+      elRef,
+      initialLoadDone,
+      loadNextBatch,
+      tweet,
+      parsedCreatedAt,
+      handleScroll,
+    }
   },
 })
 </script>

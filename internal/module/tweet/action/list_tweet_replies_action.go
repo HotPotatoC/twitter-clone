@@ -26,8 +26,14 @@ func (a listTweetRepliesAction) Execute(c *fiber.Ctx) error {
 		})
 	}
 
-	replies, err := a.service.Execute(tweetID)
+	createdAtCursor := c.Query("cursor")
+	replies, err := a.service.Execute(tweetID, createdAtCursor)
 	if err != nil {
+		if errors.Is(err, service.ErrInvalidCursor) {
+			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+				"message": "Invalid cursor",
+			})
+		}
 		if errors.Is(err, entity.ErrTweetDoesNotExist) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Tweet not found",

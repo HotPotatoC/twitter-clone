@@ -10,10 +10,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-var (
-	ErrInvalidCursor = errors.New("invalid cursor")
-)
-
 type ListTweetOutput struct {
 	entity.Tweet
 	Name           string `json:"name"`
