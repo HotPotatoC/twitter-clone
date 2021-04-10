@@ -13,8 +13,10 @@ import (
 	"github.com/HotPotatoC/twitter-clone/pkg/webserver"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/csrf"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 	"go.uber.org/zap"
 )
 
@@ -64,24 +66,33 @@ func (s *Server) initMiddlewares() {
 	s.webserver.Engine().Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
 		AllowCredentials: true,
-		AllowHeaders:     "Content-Type",
+		AllowHeaders:     "Content-Type, X-CSRF-Token",
 	}))
+
 	s.webserver.Engine().Use(limiter.New(limiter.Config{
 		Max:        60,
 		Expiration: 1 * time.Minute,
 	}))
+
 	s.webserver.Engine().Use(logger.New(logger.Config{
-		Format: "${green}${time}${reset} | ${status} | ${cyan}${latency}${reset} |	${host} | ${yellow}${method}${reset} | ${path} ${queryParams}\n",
+		Format: "${green}${time}${reset} | ${status} | ${cyan}${latency}${reset}	-	${host} | ${yellow}${method}${reset} | ${path} ${queryParams}\n",
 	}))
 }
 
 func (s *Server) initRoutes() {
-	tweetsGroup := s.webserver.Engine().Group("/tweets")
+	csrfMiddleware := csrf.New(csrf.Config{
+		CookieSecure: true,
+		Expiration:   24 * time.Hour,
+		KeyGenerator: func() string {
+			return gonanoid.Must()
+		},
+	})
 	authGroup := s.webserver.Engine().Group("/auth")
-	usersGroup := s.webserver.Engine().Group("/users")
-	relationshipGroup := s.webserver.Engine().Group("/relationships")
+	tweetsGroup := s.webserver.Engine().Group("/tweets", csrfMiddleware)
+	usersGroup := s.webserver.Engine().Group("/users", csrfMiddleware)
+	relationshipGroup := s.webserver.Engine().Group("/relationships", csrfMiddleware)
 	auth.Routes(authGroup, s.db, s.cache)
-	user.Routes(usersGroup, s.db, s.cache)
 	tweet.Routes(tweetsGroup, s.db, s.cache)
+	user.Routes(usersGroup, s.db, s.cache)
 	relationship.Routes(relationshipGroup, s.db, s.cache)
 }

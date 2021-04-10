@@ -6,6 +6,7 @@
 import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from './services/axios'
+import * as cookie from './services/cookie'
 import { useStore } from './store'
 import { ActionTypes } from './store/auth/actions'
 
@@ -15,13 +16,24 @@ export default defineComponent({
     const store = useStore()
     const router = useRouter()
 
-    const interceptor = axios.interceptors.response.use(
+    const requestInterceptor = axios.interceptors.request.use(
+      (cfg) => {
+        cfg.headers['X-CSRF-Token'] = cookie.get('csrf_')
+        return cfg
+      },
+      (error) => {
+        axios.interceptors.request.eject(requestInterceptor)
+        return Promise.reject(error)
+      }
+    )
+
+    const responseInterceptor = axios.interceptors.response.use(
       (res) => {
         return res
       },
       async (error) => {
         if (error.response.status === 401) {
-          axios.interceptors.response.eject(interceptor)
+          axios.interceptors.response.eject(responseInterceptor)
 
           await store.dispatch(ActionTypes.REFRESH_AUTH_TOKEN)
           await store.dispatch(ActionTypes.GET_USER_DATA)
