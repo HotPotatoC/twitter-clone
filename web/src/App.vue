@@ -6,7 +6,6 @@
 import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from './services/axios'
-import * as cookie from './services/cookie'
 import { useStore } from './store'
 import { ActionTypes } from './modules/auth/store/actions'
 
