@@ -16,17 +16,6 @@ export default defineComponent({
     const store = useStore()
     const router = useRouter()
 
-    const requestInterceptor = axios.interceptors.request.use(
-      (cfg) => {
-        cfg.headers['X-CSRF-Token'] = cookie.get('csrf_')
-        return cfg
-      },
-      (error) => {
-        axios.interceptors.request.eject(requestInterceptor)
-        return Promise.reject(error)
-      }
-    )
-
     const responseInterceptor = axios.interceptors.response.use(
       (res) => {
         return res

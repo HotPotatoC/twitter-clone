@@ -51,14 +51,9 @@ func (s registerService) Execute(input RegisterInput) (*token.AccessToken, *toke
 		return nil, nil, errors.Wrap(err, "service.registerService.Execute")
 	}
 
-	_, err = s.db.Exec("INSERT INTO users(name, email, password, created_at) VALUES($1, $2, $3, $4)",
-		input.Name, input.Email, hash, time.Now())
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "service.registerService.Execute")
-	}
-
 	var id int64
-	err = s.db.QueryRow("SELECT id FROM users WHERE email = $1", input.Email).Scan(&id)
+	err = s.db.QueryRow("INSERT INTO users(name, email, password, created_at) VALUES($1, $2, $3, $4) RETURNING id",
+		input.Name, input.Email, hash, time.Now()).Scan(&id)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "service.registerService.Execute")
 	}
@@ -78,7 +73,6 @@ func (s registerService) Execute(input RegisterInput) (*token.AccessToken, *toke
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "service.registerService.Execute")
 	}
-
 
 	return at, rt, nil
 }
