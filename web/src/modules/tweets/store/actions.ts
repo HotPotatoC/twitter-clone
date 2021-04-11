@@ -1,9 +1,9 @@
 import { ActionTree } from 'vuex'
-import { AugmentedActionContext } from '../types'
+import { AugmentedActionContext } from '../../../store/types'
 import { Mutations, MutationTypes } from './mutations'
 import { State, Tweet } from './state'
 
-import axios from '../../services/axios'
+import axios from '../../../services/axios'
 
 export enum ActionTypes {
   GET_TWEETS_FEED = 'GET_TWEETS_FEED',

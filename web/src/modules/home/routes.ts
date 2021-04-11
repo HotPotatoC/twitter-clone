@@ -1,0 +1,16 @@
+import { RouteRecordRaw } from 'vue-router'
+import BaseLayout from '../../layouts/base-layout.vue'
+import { makeRoutesWithLayout } from '../../services/routes'
+import Home from './index.vue'
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '',
+    component: Home,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+]
+
+export default makeRoutesWithLayout('/home', BaseLayout, routes)

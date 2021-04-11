@@ -44,8 +44,8 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStore } from '../store'
-import { ActionTypes } from '../store/auth/actions'
+import { useStore } from '../../store'
+import { ActionTypes } from './store/actions'
 
 export default defineComponent({
   name: 'Login',

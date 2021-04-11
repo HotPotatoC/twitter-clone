@@ -89,10 +89,10 @@ import dayjs from 'dayjs'
 import { computed, defineComponent, onBeforeMount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../../../store'
-import { ActionTypes } from '../../../store/tweets/actions'
-import { TweetAndReplies } from '../../../store/tweets/state'
 import TweetCard from '../../../components/common/TweetCard.vue'
 import LoadingSpinner from '../../../components/common/LoadingSpinner.vue'
+import { ActionTypes } from '../../tweets/store/actions'
+import { TweetAndReplies } from '../../tweets/store/state'
 
 export default defineComponent({
   components: { TweetCard, LoadingSpinner },

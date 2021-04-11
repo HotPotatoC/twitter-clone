@@ -4,8 +4,6 @@ import {
   CommitOptions,
   DispatchOptions,
 } from 'vuex'
-import { MutationTypes as AuthMutationTypes } from './auth/mutations'
-import { ActionTypes as AuthActionTypes } from './auth/actions'
 
 export type AnyRecord = Record<any, any>
 
@@ -38,6 +36,3 @@ export type AugmentedModule<
     options?: DispatchOptions
   ): ReturnType<A[K]>
 }
-
-export const allMutationsTypes = { ...AuthMutationTypes }
-export const allActionsTypes = { ...AuthActionTypes }

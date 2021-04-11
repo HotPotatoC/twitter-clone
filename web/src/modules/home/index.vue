@@ -55,10 +55,10 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive, Ref, ref } from 'vue'
 import { useStore } from '../../store'
-import { ActionTypes } from '../../store/tweets/actions'
 import TweetCard from '../../components/common/TweetCard.vue'
-import { Tweet } from '../../store/tweets/state'
 import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
+import { Tweet } from '../tweets/store/state'
+import { ActionTypes } from '../tweets/store/actions'
 
 interface NewTweet {
   content: string | Ref<string>

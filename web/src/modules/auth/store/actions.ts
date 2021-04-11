@@ -1,10 +1,9 @@
-import { AxiosError } from 'axios'
 import { ActionTree } from 'vuex'
-import { AugmentedActionContext } from '../types'
+import { AugmentedActionContext } from '../../../store/types'
 import { Mutations, MutationTypes } from './mutations'
-import { State, UserData } from './state'
+import { State } from './state'
 
-import axios from '../../services/axios'
+import axios from '../../../services/axios'
 
 export enum ActionTypes {
   AUTHENTICATE_USER = 'AUTHENTICATE_USER',

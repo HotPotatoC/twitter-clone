@@ -4,8 +4,8 @@ import {
   useStore as useVuexStore,
   ModuleTree,
 } from 'vuex'
-import { authModule, AuthModule } from './auth'
-import { tweetsModule, TweetsModule } from './tweets'
+import { authModule, AuthModule } from '../modules/auth/store'
+import { tweetsModule, TweetsModule } from '../modules/tweets/store'
 
 type StoreModules = {
   auth: AuthModule
