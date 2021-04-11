@@ -12,6 +12,7 @@ import (
 func Routes(r fiber.Router, db database.Database, cache cache.Cache) {
 	authMiddleware := middleware.NewAuthMiddleware()
 	r.Get("/", buildListTweetHandler(db))
+	r.Get("/search", buildSearchTweetHandler(db))
 	r.Get("/:tweetID", buildGetTweetHandler(db))
 	r.Post("/", authMiddleware.Execute(), buildCreateTweetHandler(db))
 	r.Get("/:tweetID/replies", buildListTweetRepliesHandler(db))
@@ -32,6 +33,15 @@ func buildGetTweetHandler(db database.Database) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		service := service.NewGetTweetService(db)
 		action := action.NewGetTweetAction(service)
+
+		return action.Execute(c)
+	}
+}
+
+func buildSearchTweetHandler(db database.Database) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		service := service.NewSearchTweetService(db)
+		action := action.NewSearchTweetAction(service)
 
 		return action.Execute(c)
 	}
