@@ -60,7 +60,7 @@ func (s listTweetRepliesService) Execute(tweetID int64, createdAtCursor string) 
 	} else {
 		rows, err = s.db.Query(query, tweetID)
 		if err != nil {
-			return []ListTweetRepliesOutput{}, ErrInvalidCursor
+			return []ListTweetRepliesOutput{}, errors.Wrap(err, "service.listFollowersService.Execute")
 		}
 	}
 	defer rows.Close()
