@@ -48,7 +48,7 @@ func (a registerAction) Execute(c *fiber.Ctx) error {
 		Value:    refreshToken.String(),
 		Expires:  refreshToken.ExpiresAt(),
 		HTTPOnly: true,
-		Secure:   true,
+		Secure:   config.GetString("APP_ENV", "development") == "production",
 		Path:     "/",
 		Domain:   config.GetString("APP_DOMAIN", ""),
 		SameSite: "None",

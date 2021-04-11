@@ -9,6 +9,7 @@ import (
 	"github.com/HotPotatoC/twitter-clone/internal/module/tweet"
 	"github.com/HotPotatoC/twitter-clone/internal/module/user"
 	"github.com/HotPotatoC/twitter-clone/pkg/cache"
+	"github.com/HotPotatoC/twitter-clone/pkg/config"
 	"github.com/HotPotatoC/twitter-clone/pkg/database"
 	"github.com/HotPotatoC/twitter-clone/pkg/webserver"
 	"github.com/gofiber/fiber/v2"
@@ -81,7 +82,7 @@ func (s *Server) initMiddlewares() {
 
 func (s *Server) initRoutes() {
 	csrfMiddleware := csrf.New(csrf.Config{
-		CookieSecure: true,
+		CookieSecure: config.GetString("APP_ENV", "development") == "production",
 		Expiration:   24 * time.Hour,
 		KeyGenerator: func() string {
 			return gonanoid.Must()
