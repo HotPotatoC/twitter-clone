@@ -165,7 +165,7 @@ export default defineComponent({
     const selectedTab = ref<string>('home')
     const showDropdown = ref<boolean>(false)
 
-    const user = computed(() => store.getters['getUserData'])
+    const user = computed(() => store.getters['userData'])
 
     return { tabs, selectedTab, showDropdown, user }
   },

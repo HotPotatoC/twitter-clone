@@ -2,23 +2,27 @@ import { GetterTree } from 'vuex'
 import { State, Tweet, TweetAndReplies } from './state'
 
 export interface Getters {
-  getTweetsFeed(state: State): Tweet[]
-  getLastTweetFeedItem(state: State): Tweet
-  getTweetStatus(state: State): TweetAndReplies
-  getLastStatusReplyItem(state: State): Tweet
+  tweetsFeed(state: State): Tweet[]
+  lastTweetFeedItem(state: State): Tweet
+  tweetStatus(state: State): TweetAndReplies
+  lastStatusReplyItem(state: State): Tweet
+  tweetsSearchResults(state: State): Tweet[]
 }
 
 export const getters: GetterTree<State, State> & Getters = {
-  getTweetsFeed(state): Tweet[] {
+  tweetsFeed(state): Tweet[] {
     return state.tweetsFeed
   },
-  getLastTweetFeedItem(state): Tweet {
+  lastTweetFeedItem(state): Tweet {
     return state.tweetsFeed[state.tweetsFeed.length - 1]
   },
-  getTweetStatus(state): TweetAndReplies {
+  tweetStatus(state): TweetAndReplies {
     return state.tweetStatus
   },
-  getLastStatusReplyItem(state: State): Tweet {
+  lastStatusReplyItem(state: State): Tweet {
     return state.tweetStatus.replies[state.tweetStatus.replies.length - 1]
+  },
+  tweetsSearchResults(state: State): Tweet[] {
+    return state.tweetSearchResult
   },
 }

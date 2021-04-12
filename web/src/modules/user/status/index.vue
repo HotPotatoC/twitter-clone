@@ -108,15 +108,15 @@ export default defineComponent({
     async function getTweetStatus(tweetId: string | string[]) {
       await store.dispatch(ActionTypes.GET_TWEET_STATUS, tweetId)
 
-      tweet.value = store.getters['getTweetStatus']
+      tweet.value = store.getters['tweetStatus']
     }
 
     async function loadMoreReplies(tweetId: string | string[]) {
       if (
         initialLoadDone.value &&
-        store.getters['getTweetStatus'].replies.length > 0
+        store.getters['tweetStatus'].replies.length > 0
       ) {
-        const cursor = store.getters['getLastStatusReplyItem'].createdAt
+        const cursor = store.getters['lastStatusReplyItem'].createdAt
         await store.dispatch(ActionTypes.LOAD_MORE_REPLIES, { tweetId, cursor })
       }
     }
@@ -141,7 +141,7 @@ export default defineComponent({
     watch(() => route.params.tweetId, getTweetStatus, { flush: 'post' })
 
     const parsedCreatedAt = computed(() =>
-      dayjs(store.getters['getTweetStatus'].createdAt).format(
+      dayjs(store.getters['tweetStatus'].createdAt).format(
         'h:mm A · MMM D, YYYY'
       )
     )

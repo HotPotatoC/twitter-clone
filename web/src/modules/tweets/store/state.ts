@@ -16,6 +16,7 @@ export interface TweetAndReplies extends Tweet {
 export interface State {
   tweetsFeed: Tweet[]
   tweetStatus: TweetAndReplies
+  tweetSearchResult: Tweet[]
 }
 
 export const state: State = {
@@ -31,4 +32,5 @@ export const state: State = {
     createdAt: '',
     replies: [],
   },
+  tweetSearchResult: [],
 }

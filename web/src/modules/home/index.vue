@@ -80,14 +80,14 @@ export default defineComponent({
     })
 
     async function loadTweets() {
-      if (initialLoadDone.value && store.getters['getTweetsFeed'].length > 0) {
-        const lastItem = store.getters['getLastTweetFeedItem']
+      if (initialLoadDone.value && store.getters['tweetsFeed'].length > 0) {
+        const lastItem = store.getters['lastTweetFeedItem']
         await store.dispatch(ActionTypes.LOAD_MORE_TWEETS, lastItem.createdAt)
       } else {
         await store.dispatch(ActionTypes.GET_TWEETS_FEED)
       }
 
-      tweets.value = store.getters['getTweetsFeed']
+      tweets.value = store.getters['tweetsFeed']
     }
 
     async function addNewTweet() {

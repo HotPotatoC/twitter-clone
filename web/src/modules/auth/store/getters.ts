@@ -3,18 +3,18 @@ import { State, UserData } from './state'
 
 export interface Getters {
   isLoggedIn(state: State): boolean
-  getAccessToken(state: State): string
-  getUserData(state: State): UserData
+  accessToken(state: State): string
+  userData(state: State): UserData
 }
 
 export const getters: GetterTree<State, State> & Getters = {
   isLoggedIn(state): boolean {
     return state.authStatus.isLoggedIn
   },
-  getAccessToken(state): string {
+  accessToken(state): string {
     return state.accessToken
   },
-  getUserData(state): UserData {
+  userData(state): UserData {
     return state.user
   },
 }

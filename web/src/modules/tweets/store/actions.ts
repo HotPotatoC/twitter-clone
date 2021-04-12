@@ -11,6 +11,7 @@ export enum ActionTypes {
   GET_TWEET_STATUS = 'GET_TWEET_STATUS',
   LOAD_MORE_REPLIES = 'LOAD_MORE_REPLIES',
   NEW_TWEET = 'NEW_TWEET',
+  SEARCH_TWEETS = 'SEARCH_TWEETS',
 }
 
 export interface Actions {
@@ -30,6 +31,10 @@ export interface Actions {
     payload: { tweetId: string | string[]; cursor: string }
   ): Promise<any>
   [ActionTypes.NEW_TWEET](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    payload: string | string[]
+  ): Promise<any>
+  [ActionTypes.SEARCH_TWEETS](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: string | string[]
   ): Promise<any>
@@ -150,6 +155,26 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.NEW_TWEET]({ commit }, content): Promise<any> {
     try {
       await axios.post<TweetsJSONSchema>('/tweets', { content })
+    } catch (error) {
+      return error
+    }
+  },
+  async [ActionTypes.SEARCH_TWEETS]({ commit }, query): Promise<any> {
+    try {
+      const response = await axios.get<TweetsJSONSchema>(
+        `/tweets/search?query=${query}`
+      )
+
+      const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
+        repliedToTweet: item.replied_to_tweet,
+        repliedToName: item.replied_to_name,
+        favoritesCount: item.favorites_count,
+        repliesCount: item.replies_count,
+        createdAt: item.created_at,
+        ...item,
+      }))
+
+      commit(MutationTypes.SET_TWEET_SEARCH_RESULTS, tweetsFeed)
     } catch (error) {
       return error
     }
