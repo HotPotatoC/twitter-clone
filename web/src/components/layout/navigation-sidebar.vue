@@ -10,7 +10,7 @@
       <button
         class="h-12 w-12 hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 text-3xl text-blue rounded-full"
       >
-        <font-awesome :icon="['fab', 'twitter']" />
+        <FontAwesome :icon="['fab', 'twitter']" />
       </button>
       <div>
         <router-link v-for="tab in tabs" :key="tab.id" :to="tab.to">
@@ -23,7 +23,7 @@
                 : 'dark:text-light'
             "
           >
-            <font-awesome
+            <FontAwesome
               :icon="[tab.iconPrefix, tab.icon]"
               class="text-left text-2xl mr-4"
             />
@@ -37,7 +37,7 @@
           @click="showCreateFormDialog = true"
         >
           <p class="hidden lg:block">Tweet</p>
-          <font-awesome :icon="['fas', 'plus']" class="lg:hidden" />
+          <FontAwesome :icon="['fas', 'plus']" class="lg:hidden" />
         </button>
       </div>
     </div>
@@ -52,7 +52,7 @@
           </p>
           <p class="text-sm leading-tight dark:text-light">@{{ user.name }}</p>
         </div>
-        <font-awesome
+        <FontAwesome
           :icon="['fas', 'angle-down']"
           class="ml-auto text-lg dark:text-lightest"
         />
@@ -74,7 +74,7 @@
               @{{ user.name }}
             </p>
           </div>
-          <font-awesome :icon="['fas', 'check']" class="ml-auto text-blue" />
+          <FontAwesome :icon="['fas', 'check']" class="ml-auto text-blue" />
         </button>
         <button
           @click="logout"

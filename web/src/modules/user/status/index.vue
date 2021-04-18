@@ -7,7 +7,7 @@
     <div
       class="px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25 flex items-center justify-start space-x-6"
     >
-      <font-awesome :icon="['fas', 'arrow-left']" class="text-xl text-blue" />
+      <FontAwesome :icon="['fas', 'arrow-left']" class="text-xl text-blue" />
       <h1 class="text-2xl font-bold dark:text-lightest">Tweet</h1>
     </div>
     <div
@@ -19,7 +19,7 @@
             <p class="font-semibold dark:text-lightest">{{ tweet.name }}</p>
             <p class="text-sm text-dark dark:text-light">@{{ tweet.name }}</p>
           </div>
-          <font-awesome
+          <FontAwesome
             :icon="['fas', 'angle-down']"
             class="text-dark ml-auto"
           />
@@ -47,10 +47,10 @@
         <div
           class="flex items-center justify-around w-full mb-2 text-xl text-dark dark:text-light"
         >
-          <font-awesome :icon="['fas', 'comment']" class="mr-3" />
-          <font-awesome :icon="['fas', 'retweet']" class="mr-3" />
-          <font-awesome :icon="['fas', 'heart']" class="mr-3" />
-          <font-awesome :icon="['fas', 'share-square']" class="mr-3" />
+          <FontAwesome :icon="['fas', 'comment']" class="mr-3" />
+          <FontAwesome :icon="['fas', 'retweet']" class="mr-3" />
+          <FontAwesome :icon="['fas', 'heart']" class="mr-3" />
+          <FontAwesome :icon="['fas', 'share-square']" class="mr-3" />
         </div>
       </div>
     </div>

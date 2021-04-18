@@ -12,7 +12,7 @@
         placeholder="Search Twitter"
       />
       <input type="submit" class="hidden" />
-      <font-awesome
+      <FontAwesome
         :icon="['fas', 'search']"
         class="absolute left-0 top-0 mt-6 ml-12 text-base"
         :class="searchFocused ? 'text-blue' : 'text-light'"

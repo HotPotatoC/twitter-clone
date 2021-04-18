@@ -3,11 +3,10 @@
     class="flex justify-center container mx-auto h-screen w-1/4 px-4 lg:px-0 py-8"
   >
     <div>
-      <font-awesome
+      <FontAwesome
         :icon="['fab', 'twitter']"
         class="h-12 w-12 text-6xl text-blue rounded-full"
-      >
-      </font-awesome>
+      />
       <h1 class="pt-12 text-4xl dark:text-lightest font-bold">
         Log in to Twitter
       </h1>

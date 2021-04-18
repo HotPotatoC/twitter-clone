@@ -7,7 +7,7 @@
     <div
       class="relative px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25 flex items-center justify-between"
     >
-      <font-awesome
+      <FontAwesome
         :icon="['fas', 'arrow-left']"
         class="text-xl text-blue mr-6"
       />
@@ -22,7 +22,7 @@
         />
         <input type="submit" class="hidden" />
       </form>
-      <font-awesome
+      <FontAwesome
         :icon="['fas', 'search']"
         class="absolute left-0 top-0 mt-6 ml-20 text-base"
         :class="searchFocused ? 'text-blue' : 'text-light'"

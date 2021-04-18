@@ -36,7 +36,7 @@
                 @click="onClose()"
                 class="text-lg font-medium leading-6 text-blue focus:outline-none"
               >
-                <font-awesome :icon="['fas', 'times']" />
+                <FontAwesome :icon="['fas', 'times']" />
               </DialogTitle>
               <div
                 class="mt-2 border-t border-lighter dark:border-light dark:border-opacity-25"

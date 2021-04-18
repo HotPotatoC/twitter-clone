@@ -5,26 +5,26 @@
     <p class="text-sm text-dark dark:text-light ml-2">
       {{ parsedCreatedAt }}
     </p>
-    <font-awesome :icon="['fas', 'angle-down']" class="text-dark ml-auto" />
+    <FontAwesome :icon="['fas', 'angle-down']" class="text-dark ml-auto" />
   </div>
   <p class="py-2 dark:text-lightest">
     {{ tweet.content }}
   </p>
   <div class="flex items-center justify-between w-full">
     <div class="flex items-center text-sm text-dark dark:text-light">
-      <font-awesome :icon="['fas', 'comment']" class="mr-3" />
+      <FontAwesome :icon="['fas', 'comment']" class="mr-3" />
       <p>{{ tweet.repliesCount }}</p>
     </div>
     <div class="flex items-center text-sm text-dark dark:text-light">
-      <font-awesome :icon="['fas', 'retweet']" class="mr-3" />
+      <FontAwesome :icon="['fas', 'retweet']" class="mr-3" />
       <p>{{ tweet.repliesCount }}</p>
     </div>
     <div class="flex items-center text-sm text-dark dark:text-light">
-      <font-awesome :icon="['fas', 'heart']" class="mr-3" />
+      <FontAwesome :icon="['fas', 'heart']" class="mr-3" />
       <p>{{ tweet.favoritesCount }}</p>
     </div>
     <div class="flex items-center text-sm text-dark dark:text-light">
-      <font-awesome :icon="['fas', 'share-square']" class="mr-3" />
+      <FontAwesome :icon="['fas', 'share-square']" class="mr-3" />
     </div>
   </div>
 </template>

@@ -7,7 +7,7 @@ import './assets/tailwind.css'
 
 const app = createApp(App)
 
-app.component('font-awesome', makeFontAwesomePlugin())
+app.component('FontAwesome', makeFontAwesomePlugin())
 
 app.use(store)
 app.use(router)
