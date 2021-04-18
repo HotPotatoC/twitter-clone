@@ -1,31 +1,9 @@
 <template>
-  <!-- Create tweet dialog -->
-  <Dialog :show="showCreateFormDialog" @close="showCreateFormDialog = false">
-    <form @submit.prevent="addNewTweet" class="w-full">
-      <textarea
-        v-model="newTweet.content"
-        placeholder="What's happening?"
-        class="mt-3 w-full focus:outline-none dark:bg-black dark:text-light"
-      />
-
-      <div class="mt-4 text-right">
-        <button
-          type="submit"
-          class="h-10 px-4 font-semibold focus:outline-none rounded-full transition-colors duration-75"
-          :class="
-            contentIsEmpty
-              ? ['bg-dark', 'text-light', 'cursor-default']
-              : ['bg-blue', 'hover:bg-darkblue', 'text-lightest']
-          "
-          @click="showCreateFormDialog = false"
-          :disabled="contentIsEmpty"
-        >
-          Tweet
-        </button>
-      </div>
-    </form>
-  </Dialog>
-
+  <TweetCreateTweetDialog
+    :show="showCreateFormDialog"
+    @close="showCreateFormDialog = false"
+    @dispatch="createTweet"
+  />
   <!-- Sidebar -->
   <div
     class="lg:w-1/5 border-r border-lighter dark:border-darker px-2 lg:px-8 py-2 flex flex-col justify-between"
@@ -112,9 +90,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, Ref, reactive } from 'vue'
+import { computed, defineComponent, ref, Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ActionTypes as AuthActionTypes } from '../../modules/auth/store/actions'
+import TweetCreateTweetDialog from '../../modules/tweets/components/TweetCreateTweetDialog.vue'
 import { ActionTypes as TweetActionTypes } from '../../modules/tweets/store/actions'
 import { useStore } from '../../store'
 import Dialog from '../common/Dialog.vue'
@@ -133,84 +112,19 @@ interface NewTweet {
 
 export default defineComponent({
   name: 'ProfileSidebar',
-  components: { Dialog },
+  components: { Dialog, TweetCreateTweetDialog },
   setup() {
-    const tabs: Tab[] = [
-      {
-        id: 'home',
-        icon: 'home',
-        iconPrefix: 'fas',
-        label: 'Home',
-        to: '/home',
-      },
-      {
-        id: 'explore',
-        icon: 'hashtag',
-        iconPrefix: 'fas',
-        label: 'Explore',
-        to: '/home',
-      },
-      {
-        id: 'notifications',
-        icon: 'bell',
-        iconPrefix: 'fas',
-        label: 'Notifications',
-        to: '/home',
-      },
-      {
-        id: 'messages',
-        icon: 'envelope',
-        iconPrefix: 'fas',
-        label: 'Messages',
-        to: '/home',
-      },
-      {
-        id: 'bookmarks',
-        icon: 'bookmark',
-        iconPrefix: 'fas',
-        label: 'Bookmarks',
-        to: '/home',
-      },
-      {
-        id: 'lists',
-        icon: 'clipboard-list',
-        iconPrefix: 'fas',
-        label: 'Lists',
-        to: '/home',
-      },
-      {
-        id: 'profile',
-        icon: 'user',
-        iconPrefix: 'fas',
-        label: 'Profile',
-        to: '/home',
-      },
-      {
-        id: 'more',
-        icon: 'ellipsis-h',
-        iconPrefix: 'fas',
-        label: 'More',
-        to: '/home',
-      },
-    ]
-
     const store = useStore()
     const router = useRouter()
     const selectedTab = ref<string>('home')
     const showDropdown = ref<boolean>(false)
     const showCreateFormDialog = ref<boolean>(false)
-    const tweetContent = ref<string>('')
-    const newTweet = reactive<NewTweet>({
-      content: tweetContent,
-    })
 
     const user = computed(() => store.getters['userData'])
-    const contentIsEmpty = computed(() => tweetContent.value === '')
 
-    async function addNewTweet() {
+    async function createTweet(content: string) {
       try {
-        await store.dispatch(TweetActionTypes.NEW_TWEET, newTweet.content)
-        newTweet.content = ''
+        await store.dispatch(TweetActionTypes.NEW_TWEET, content)
       } catch (error) {
         console.log(error)
       }
@@ -224,16 +138,70 @@ export default defineComponent({
     }
 
     return {
-      tabs,
       selectedTab,
       showDropdown,
       showCreateFormDialog,
       user,
       logout,
-      tweetContent,
-      newTweet,
-      contentIsEmpty,
-      addNewTweet,
+      createTweet,
+      tabs: [
+        {
+          id: 'home',
+          icon: 'home',
+          iconPrefix: 'fas',
+          label: 'Home',
+          to: '/home',
+        },
+        {
+          id: 'explore',
+          icon: 'hashtag',
+          iconPrefix: 'fas',
+          label: 'Explore',
+          to: '/home',
+        },
+        {
+          id: 'notifications',
+          icon: 'bell',
+          iconPrefix: 'fas',
+          label: 'Notifications',
+          to: '/home',
+        },
+        {
+          id: 'messages',
+          icon: 'envelope',
+          iconPrefix: 'fas',
+          label: 'Messages',
+          to: '/home',
+        },
+        {
+          id: 'bookmarks',
+          icon: 'bookmark',
+          iconPrefix: 'fas',
+          label: 'Bookmarks',
+          to: '/home',
+        },
+        {
+          id: 'lists',
+          icon: 'clipboard-list',
+          iconPrefix: 'fas',
+          label: 'Lists',
+          to: '/home',
+        },
+        {
+          id: 'profile',
+          icon: 'user',
+          iconPrefix: 'fas',
+          label: 'Profile',
+          to: '/home',
+        },
+        {
+          id: 'more',
+          icon: 'ellipsis-h',
+          iconPrefix: 'fas',
+          label: 'More',
+          to: '/home',
+        },
+      ],
     }
   },
 })

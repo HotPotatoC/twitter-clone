@@ -2,8 +2,8 @@
   <Dialog :show="show" @close="close">
     <form @submit.prevent="dispatch" class="w-full">
       <textarea
-        v-model="newReply.content"
-        placeholder="Tweet your reply"
+        v-model="newTweet.content"
+        placeholder="What's happening?"
         class="mt-3 w-full focus:outline-none dark:bg-black dark:text-light"
       />
 
@@ -30,12 +30,12 @@
 import { defineComponent, toRefs, ref, Ref, reactive, computed } from 'vue'
 import Dialog from '../../../components/common/Dialog.vue'
 
-interface NewReply {
+interface NewTweet {
   content: string | Ref<string>
 }
 
 export default defineComponent({
-  name: 'TweetCreateReplyDialog',
+  name: 'TweetCreateTweetDialog',
   components: { Dialog },
   props: {
     show: {
@@ -43,25 +43,24 @@ export default defineComponent({
       default: false,
     },
   },
-  emit: ['close', 'dispatch'],
   setup(props, { emit }) {
     const { show } = toRefs(props)
-    const replyContent = ref<string>('')
-    const newReply = reactive<NewReply>({
-      content: replyContent,
+    const tweetContent = ref<string>('')
+    const newTweet = reactive<NewTweet>({
+      content: tweetContent,
     })
 
-    const contentIsEmpty = computed(() => replyContent.value === '')
+    const contentIsEmpty = computed(() => tweetContent.value === '')
 
     function close() {
       emit('close')
     }
 
     function dispatch() {
-      emit('dispatch', newReply.content)
+      emit('dispatch', newTweet.content)
     }
 
-    return { show, emit, newReply, contentIsEmpty, close, dispatch }
+    return { show, emit, newTweet, contentIsEmpty, close, dispatch }
   },
 })
 </script>
