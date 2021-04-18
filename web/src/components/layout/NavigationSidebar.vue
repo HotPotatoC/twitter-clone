@@ -98,18 +98,6 @@ import { ActionTypes as TweetActionTypes } from '../../modules/tweets/store/acti
 import { useStore } from '../../store'
 import Dialog from '../common/Dialog.vue'
 
-interface Tab {
-  id: string
-  icon: string
-  iconPrefix: string
-  label: string
-  to: string
-}
-
-interface NewTweet {
-  content: string | Ref<string>
-}
-
 export default defineComponent({
   name: 'ProfileSidebar',
   components: { Dialog, TweetCreateTweetDialog },
