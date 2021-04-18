@@ -20,6 +20,7 @@ import {
   faClipboardList,
   faUser,
   faEllipsisH,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -45,7 +46,8 @@ export default function () {
     faClipboardList,
     faUser,
     faEllipsisH,
-    faTwitter
+    faTwitter,
+    faTimes
   )
 
   return FontAwesomeIcon

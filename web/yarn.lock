@@ -145,6 +145,11 @@
   dependencies:
     purgecss "^3.1.3"
 
+"@headlessui/vue@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.0.0.tgz#e1c736f78eeaea29b93671d8d6fbdb400159650c"
+  integrity sha512-TPIe/7j9/J5wpXk+VfxGj49alSgUPdCCg9alApps3aqEpdFSbtJfXbNpQsMJIAnimZENxAK/AneCcvI9dpLKbg==
+
 "@intlify/core-base@9.0.0":
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/@intlify/core-base/-/core-base-9.0.0.tgz#3de223b8532c535d022e5be58f7d56a26d2fb12f"

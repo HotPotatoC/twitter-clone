@@ -44,19 +44,13 @@
             <p class="text-dark dark:text-light">Likes</p>
           </div>
         </div>
-        <div class="flex items-center justify-around w-full mb-2">
-          <div class="flex items-center text-xl text-dark dark:text-light">
-            <font-awesome :icon="['fas', 'comment']" class="mr-3" />
-          </div>
-          <div class="flex items-center text-xl text-dark dark:text-light">
-            <font-awesome :icon="['fas', 'retweet']" class="mr-3" />
-          </div>
-          <div class="flex items-center text-xl text-dark dark:text-light">
-            <font-awesome :icon="['fas', 'heart']" class="mr-3" />
-          </div>
-          <div class="flex items-center text-xl text-dark dark:text-light">
-            <font-awesome :icon="['fas', 'share-square']" class="mr-3" />
-          </div>
+        <div
+          class="flex items-center justify-around w-full mb-2 text-xl text-dark dark:text-light"
+        >
+          <font-awesome :icon="['fas', 'comment']" class="mr-3" />
+          <font-awesome :icon="['fas', 'retweet']" class="mr-3" />
+          <font-awesome :icon="['fas', 'heart']" class="mr-3" />
+          <font-awesome :icon="['fas', 'share-square']" class="mr-3" />
         </div>
       </div>
     </div>

@@ -1,4 +1,8 @@
 <template>
+  <tweet-create-form-dialog
+    :show="showCreateFormDialog"
+    @close="showCreateFormDialog = false"
+  />
   <div
     class="lg:w-1/5 border-r border-lighter dark:border-light dark:border-opacity-25 px-2 lg:px-8 py-2 flex flex-col justify-between"
   >
@@ -30,6 +34,7 @@
         </router-link>
         <button
           class="text-lightest bg-blue rounded-full font-semibold focus:outline-none w-12 h-12 lg:w-full lg:h-auto p-3 hover:bg-darkblue"
+          @click="showCreateFormDialog = true"
         >
           <p class="hidden lg:block">Tweet</p>
           <font-awesome :icon="['fas', 'plus']" class="lg:hidden" />
@@ -52,15 +57,16 @@
           class="ml-auto text-lg dark:text-lightest"
         />
       </button>
+
       <div
         v-if="showDropdown"
-        class="absolute bottom-0 left-0 w-64 mb-16 rounded-3xl shadow-md border-lightest"
+        class="absolute overflow-hidden bottom-0 left-0 w-64 mb-16 rounded-2xl shadow-md border border-lighter dark:border-light dark:border-opacity-25"
       >
         <button
           @click="showDropdown = false"
-          class="flex items-center w-full hover:bg-lightest dark:hover:bg-light dark:hover:bg-opacity-10 p-3 bg-white dark:bg-black focus:outline-none"
+          class="flex items-center w-full hover:bg-lightest dark:hover:bg-darkest p-3 bg-white dark:bg-black focus:outline-none"
         >
-          <div class="lg:ml-4">
+          <div>
             <p class="text-sm font-bold leading-tight dark:text-lightest">
               {{ user.name }}
             </p>
@@ -72,7 +78,7 @@
         </button>
         <button
           @click="logout"
-          class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-light dark:hover:bg-opacity-10 border-t border-lighter dark:border-light dark:border-opacity-25 p-3 text-sm dark:text-lightest focus:outline-none"
+          class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-darkest border-t border-lighter dark:border-light dark:border-opacity-25 p-3 text-sm dark:text-lightest focus:outline-none"
         >
           Log Out @{{ user.name }}
         </button>
@@ -86,6 +92,7 @@ import { computed, defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ActionTypes } from '../../modules/auth/store/actions'
 import { useStore } from '../../store'
+import TweetCreateFormDialog from '../common/TweetCreateFormDialog.vue'
 
 interface Tab {
   id: string
@@ -97,6 +104,7 @@ interface Tab {
 
 export default defineComponent({
   name: 'ProfileSidebar',
+  components: { TweetCreateFormDialog },
   setup() {
     const tabs: Tab[] = [
       {
@@ -161,6 +169,7 @@ export default defineComponent({
     const router = useRouter()
     const selectedTab = ref<string>('home')
     const showDropdown = ref<boolean>(false)
+    const showCreateFormDialog = ref<boolean>(false)
 
     const user = computed(() => store.getters['userData'])
 
@@ -171,7 +180,14 @@ export default defineComponent({
       return
     }
 
-    return { tabs, selectedTab, showDropdown, user, logout }
+    return {
+      tabs,
+      selectedTab,
+      showDropdown,
+      showCreateFormDialog,
+      user,
+      logout,
+    }
   },
 })
 </script>
