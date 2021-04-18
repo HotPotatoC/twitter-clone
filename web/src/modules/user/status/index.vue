@@ -106,6 +106,12 @@ export default defineComponent({
     const loadNextBatch = ref<boolean>(false)
     const tweet = ref<TweetAndReplies | null>(null)
 
+    const parsedCreatedAt = computed(() =>
+      dayjs(store.getters['tweetStatus'].createdAt).format(
+        'h:mm A · MMM D, YYYY'
+      )
+    )
+
     onBeforeMount(async () => {
       await getTweetStatus(route.params.tweetId)
       initialLoadDone.value = true
@@ -122,12 +128,6 @@ export default defineComponent({
         { flush: 'post' }
       )
     })
-
-    const parsedCreatedAt = computed(() =>
-      dayjs(store.getters['tweetStatus'].createdAt).format(
-        'h:mm A · MMM D, YYYY'
-      )
-    )
 
     async function getTweetStatus(tweetId: string | string[]) {
       await store.dispatch(ActionTypes.GET_TWEET_STATUS, tweetId)
