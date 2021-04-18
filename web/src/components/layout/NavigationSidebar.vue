@@ -28,7 +28,7 @@
 
   <!-- Sidebar -->
   <div
-    class="lg:w-1/5 border-r border-lighter dark:border-light dark:border-opacity-25 px-2 lg:px-8 py-2 flex flex-col justify-between"
+    class="lg:w-1/5 border-r border-lighter dark:border-darker px-2 lg:px-8 py-2 flex flex-col justify-between"
   >
     <div>
       <button
@@ -84,7 +84,7 @@
 
       <div
         v-if="showDropdown"
-        class="absolute overflow-hidden bottom-0 left-0 w-64 mb-16 rounded-2xl shadow-md border border-lighter dark:border-light dark:border-opacity-25"
+        class="absolute overflow-hidden bottom-0 left-0 w-64 mb-16 rounded-2xl shadow-md border border-lighter dark:border-darker"
       >
         <button
           @click="showDropdown = false"
@@ -102,7 +102,7 @@
         </button>
         <button
           @click="logout"
-          class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-darkest border-t border-lighter dark:border-light dark:border-opacity-25 p-3 text-sm dark:text-lightest focus:outline-none"
+          class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-darkest border-t border-lighter dark:border-darker p-3 text-sm dark:text-lightest focus:outline-none"
         >
           Log Out @{{ user.name }}
         </button>

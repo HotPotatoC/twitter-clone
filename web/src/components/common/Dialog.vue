@@ -39,7 +39,7 @@
                 <FontAwesome :icon="['fas', 'times']" />
               </BaseDialogTitle>
               <div
-                class="mt-2 border-t border-lighter dark:border-light dark:border-opacity-25"
+                class="mt-2 border-t border-lighter dark:border-darker"
               >
                 <slot></slot>
               </div>

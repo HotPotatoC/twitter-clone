@@ -1,17 +1,17 @@
 <template>
   <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-light dark:border-opacity-25"
+    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker"
     ref="elRef"
     @scroll="handleScroll"
   >
     <div
-      class="px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25 flex items-center justify-start space-x-6"
+      class="px-5 py-3 border-b border-lighter dark:border-darker flex items-center justify-start space-x-6"
     >
       <FontAwesome :icon="['fas', 'arrow-left']" class="text-xl text-blue" />
       <h1 class="text-2xl font-bold dark:text-lightest">Tweet</h1>
     </div>
     <div
-      class="px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25"
+      class="px-5 py-3 border-b border-lighter dark:border-darker"
     >
       <div v-if="initialLoadDone" class="w-full">
         <div class="flex items-center w-full">
@@ -29,7 +29,7 @@
         </p>
         <p class="text-dark dark:text-light">{{ parsedCreatedAt }}</p>
         <div
-          class="flex items-center justify-start space-x-12 w-full border-t border-b my-4 py-4 border-lighter dark:border-light dark:border-opacity-25"
+          class="flex items-center justify-start space-x-12 w-full border-t border-b my-4 py-4 border-lighter dark:border-darker"
         >
           <div class="flex space-x-2 text-sm">
             <p class="text-light dark:text-lightest font-bold">
@@ -58,7 +58,7 @@
       <div
         v-for="reply in tweet.replies"
         :key="reply.id"
-        class="w-full p-4 border-b dark:border-light dark:border-opacity-25 hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
       >
         <div class="w-full">
           <router-link :to="`/${reply.name}/status/${reply.id}`">
@@ -68,7 +68,7 @@
       </div>
       <div
         v-show="tweet.replies.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b dark:border-light dark:border-opacity-25 hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
       >
         <div class="w-full text-center">
           <LoadingSpinner />

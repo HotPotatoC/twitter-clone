@@ -15,13 +15,13 @@
           v-model="input.email"
           type="text"
           placeholder="Email"
-          class="w-full px-2 py-4 my-6 border-2 border-lighter text-xl rounded dark:border-light dark:border-opacity-25 focus:outline-none dark:bg-black dark:text-light"
+          class="w-full px-2 py-4 my-6 border-2 border-lighter text-xl rounded dark:border-darker focus:outline-none dark:bg-black dark:text-light"
         />
         <input
           v-model="input.password"
           type="password"
           placeholder="Password"
-          class="w-full px-2 py-4 mb-6 border-2 border-lighter text-xl rounded dark:border-light dark:border-opacity-25 focus:outline-none dark:bg-black dark:text-light"
+          class="w-full px-2 py-4 mb-6 border-2 border-lighter text-xl rounded dark:border-darker focus:outline-none dark:bg-black dark:text-light"
         />
         <button
           type="submit"

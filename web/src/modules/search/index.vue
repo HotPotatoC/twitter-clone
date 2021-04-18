@@ -1,11 +1,11 @@
 <template>
   <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-light dark:border-opacity-25"
+    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker"
     ref="tweetsRef"
     @scroll="handleScroll"
   >
     <div
-      class="relative px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25 flex items-center justify-between"
+      class="relative px-5 py-3 border-b border-lighter dark:border-darker flex items-center justify-between"
     >
       <FontAwesome
         :icon="['fas', 'arrow-left']"
@@ -32,7 +32,7 @@
       <div
         v-for="tweet in tweets"
         :key="tweet.id"
-        class="w-full p-4 border-b dark:border-light dark:border-opacity-25 hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
       >
         <div class="w-full">
           <router-link :to="`/${tweet.name}/status/${tweet.id}`">
@@ -43,7 +43,7 @@
 
       <!-- <div
         v-show="tweets.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b dark:border-light dark:border-opacity-25 hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
       >
         <div class="w-full text-center">
           <loading-spinner />

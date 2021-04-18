@@ -1,17 +1,17 @@
 <template>
   <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-light dark:border-opacity-25"
+    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker"
     ref="tweetsRef"
     @scroll="handleScroll"
   >
     <div
-      class="px-5 py-3 border-b border-lighter dark:border-light dark:border-opacity-25 flex items-center justify-between"
+      class="px-5 py-3 border-b border-lighter dark:border-darker flex items-center justify-between"
     >
       <h1 class="text-xl font-bold dark:text-lightest">Home</h1>
       <FontAwesome :icon="['fas', 'star']" class="text-xl text-blue" />
     </div>
     <div
-      class="px-5 py-3 border-b-8 border-lighter dark:border-light dark:border-opacity-25 flex"
+      class="px-5 py-3 border-b-8 border-lighter dark:border-darker flex"
     >
       <form @submit.prevent="addNewTweet" class="w-full px-4 relative">
         <textarea
@@ -31,7 +31,7 @@
       <div
         v-for="tweet in tweets"
         :key="tweet.id"
-        class="w-full p-4 border-b dark:border-light dark:border-opacity-25 hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-darker flex cursor-pointer"
       >
         <div class="w-full">
           <router-link :to="`/${tweet.name}/status/${tweet.id}`">
@@ -42,7 +42,7 @@
 
       <div
         v-show="tweets.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b dark:border-light dark:border-opacity-25 hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-darker flex cursor-pointer"
       >
         <div class="w-full text-center">
           <LoadingSpinner />
