@@ -1,8 +1,32 @@
 <template>
-  <tweet-create-form-dialog
-    :show="showCreateFormDialog"
-    @close="showCreateFormDialog = false"
-  />
+  <!-- Create tweet dialog -->
+  <Dialog :show="showCreateFormDialog" @close="showCreateFormDialog = false">
+    <form @submit.prevent="addNewTweet" class="w-full">
+      <textarea
+        v-model="newTweet.content"
+        placeholder="What's happening?"
+        class="mt-3 w-full focus:outline-none dark:bg-black dark:text-light"
+      />
+
+      <div class="mt-4 text-right">
+        <button
+          type="submit"
+          class="h-10 px-4 font-semibold focus:outline-none rounded-full"
+          :class="
+            contentIsEmpty
+              ? ['bg-dark', 'text-light', 'cursor-default']
+              : ['bg-blue', 'hover:bg-darkblue', 'text-lightest']
+          "
+          @click="showCreateFormDialog = false"
+          :disabled="contentIsEmpty"
+        >
+          Tweet
+        </button>
+      </div>
+    </form>
+  </Dialog>
+
+  <!-- Sidebar -->
   <div
     class="lg:w-1/5 border-r border-lighter dark:border-light dark:border-opacity-25 px-2 lg:px-8 py-2 flex flex-col justify-between"
   >
@@ -88,11 +112,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, Ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { ActionTypes } from '../../modules/auth/store/actions'
+import { ActionTypes as AuthActionTypes } from '../../modules/auth/store/actions'
+import { ActionTypes as TweetActionTypes } from '../../modules/tweets/store/actions'
 import { useStore } from '../../store'
-import TweetCreateFormDialog from '../common/TweetCreateFormDialog.vue'
+import Dialog from '../common/Dialog.vue'
 
 interface Tab {
   id: string
@@ -102,9 +127,13 @@ interface Tab {
   to: string
 }
 
+interface NewTweet {
+  content: string | Ref<string>
+}
+
 export default defineComponent({
   name: 'ProfileSidebar',
-  components: { TweetCreateFormDialog },
+  components: { Dialog },
   setup() {
     const tabs: Tab[] = [
       {
@@ -170,11 +199,25 @@ export default defineComponent({
     const selectedTab = ref<string>('home')
     const showDropdown = ref<boolean>(false)
     const showCreateFormDialog = ref<boolean>(false)
+    const tweetContent = ref<string>('')
+    const newTweet = reactive<NewTweet>({
+      content: tweetContent,
+    })
 
     const user = computed(() => store.getters['userData'])
+    const contentIsEmpty = computed(() => tweetContent.value === '')
+
+    async function addNewTweet() {
+      try {
+        await store.dispatch(TweetActionTypes.NEW_TWEET, newTweet.content)
+        newTweet.content = ''
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
     async function logout() {
-      await store.dispatch(ActionTypes.LOGOUT_USER)
+      await store.dispatch(AuthActionTypes.LOGOUT_USER)
 
       router.push('/login')
       return
@@ -187,6 +230,10 @@ export default defineComponent({
       showCreateFormDialog,
       user,
       logout,
+      tweetContent,
+      newTweet,
+      contentIsEmpty,
+      addNewTweet,
     }
   },
 })
