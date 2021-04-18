@@ -22,7 +22,7 @@ type GetUserOutput struct {
 }
 
 type GetUserService interface {
-	Execute(userID int64) (GetUserOutput, error)
+	Execute(username string) (GetUserOutput, error)
 }
 
 type getUserService struct {
@@ -33,9 +33,9 @@ func NewGetUserService(db database.Database) GetUserService {
 	return getUserService{db: db}
 }
 
-func (s getUserService) Execute(userID int64) (GetUserOutput, error) {
+func (s getUserService) Execute(username string) (GetUserOutput, error) {
 	var userExists bool
-	err := s.db.QueryRow("SELECT EXISTS (SELECT 1 FROM users WHERE id = $1)", userID).Scan(&userExists)
+	err := s.db.QueryRow("SELECT EXISTS (SELECT 1 FROM users WHERE name = $1)", username).Scan(&userExists)
 	if err != nil {
 		return GetUserOutput{}, errors.Wrap(err, "service.getUserService.Execute")
 	}
@@ -63,9 +63,9 @@ func (s getUserService) Execute(userID int64) (GetUserOutput, error) {
 	FROM users AS u
 		LEFT JOIN follows AS f1 ON f1.follower_id = u.id
 		LEFT JOIN follows AS f2 ON f2.followed_id = u.id
-	WHERE u.id = $1
+	WHERE u.name = $1
 	GROUP BY u.id
-	`, userID).Scan(&id, &name, &bio, &location, &website, &birthDate, &joinedAt, &followingsCount, &followersCount)
+	`, username).Scan(&id, &name, &bio, &location, &website, &birthDate, &joinedAt, &followingsCount, &followersCount)
 	if err != nil {
 		return GetUserOutput{}, errors.Wrap(err, "service.getUserService.Execute")
 	}
