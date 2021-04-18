@@ -36,7 +36,7 @@
       >
         <div class="w-full">
           <router-link :to="`/${tweet.name}/status/${tweet.id}`">
-            <tweet-card :tweet="tweet" />
+            <TweetCard :tweet="tweet" />
           </router-link>
         </div>
       </div>

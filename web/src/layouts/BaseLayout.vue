@@ -1,15 +1,15 @@
 <template>
   <div class="flex container mx-auto px-12 h-screen w-full font-sans">
-    <navigation-sidebar />
+    <NavigationSidebar />
     <router-view />
-    <trending-sidebar />
+    <TrendingSidebar />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import NavigationSidebar from '../components/layout/navigation-sidebar.vue'
-import TrendingSidebar from '../components/layout/trending-sidebar.vue'
+import NavigationSidebar from '../components/layout/NavigationSidebar.vue'
+import TrendingSidebar from '../components/layout/TrendingSidebar.vue'
 
 export default defineComponent({
   components: { NavigationSidebar, TrendingSidebar },

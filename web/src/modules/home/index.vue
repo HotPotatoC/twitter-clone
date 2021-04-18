@@ -35,7 +35,7 @@
       >
         <div class="w-full">
           <router-link :to="`/${tweet.name}/status/${tweet.id}`">
-            <tweet-card :tweet="tweet" />
+            <TweetCard :tweet="tweet" />
           </router-link>
         </div>
       </div>
@@ -45,7 +45,7 @@
         class="w-full p-4 border-b dark:border-light dark:border-opacity-25 hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
       >
         <div class="w-full text-center">
-          <loading-spinner />
+          <LoadingSpinner />
         </div>
       </div>
     </div>
