@@ -1,4 +1,10 @@
 <template>
+  <TweetCreateReplyDialog
+    :show="showCreateReplyDialog"
+    @close="showCreateReplyDialog = false"
+    @dispatch="createReply"
+  />
+
   <main
     class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker"
     ref="elRef"
@@ -43,12 +49,29 @@
           </div>
         </div>
         <div
-          class="flex items-center justify-around w-full mb-2 text-xl text-dark dark:text-light"
+          class="flex items-center justify-around w-full text-xl text-dark dark:text-light"
         >
-          <FontAwesome :icon="['fas', 'comment']" class="mr-3" />
-          <FontAwesome :icon="['fas', 'retweet']" class="mr-3" />
-          <FontAwesome :icon="['fas', 'heart']" class="mr-3" />
-          <FontAwesome :icon="['fas', 'share-square']" class="mr-3" />
+          <div
+            class="flex justify-center hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full p-3 cursor-pointer transition duration-75"
+            @click="showCreateReplyDialog = true"
+          >
+            <FontAwesome :icon="['fas', 'comment']" />
+          </div>
+          <div
+            class="flex justify-center hover:bg-success hover:text-success hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+          >
+            <FontAwesome :icon="['fas', 'retweet']" />
+          </div>
+          <div
+            class="flex justify-center hover:bg-danger hover:text-danger hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+          >
+            <FontAwesome :icon="['fas', 'heart']" />
+          </div>
+          <div
+            class="flex justify-center hover:bg-darkblue hover:text-darkblue hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+          >
+            <FontAwesome :icon="['fas', 'share-square']" />
+          </div>
         </div>
       </div>
     </div>
@@ -92,9 +115,10 @@ import TweetCard from '../../../components/common/TweetCard.vue'
 import LoadingSpinner from '../../../components/common/LoadingSpinner.vue'
 import { ActionTypes } from '../../tweets/store/actions'
 import { TweetAndReplies } from '../../tweets/store/state'
+import TweetCreateReplyDialog from '../../tweets/components/TweetCreateReplyDialog.vue'
 
 export default defineComponent({
-  components: { TweetCard, LoadingSpinner },
+  components: { TweetCard, LoadingSpinner, TweetCreateReplyDialog },
   name: 'Status',
   setup() {
     const store = useStore()
@@ -103,6 +127,8 @@ export default defineComponent({
     const initialLoadDone = ref<boolean>(false)
     const loadNextBatch = ref<boolean>(false)
     const tweet = ref<TweetAndReplies | null>(null)
+
+    const showCreateReplyDialog = ref<boolean>(false)
 
     const parsedCreatedAt = computed(() =>
       dayjs(store.getters['tweetStatus'].createdAt).format(
@@ -143,6 +169,20 @@ export default defineComponent({
       }
     }
 
+    async function createReply(content: string) {
+      try {
+        await store.dispatch(ActionTypes.NEW_REPLY, {
+          tweetId: route.params.tweetId,
+          content,
+        })
+        initialLoadDone.value = false
+        await store.dispatch(ActionTypes.GET_TWEET_STATUS, route.params.tweetId)
+        initialLoadDone.value = true
+
+        tweet.value = store.getters['tweetStatus']
+      } catch (error) {}
+    }
+
     async function handleScroll(e: Event) {
       const element = elRef.value
       if (
@@ -160,6 +200,8 @@ export default defineComponent({
       initialLoadDone,
       loadNextBatch,
       tweet,
+      showCreateReplyDialog,
+      createReply,
       parsedCreatedAt,
       handleScroll,
     }

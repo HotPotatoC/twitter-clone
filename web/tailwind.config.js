@@ -18,6 +18,8 @@ module.exports = {
         light: '#AAB8C2',
         lighter: '#E1E8ED',
         lightest: '#F5F8FA',
+        success: '#17BF63',
+        danger: '#E0245E',
       },
     },
     fill: (theme) => ({

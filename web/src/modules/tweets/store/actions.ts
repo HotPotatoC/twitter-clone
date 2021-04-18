@@ -10,8 +10,9 @@ export enum ActionTypes {
   LOAD_MORE_TWEETS = 'LOAD_MORE_TWEETS',
   GET_TWEET_STATUS = 'GET_TWEET_STATUS',
   LOAD_MORE_REPLIES = 'LOAD_MORE_REPLIES',
-  NEW_TWEET = 'NEW_TWEET',
   SEARCH_TWEETS = 'SEARCH_TWEETS',
+  NEW_TWEET = 'NEW_TWEET',
+  NEW_REPLY = 'NEW_REPLY',
 }
 
 export interface Actions {
@@ -30,13 +31,17 @@ export interface Actions {
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: { tweetId: string | string[]; cursor: string }
   ): Promise<any>
+  [ActionTypes.SEARCH_TWEETS](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    payload: string | string[]
+  ): Promise<any>
   [ActionTypes.NEW_TWEET](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: string | string[]
   ): Promise<any>
-  [ActionTypes.SEARCH_TWEETS](
+  [ActionTypes.NEW_REPLY](
     { commit }: AugmentedActionContext<Mutations, State>,
-    payload: string | string[]
+    payload: { tweetId: string | string[]; content: string | string[] }
   ): Promise<any>
 }
 
@@ -152,13 +157,6 @@ export const actions: ActionTree<State, State> & Actions = {
       return error
     }
   },
-  async [ActionTypes.NEW_TWEET]({ commit }, content): Promise<any> {
-    try {
-      await axios.post<TweetsJSONSchema>('/tweets', { content })
-    } catch (error) {
-      return error
-    }
-  },
   async [ActionTypes.SEARCH_TWEETS]({ commit }, query): Promise<any> {
     try {
       const response = await axios.get<TweetsJSONSchema>(
@@ -175,6 +173,25 @@ export const actions: ActionTree<State, State> & Actions = {
       }))
 
       commit(MutationTypes.SET_TWEET_SEARCH_RESULTS, tweetsFeed)
+    } catch (error) {
+      return error
+    }
+  },
+  async [ActionTypes.NEW_TWEET]({ commit }, content): Promise<any> {
+    try {
+      await axios.post<TweetsJSONSchema>('/tweets', { content })
+    } catch (error) {
+      return error
+    }
+  },
+  async [ActionTypes.NEW_REPLY](
+    { commit },
+    { tweetId, content }
+  ): Promise<any> {
+    try {
+      await axios.post<TweetsJSONSchema>(`/tweets/${tweetId}/reply`, {
+        content,
+      })
     } catch (error) {
       return error
     }
