@@ -71,13 +71,7 @@
           <font-awesome :icon="['fas', 'check']" class="ml-auto text-blue" />
         </button>
         <button
-          @click="showDropdown = false"
-          class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-light dark:hover:bg-opacity-10 border-t border-lighter dark:border-light dark:border-opacity-25 p-3 text-sm dark:text-lightest focus:outline-none"
-        >
-          Add an existing account
-        </button>
-        <button
-          @click="showDropdown = false"
+          @click="logout"
           class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-light dark:hover:bg-opacity-10 border-t border-lighter dark:border-light dark:border-opacity-25 p-3 text-sm dark:text-lightest focus:outline-none"
         >
           Log Out @{{ user.name }}
@@ -89,6 +83,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ActionTypes } from '../../modules/auth/store/actions'
 import { useStore } from '../../store'
 
 interface Tab {
@@ -162,12 +158,20 @@ export default defineComponent({
     ]
 
     const store = useStore()
+    const router = useRouter()
     const selectedTab = ref<string>('home')
     const showDropdown = ref<boolean>(false)
 
     const user = computed(() => store.getters['userData'])
 
-    return { tabs, selectedTab, showDropdown, user }
+    async function logout() {
+      await store.dispatch(ActionTypes.LOGOUT_USER)
+
+      router.push('/login')
+      return
+    }
+
+    return { tabs, selectedTab, showDropdown, user, logout }
   },
 })
 </script>

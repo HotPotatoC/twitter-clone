@@ -86,7 +86,14 @@
 
 <script lang="ts">
 import dayjs from 'dayjs'
-import { computed, defineComponent, onBeforeMount, ref, watch } from 'vue'
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  ref,
+  watch,
+} from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../../../store'
 import TweetCard from '../../../components/common/TweetCard.vue'
@@ -104,6 +111,29 @@ export default defineComponent({
     const initialLoadDone = ref<boolean>(false)
     const loadNextBatch = ref<boolean>(false)
     const tweet = ref<TweetAndReplies | null>(null)
+
+    onBeforeMount(async () => {
+      await getTweetStatus(route.params.tweetId)
+      initialLoadDone.value = true
+    })
+
+    onMounted(async () => {
+      watch(
+        () => route.params.tweetId,
+        async (tweetId) => {
+          initialLoadDone.value = false
+          await getTweetStatus(tweetId)
+          initialLoadDone.value = true
+        },
+        { flush: 'post' }
+      )
+    })
+
+    const parsedCreatedAt = computed(() =>
+      dayjs(store.getters['tweetStatus'].createdAt).format(
+        'h:mm A · MMM D, YYYY'
+      )
+    )
 
     async function getTweetStatus(tweetId: string | string[]) {
       await store.dispatch(ActionTypes.GET_TWEET_STATUS, tweetId)
@@ -132,19 +162,6 @@ export default defineComponent({
         loadNextBatch.value = false
       }
     }
-
-    onBeforeMount(async () => {
-      await getTweetStatus(route.params.tweetId)
-      initialLoadDone.value = true
-    })
-
-    watch(() => route.params.tweetId, getTweetStatus, { flush: 'post' })
-
-    const parsedCreatedAt = computed(() =>
-      dayjs(store.getters['tweetStatus'].createdAt).format(
-        'h:mm A · MMM D, YYYY'
-      )
-    )
 
     return {
       elRef,

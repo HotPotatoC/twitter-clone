@@ -80,6 +80,23 @@ export default defineComponent({
     const searchFocused = ref<boolean>(false)
     const searchQuery = ref<string>('')
 
+    onBeforeMount(async () => {
+      await loadSearchResults()
+      initialLoadDone.value = true
+    })
+
+    onMounted(() => {
+      watch(
+        () => route.query.q,
+        async () => {
+          initialLoadDone.value = false
+          await loadSearchResults()
+          initialLoadDone.value = true
+        },
+        { flush: 'post' }
+      )
+    })
+
     function redirectWithSearchQuery() {
       router.push({
         path: '/search',
@@ -110,17 +127,6 @@ export default defineComponent({
       //   loadNextBatch.value = false
       // }
     }
-
-    onBeforeMount(async () => {
-      await loadSearchResults()
-      initialLoadDone.value = true
-    })
-
-    onMounted(() => {
-      initialLoadDone.value = false
-      watch(() => route.query.q, loadSearchResults, { flush: 'post' })
-      initialLoadDone.value = true
-    })
 
     return {
       searchFocused,

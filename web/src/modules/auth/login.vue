@@ -59,6 +59,10 @@ export default defineComponent({
 
     const input = reactive({ email, password })
 
+    const inputEmpty = computed(
+      () => input.email === '' || input.password === ''
+    )
+
     async function authenticate() {
       await store.dispatch(ActionTypes.AUTHENTICATE_USER, input)
       if (store.getters['isLoggedIn']) {
@@ -69,11 +73,6 @@ export default defineComponent({
         }
       }
     }
-
-    const inputEmpty = computed(
-      () => input.email === '' || input.password === ''
-    )
-
     return { input, authenticate, inputEmpty }
   },
 })

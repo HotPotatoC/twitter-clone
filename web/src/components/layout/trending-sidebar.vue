@@ -63,6 +63,8 @@ export default defineComponent({
     const searchFocused = ref<boolean>(false)
     const searchQuery = ref<string>('')
 
+    const isInSearchPage = computed(() => route.path === '/search')
+
     function redirectWithSearchQuery() {
       router.push({
         path: '/search',
@@ -70,8 +72,6 @@ export default defineComponent({
       })
       return
     }
-
-    const isInSearchPage = computed(() => route.path === '/search')
 
     return {
       searchFocused,

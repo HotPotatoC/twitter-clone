@@ -79,6 +79,11 @@ export default defineComponent({
       content: tweetContent,
     })
 
+    onBeforeMount(async () => {
+      await loadTweets()
+      initialLoadDone.value = true
+    })
+
     async function loadTweets() {
       if (initialLoadDone.value && store.getters['tweetsFeed'].length > 0) {
         const lastItem = store.getters['lastTweetFeedItem']
@@ -113,11 +118,6 @@ export default defineComponent({
         loadNextBatch.value = false
       }
     }
-
-    onBeforeMount(async () => {
-      await loadTweets()
-      initialLoadDone.value = true
-    })
 
     return {
       initialLoadDone,

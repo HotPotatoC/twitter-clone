@@ -9,6 +9,7 @@ export enum ActionTypes {
   AUTHENTICATE_USER = 'AUTHENTICATE_USER',
   REFRESH_AUTH_TOKEN = 'REFRESH_AUTH_TOKEN',
   GET_USER_DATA = 'GET_USER_DATA',
+  LOGOUT_USER = 'LOGOUT_USER',
 }
 
 export interface Actions {
@@ -20,6 +21,9 @@ export interface Actions {
     commit,
   }: AugmentedActionContext<Mutations, State>): Promise<void>
   [ActionTypes.GET_USER_DATA]({
+    commit,
+  }: AugmentedActionContext<Mutations, State>): Promise<void>
+  [ActionTypes.LOGOUT_USER]({
     commit,
   }: AugmentedActionContext<Mutations, State>): Promise<void>
 }
@@ -94,5 +98,21 @@ export const actions: ActionTree<State, State> & Actions = {
         isLoggedIn: false,
       })
     }
+  },
+  async [ActionTypes.LOGOUT_USER]({
+    commit,
+  }: AugmentedActionContext<Mutations, State>): Promise<void> {
+    await axios.post('/auth/logout')
+
+    commit(MutationTypes.SET_AUTHENTICATION_STATUS, {
+      isLoggedIn: false,
+    })
+
+    commit(MutationTypes.SET_ACCESS_TOKEN, '')
+    commit(MutationTypes.SET_USER_DATA, {
+      id: 0,
+      email: '',
+      name: '',
+    })
   },
 }
