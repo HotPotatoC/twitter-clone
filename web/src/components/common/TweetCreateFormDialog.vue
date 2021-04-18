@@ -75,7 +75,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, Ref, reactive, toRefs, computed } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '../../store'
 import {
   TransitionRoot,
   TransitionChild,
