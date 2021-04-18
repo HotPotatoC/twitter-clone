@@ -1,0 +1,4 @@
+BEGIN;
+DROP FUNCTION IF EXISTS count_estimate_rows;
+COMMIT;
+
