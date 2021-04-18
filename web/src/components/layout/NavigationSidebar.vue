@@ -11,7 +11,7 @@
       <div class="mt-4 text-right">
         <button
           type="submit"
-          class="h-10 px-4 font-semibold focus:outline-none rounded-full"
+          class="h-10 px-4 font-semibold focus:outline-none rounded-full transition-colors duration-75"
           :class="
             contentIsEmpty
               ? ['bg-dark', 'text-light', 'cursor-default']
@@ -32,7 +32,7 @@
   >
     <div>
       <button
-        class="h-12 w-12 hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 text-3xl text-blue rounded-full"
+        class="h-12 w-12 hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 text-3xl text-blue rounded-full transition-colors duration-75"
       >
         <FontAwesome :icon="['fab', 'twitter']" />
       </button>
@@ -40,7 +40,7 @@
         <router-link v-for="tab in tabs" :key="tab.id" :to="tab.to">
           <button
             @click="selectedTab = tab.id"
-            class="flex items-center mr-auto mb-3 py-2 px-4 rounded-full hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 hover:text-blue focus:outline-none"
+            class="flex items-center mr-auto mb-3 py-2 px-4 rounded-full hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 hover:text-blue focus:outline-none transition-colors duration-75"
             :class="
               selectedTab === tab.id
                 ? 'text-blue dark:text-blue'
@@ -57,7 +57,7 @@
           </button>
         </router-link>
         <button
-          class="text-lightest bg-blue rounded-full font-semibold focus:outline-none w-12 h-12 lg:w-full lg:h-auto p-3 hover:bg-darkblue"
+          class="text-lightest bg-blue rounded-full font-semibold focus:outline-none w-12 h-12 lg:w-full lg:h-auto p-3 hover:bg-darkblue transition-colors duration-75"
           @click="showCreateFormDialog = true"
         >
           <p class="hidden lg:block">Tweet</p>
@@ -68,7 +68,7 @@
     <div class="lg:w-full relative">
       <button
         @click="showDropdown = !showDropdown"
-        class="flex items-center w-full hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-10 rounded-full p-2 focus:outline-none"
+        class="flex items-center w-full hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-10 rounded-full p-2 focus:outline-none transition-colors duration-75"
       >
         <div class="lg:ml-4">
           <p class="text-sm font-bold leading-tight dark:text-lightest">

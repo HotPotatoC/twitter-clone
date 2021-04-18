@@ -10,9 +10,7 @@
       <h1 class="text-xl font-bold dark:text-lightest">Home</h1>
       <FontAwesome :icon="['fas', 'star']" class="text-xl text-blue" />
     </div>
-    <div
-      class="px-5 py-3 border-b-8 border-lighter dark:border-darker flex"
-    >
+    <div class="px-5 py-3 border-b-8 border-lighter dark:border-darker flex">
       <form @submit.prevent="addNewTweet" class="w-full px-4 relative">
         <textarea
           v-model="newTweet.content"
@@ -21,7 +19,7 @@
         />
         <button
           type="submit"
-          class="h-10 px-4 text-lightest font-semibold bg-blue hover:bg-darkblue focus:outline-none rounded-full absolute bottom-0 right-0"
+          class="h-10 px-4 text-lightest font-semibold bg-blue hover:bg-darkblue focus:outline-none rounded-full absolute bottom-0 right-0 transition-colors duration-75"
         >
           Tweet
         </button>
@@ -31,7 +29,7 @@
       <div
         v-for="tweet in tweets"
         :key="tweet.id"
-        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-darker flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-darker flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full">
           <router-link :to="`/${tweet.name}/status/${tweet.id}`">

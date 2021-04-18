@@ -26,7 +26,7 @@
       </div>
       <button
         v-for="friend in friends"
-        class="w-full flex hover:bg-lighter dark:hover:bg-darker p-3 border-t border-lighter dark:border-darker focus:outline-none"
+        class="w-full flex hover:bg-lighter dark:hover:bg-darker p-3 border-t border-lighter dark:border-darker focus:outline-none transition-colors duration-75"
       >
         <div>
           <p class="text-sm font-bold leading-tight dark:text-lightest">
@@ -37,13 +37,13 @@
           </p>
         </div>
         <button
-          class="ml-auto text-sm text-blue py-1 px-4 rounded-full border-2 border-blue hover:bg-blue hover:bg-opacity-25 focus:outline-none"
+          class="ml-auto text-sm text-blue py-1 px-4 rounded-full border-2 border-blue hover:bg-blue hover:bg-opacity-25 focus:outline-none transition-colors duration-75"
         >
           Follow
         </button>
       </button>
       <button
-        class="p-4 w-full hover:bg-lighter dark:hover:bg-darker text-left text-blue border-t border-lighter dark:border-darker rounded-b-2xl focus:outline-none"
+        class="p-4 w-full hover:bg-lighter dark:hover:bg-darker text-left text-blue border-t border-lighter dark:border-darker rounded-b-2xl focus:outline-none transition-colors duration-75"
       >
         Show More
       </button>
