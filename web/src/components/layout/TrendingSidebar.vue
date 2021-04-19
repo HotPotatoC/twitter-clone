@@ -1,6 +1,6 @@
 <template>
   <div
-    class="md:block hidden w-1/2 h-full border-l border-lighter dark:border-darker py-2 px-6 overflow-y-scroll relative"
+    class="md:block hidden w-1/2 h-full border-l border-lighter dark:border-dark py-2 px-6 overflow-y-scroll relative"
   >
     <form v-show="!isInSearchPage" @submit.prevent="redirectWithSearchQuery">
       <input
@@ -26,7 +26,7 @@
       </div>
       <button
         v-for="friend in friends"
-        class="w-full flex hover:bg-lighter dark:hover:bg-darker p-3 border-t border-lighter dark:border-darker focus:outline-none transition-colors duration-75"
+        class="w-full flex hover:bg-lighter dark:hover:bg-darker p-3 border-t border-lighter dark:border-dark focus:outline-none transition-colors duration-75"
       >
         <div>
           <p class="text-sm font-bold leading-tight dark:text-lightest">
@@ -43,7 +43,7 @@
         </button>
       </button>
       <button
-        class="p-4 w-full hover:bg-lighter dark:hover:bg-darker text-left text-blue border-t border-lighter dark:border-darker rounded-b-2xl focus:outline-none transition-colors duration-75"
+        class="p-4 w-full hover:bg-lighter dark:hover:bg-darker text-left text-blue border-t border-lighter dark:border-dark rounded-b-2xl focus:outline-none transition-colors duration-75"
       >
         Show More
       </button>

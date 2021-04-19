@@ -21,6 +21,10 @@ import {
   faUser,
   faEllipsisH,
   faTimes,
+  faLink,
+  faMapMarkerAlt,
+  faBirthdayCake,
+  faCalendarAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -47,7 +51,11 @@ export default function () {
     faUser,
     faEllipsisH,
     faTwitter,
-    faTimes
+    faTimes,
+    faLink,
+    faMapMarkerAlt,
+    faBirthdayCake,
+    faCalendarAlt
   )
 
   return FontAwesomeIcon

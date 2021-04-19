@@ -1,5 +1,5 @@
 <template>
-  <div class="flex container mx-auto px-12 h-screen w-full font-sans">
+  <div class="flex container mx-auto px-4 xl:px-40 h-screen w-full font-sans">
     <NavigationSidebar />
     <router-view />
     <TrendingSidebar />

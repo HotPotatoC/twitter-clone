@@ -5,9 +5,9 @@
     <p class="text-sm text-dark dark:text-light ml-2">
       {{ parsedCreatedAt }}
     </p>
-    <FontAwesome :icon="['fas', 'angle-down']" class="text-dark ml-auto" />
+    <FontAwesome :icon="['fas', 'ellipsis-h']" class="text-gray ml-auto" />
   </div>
-  <p class="py-2 dark:text-lightest">
+  <p class="py-2 break-words dark:text-lightest">
     {{ tweet.content }}
   </p>
   <div class="flex items-center justify-between w-full">

@@ -5,8 +5,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from './services/axios'
 import { useStore } from './store'
+import axios from './services/axios'
 import { ActionTypes } from './modules/auth/store/actions'
 
 export default defineComponent({
@@ -16,9 +16,7 @@ export default defineComponent({
     const router = useRouter()
 
     const responseInterceptor = axios.interceptors.response.use(
-      (res) => {
-        return res
-      },
+      (res) => res,
       async (error) => {
         if (error.response.status === 401) {
           axios.interceptors.response.eject(responseInterceptor)

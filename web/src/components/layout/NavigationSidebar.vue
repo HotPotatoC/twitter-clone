@@ -4,11 +4,11 @@
     @close="showCreateFormDialog = false"
     @dispatch="createTweet"
   />
-  <!-- Sidebar -->
+
   <div
-    class="lg:w-1/5 border-r border-lighter dark:border-darker px-2 lg:px-8 py-2 flex flex-col justify-between"
+    class="lg:w-1/5 border-r border-lighter dark:border-dark px-2 lg:px-8 py-2 flex flex-col justify-between"
   >
-    <div>
+    <div v-show="ready">
       <button
         class="h-12 w-12 hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 text-3xl text-blue rounded-full transition-colors duration-75"
       >
@@ -62,7 +62,7 @@
 
       <div
         v-if="showDropdown"
-        class="absolute overflow-hidden bottom-0 left-0 w-64 mb-16 rounded-2xl shadow-md border border-lighter dark:border-darker"
+        class="absolute overflow-hidden bottom-0 left-0 w-64 mb-16 rounded-2xl shadow-md border border-lighter dark:border-dark"
       >
         <button
           @click="showDropdown = false"
@@ -80,7 +80,7 @@
         </button>
         <button
           @click="logout"
-          class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-darkest border-t border-lighter dark:border-darker p-3 text-sm dark:text-lightest focus:outline-none"
+          class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-darkest border-t border-lighter dark:border-dark p-3 text-sm dark:text-lightest focus:outline-none"
         >
           Log Out @{{ user.name }}
         </button>
@@ -90,13 +90,21 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, Ref } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { ActionTypes as AuthActionTypes } from '../../modules/auth/store/actions'
-import TweetCreateTweetDialog from '../../modules/tweets/components/TweetCreateTweetDialog.vue'
-import { ActionTypes as TweetActionTypes } from '../../modules/tweets/store/actions'
 import { useStore } from '../../store'
+import { ActionTypes as AuthActionTypes } from '../../modules/auth/store/actions'
+import { ActionTypes as TweetActionTypes } from '../../modules/tweets/store/actions'
 import Dialog from '../common/Dialog.vue'
+import TweetCreateTweetDialog from '../../modules/tweets/components/TweetCreateTweetDialog.vue'
+
+interface Tab {
+  id: string
+  icon: string
+  iconPrefix: string
+  label: string
+  to: string
+}
 
 export default defineComponent({
   name: 'ProfileSidebar',
@@ -104,11 +112,87 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
+    const ready = ref<boolean>(false)
     const selectedTab = ref<string>('home')
     const showDropdown = ref<boolean>(false)
     const showCreateFormDialog = ref<boolean>(false)
+    const tabs = ref<Tab[]>([
+      {
+        id: 'home',
+        icon: 'home',
+        iconPrefix: 'fas',
+        label: 'Home',
+        to: '/home',
+      },
+      {
+        id: 'explore',
+        icon: 'hashtag',
+        iconPrefix: 'fas',
+        label: 'Explore',
+        to: '/home',
+      },
+      {
+        id: 'notifications',
+        icon: 'bell',
+        iconPrefix: 'fas',
+        label: 'Notifications',
+        to: '/home',
+      },
+      {
+        id: 'messages',
+        icon: 'envelope',
+        iconPrefix: 'fas',
+        label: 'Messages',
+        to: '/home',
+      },
+      {
+        id: 'bookmarks',
+        icon: 'bookmark',
+        iconPrefix: 'fas',
+        label: 'Bookmarks',
+        to: '/home',
+      },
+      {
+        id: 'lists',
+        icon: 'clipboard-list',
+        iconPrefix: 'fas',
+        label: 'Lists',
+        to: '/home',
+      },
+      {
+        id: 'profile',
+        icon: 'user',
+        iconPrefix: 'fas',
+        label: 'Profile',
+        to: '',
+      },
+      {
+        id: 'more',
+        icon: 'ellipsis-h',
+        iconPrefix: 'fas',
+        label: 'More',
+        to: '/home',
+      },
+    ])
 
     const user = computed(() => store.getters['userData'])
+
+    onMounted(() => {
+      const index = tabs.value.findIndex((tab) => tab.id === 'profile')
+      // Use watch to wait for the user data mutation to finish
+      // then show the navigation tabs
+      watch(
+        () => store.getters['userData'].name,
+        (value) => {
+          // Update the link for profile tab to current user data name
+          tabs.value[index].to = `/${value}`
+          ready.value = true
+        }
+      )
+
+      // Just in case
+      ready.value = true
+    })
 
     async function createTweet(content: string) {
       try {
@@ -126,70 +210,14 @@ export default defineComponent({
     }
 
     return {
+      ready,
       selectedTab,
       showDropdown,
       showCreateFormDialog,
       user,
       logout,
       createTweet,
-      tabs: [
-        {
-          id: 'home',
-          icon: 'home',
-          iconPrefix: 'fas',
-          label: 'Home',
-          to: '/home',
-        },
-        {
-          id: 'explore',
-          icon: 'hashtag',
-          iconPrefix: 'fas',
-          label: 'Explore',
-          to: '/home',
-        },
-        {
-          id: 'notifications',
-          icon: 'bell',
-          iconPrefix: 'fas',
-          label: 'Notifications',
-          to: '/home',
-        },
-        {
-          id: 'messages',
-          icon: 'envelope',
-          iconPrefix: 'fas',
-          label: 'Messages',
-          to: '/home',
-        },
-        {
-          id: 'bookmarks',
-          icon: 'bookmark',
-          iconPrefix: 'fas',
-          label: 'Bookmarks',
-          to: '/home',
-        },
-        {
-          id: 'lists',
-          icon: 'clipboard-list',
-          iconPrefix: 'fas',
-          label: 'Lists',
-          to: '/home',
-        },
-        {
-          id: 'profile',
-          icon: 'user',
-          iconPrefix: 'fas',
-          label: 'Profile',
-          to: '/home',
-        },
-        {
-          id: 'more',
-          icon: 'ellipsis-h',
-          iconPrefix: 'fas',
-          label: 'More',
-          to: '/home',
-        },
-      ],
+      tabs,
     }
   },
 })

@@ -4,6 +4,13 @@ import { makeRoutesWithLayout } from '../../services/routes'
 
 const routes: RouteRecordRaw[] = [
   {
+    path: '',
+    component: () => import('./index.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: 'status/:tweetId',
     component: () => import('./status/index.vue'),
     meta: {

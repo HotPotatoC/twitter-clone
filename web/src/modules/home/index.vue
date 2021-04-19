@@ -1,16 +1,16 @@
 <template>
   <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker"
+    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
     ref="tweetsRef"
     @scroll="handleScroll"
   >
     <div
-      class="px-5 py-3 border-b border-lighter dark:border-darker flex items-center justify-between"
+      class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-between"
     >
       <h1 class="text-xl font-bold dark:text-lightest">Home</h1>
       <FontAwesome :icon="['fas', 'star']" class="text-xl text-blue" />
     </div>
-    <div class="px-5 py-3 border-b-8 border-lighter dark:border-darker flex">
+    <div class="px-5 py-3 border-b-8 border-lighter dark:border-dark flex">
       <form @submit.prevent="addNewTweet" class="w-full px-4 relative">
         <textarea
           v-model="newTweet.content"
@@ -19,7 +19,13 @@
         />
         <button
           type="submit"
-          class="h-10 px-4 text-lightest font-semibold bg-blue hover:bg-darkblue focus:outline-none rounded-full absolute bottom-0 right-0 transition-colors duration-75"
+          class="h-10 px-4 font-semibold focus:outline-none rounded-full absolute bottom-0 right-0 transition-colors duration-75"
+          :class="
+            newTweetContentIsEmpty
+              ? ['bg-dark', 'text-light', 'cursor-default']
+              : ['bg-blue', 'hover:bg-darkblue', 'text-lightest']
+          "
+          :disabled="newTweetContentIsEmpty"
         >
           Tweet
         </button>
@@ -29,7 +35,7 @@
       <div
         v-for="tweet in tweets"
         :key="tweet.id"
-        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-darker flex cursor-pointer transition-colors duration-75"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full">
           <router-link :to="`/${tweet.name}/status/${tweet.id}`">
@@ -40,7 +46,7 @@
 
       <div
         v-show="tweets.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-darker flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer"
       >
         <div class="w-full text-center">
           <LoadingSpinner />
@@ -51,12 +57,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, reactive, Ref, ref } from 'vue'
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  reactive,
+  Ref,
+  ref,
+} from 'vue'
 import { useStore } from '../../store'
-import TweetCard from '../../components/common/TweetCard.vue'
-import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
 import { Tweet } from '../tweets/store/state'
 import { ActionTypes } from '../tweets/store/actions'
+import TweetCard from '../../components/common/TweetCard.vue'
+import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
 
 interface NewTweet {
   content: string | Ref<string>
@@ -76,6 +89,8 @@ export default defineComponent({
     const newTweet = reactive<NewTweet>({
       content: tweetContent,
     })
+
+    const newTweetContentIsEmpty = computed(() => tweetContent.value === '')
 
     onBeforeMount(async () => {
       await loadTweets()
@@ -122,6 +137,7 @@ export default defineComponent({
       loadNextBatch,
       tweets,
       newTweet,
+      newTweetContentIsEmpty,
       tweetsRef,
       addNewTweet,
       handleScroll,

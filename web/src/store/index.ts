@@ -6,18 +6,22 @@ import {
 } from 'vuex'
 import { authModule, AuthModule } from '../modules/auth/store'
 import { tweetsModule, TweetsModule } from '../modules/tweets/store'
+import { profileModule, ProfileModule } from '../modules/user/store'
 
 type StoreModules = {
   auth: AuthModule
   tweets: TweetsModule
+  profile: ProfileModule
 }
 
 type Store = AuthModule<Pick<StoreModules, 'auth'>> &
-  TweetsModule<Pick<StoreModules, 'tweets'>>
+  TweetsModule<Pick<StoreModules, 'tweets'>> &
+  ProfileModule<Pick<StoreModules, 'profile'>>
 
 const modules: ModuleTree<any> = {
   authModule,
   tweetsModule,
+  profileModule,
 }
 
 export const store = createStore({

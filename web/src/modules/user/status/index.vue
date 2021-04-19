@@ -6,17 +6,17 @@
   />
 
   <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker"
+    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
     ref="elRef"
     @scroll="handleScroll"
   >
     <div
-      class="px-5 py-3 border-b border-lighter dark:border-darker flex items-center justify-start space-x-6"
+      class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-start space-x-6"
     >
-      <FontAwesome :icon="['fas', 'arrow-left']" class="text-xl text-blue" />
+      <Return />
       <h1 class="text-2xl font-bold dark:text-lightest">Tweet</h1>
     </div>
-    <div class="px-5 py-3 border-b border-lighter dark:border-darker">
+    <div class="px-5 py-3 border-b border-lighter dark:border-dark">
       <div v-if="initialLoadDone" class="w-full">
         <div class="flex items-center w-full">
           <div class="block">
@@ -28,12 +28,12 @@
             class="text-dark ml-auto"
           />
         </div>
-        <p class="text-2xl py-2 dark:text-lightest">
+        <p class="text-2xl py-2 break-words dark:text-lightest">
           {{ tweet.content }}
         </p>
         <p class="text-dark dark:text-light">{{ parsedCreatedAt }}</p>
         <div
-          class="flex items-center justify-start space-x-12 w-full border-t border-b my-4 py-4 border-lighter dark:border-darker"
+          class="flex items-center justify-start space-x-12 w-full border-t border-b my-4 py-4 border-lighter dark:border-dark"
         >
           <div class="flex space-x-2 text-sm">
             <p class="text-light dark:text-lightest font-bold">
@@ -79,7 +79,7 @@
       <div
         v-for="reply in tweet.replies"
         :key="reply.id"
-        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full">
           <router-link :to="`/${reply.name}/status/${reply.id}`">
@@ -89,7 +89,7 @@
       </div>
       <div
         v-show="tweet.replies.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full text-center">
           <LoadingSpinner />
@@ -111,6 +111,7 @@ import {
 } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../../../store'
+import Return from '../../../components/common/Return.vue'
 import TweetCard from '../../../components/common/TweetCard.vue'
 import LoadingSpinner from '../../../components/common/LoadingSpinner.vue'
 import { ActionTypes } from '../../tweets/store/actions'
@@ -118,7 +119,7 @@ import { TweetAndReplies } from '../../tweets/store/state'
 import TweetCreateReplyDialog from '../../tweets/components/TweetCreateReplyDialog.vue'
 
 export default defineComponent({
-  components: { TweetCard, LoadingSpinner, TweetCreateReplyDialog },
+  components: { TweetCard, LoadingSpinner, TweetCreateReplyDialog, Return },
   name: 'Status',
   setup() {
     const store = useStore()

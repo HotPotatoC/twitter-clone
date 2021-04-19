@@ -1,16 +1,13 @@
 <template>
   <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker"
+    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
     ref="tweetsRef"
     @scroll="handleScroll"
   >
     <div
-      class="relative px-5 py-3 border-b border-lighter dark:border-darker flex items-center justify-between"
+      class="relative px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-between"
     >
-      <FontAwesome
-        :icon="['fas', 'arrow-left']"
-        class="text-xl text-blue mr-6"
-      />
+      <Return class="mr-6" />
       <form @submit.prevent="redirectWithSearchQuery" class="w-full">
         <input
           class="pl-12 rounded-full w-full p-2 bg-lighter dark:bg-darkest dark:text-light text-sm focus:bg-black focus:outline-none border-2 border-lighter dark:border-darkest focus:border-blue dark:focus:text-lightest transition duration-150"
@@ -32,7 +29,7 @@
       <div
         v-for="tweet in tweets"
         :key="tweet.id"
-        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
       >
         <div class="w-full">
           <router-link :to="`/${tweet.name}/status/${tweet.id}`">
@@ -43,7 +40,7 @@
 
       <!-- <div
         v-show="tweets.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b dark:border-darker hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
       >
         <div class="w-full text-center">
           <loading-spinner />
@@ -57,17 +54,18 @@
 import { defineComponent, onBeforeMount, onMounted, Ref, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../../store'
-import TweetCard from '../../components/common/TweetCard.vue'
-import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
 import { Tweet } from '../tweets/store/state'
 import { ActionTypes } from '../tweets/store/actions'
+import TweetCard from '../../components/common/TweetCard.vue'
+import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
+import Return from '../../components/common/Return.vue'
 
 interface NewTweet {
   content: string | Ref<string>
 }
 
 export default defineComponent({
-  components: { TweetCard, LoadingSpinner },
+  components: { TweetCard, LoadingSpinner, Return },
   name: 'Home',
   setup() {
     const store = useStore()
