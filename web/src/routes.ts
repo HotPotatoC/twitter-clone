@@ -5,13 +5,7 @@ import { ActionTypes } from './modules/auth/store/actions'
 
 export const router = createRouter({
   history: createWebHistory(),
-  routes: [
-    {
-      path: '/',
-      redirect: '/home',
-    },
-    ...routes,
-  ],
+  routes,
 })
 
 router.beforeEach(async (to, from, next) => {
