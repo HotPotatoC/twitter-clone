@@ -1,56 +1,3 @@
-<template>
-  <TransitionRoot appear :show="show" as="template">
-    <BaseDialog as="div" static :open="show" @close="onClose">
-      <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="min-h-screen px-4 text-center">
-          <TransitionChild
-            as="template"
-            enter="duration-300 ease-out"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="duration-200 ease-in"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
-          >
-            <BaseDialogOverlay class="fixed inset-0 bg-darkblue bg-opacity-20" />
-          </TransitionChild>
-
-          <span class="inline-block h-screen align-middle" aria-hidden="true">
-            &#8203;
-          </span>
-
-          <TransitionChild
-            as="template"
-            enter="duration-300 ease-out"
-            enter-from="opacity-0 scale-95"
-            enter-to="opacity-100 scale-100"
-            leave="duration-200 ease-in"
-            leave-from="opacity-100 scale-100"
-            leave-to="opacity-0 scale-95"
-          >
-            <div
-              class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-black shadow-xl rounded-2xl"
-            >
-              <BaseDialogTitle
-                as="button"
-                @click="onClose()"
-                class="text-lg font-medium leading-6 text-blue focus:outline-none"
-              >
-                <FontAwesome :icon="['fas', 'times']" />
-              </BaseDialogTitle>
-              <div
-                class="mt-2 border-t border-lighter dark:border-dark"
-              >
-                <slot></slot>
-              </div>
-            </div>
-          </TransitionChild>
-        </div>
-      </div>
-    </BaseDialog>
-  </TransitionRoot>
-</template>
-
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue'
 import {
@@ -93,3 +40,56 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <TransitionRoot appear :show="show" as="template">
+    <BaseDialog as="div" static :open="show" @close="onClose">
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="min-h-screen px-4 text-center">
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <BaseDialogOverlay
+              class="fixed inset-0 bg-darkblue bg-opacity-20"
+            />
+          </TransitionChild>
+
+          <span class="inline-block h-screen align-middle" aria-hidden="true">
+            &#8203;
+          </span>
+
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95"
+          >
+            <div
+              class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-black shadow-xl rounded-2xl"
+            >
+              <BaseDialogTitle
+                as="button"
+                @click="onClose()"
+                class="text-lg font-medium leading-6 text-blue focus:outline-none"
+              >
+                <FontAwesome :icon="['fas', 'times']" />
+              </BaseDialogTitle>
+              <div class="mt-2 border-t border-lighter dark:border-dark">
+                <slot></slot>
+              </div>
+            </div>
+          </TransitionChild>
+        </div>
+      </div>
+    </BaseDialog>
+  </TransitionRoot>
+</template>

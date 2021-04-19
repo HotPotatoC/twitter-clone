@@ -1,11 +1,3 @@
-<template>
-  <div class="flex container mx-auto px-4 xl:px-40 h-screen w-full font-sans">
-    <NavigationSidebar />
-    <router-view />
-    <TrendingSidebar />
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent } from 'vue'
 import NavigationSidebar from '../components/layout/NavigationSidebar.vue'
@@ -16,3 +8,11 @@ export default defineComponent({
   name: 'BaseLayout',
 })
 </script>
+
+<template>
+  <div class="flex container mx-auto px-4 xl:px-40 h-screen w-full font-sans">
+    <NavigationSidebar />
+    <router-view />
+    <TrendingSidebar />
+  </div>
+</template>

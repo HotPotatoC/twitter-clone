@@ -1,3 +1,28 @@
+<script lang="ts">
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import { computed, defineComponent } from 'vue'
+import { Tweet } from '../store/state'
+
+export default defineComponent({
+  name: 'TweetCard',
+  props: {
+    tweet: {
+      type: Object as () => Tweet,
+      required: true,
+    },
+  },
+  setup(props) {
+    const parsedCreatedAt = computed(() => {
+      dayjs.extend(relativeTime)
+      return dayjs(props.tweet.createdAt).fromNow()
+    })
+
+    return { parsedCreatedAt }
+  },
+})
+</script>
+
 <template>
   <div class="flex items-center w-full">
     <p class="font-semibold dark:text-lightest">{{ tweet.name }}</p>
@@ -28,28 +53,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import { computed, defineComponent } from 'vue'
-import { Tweet } from '../store/state'
-
-export default defineComponent({
-  name: 'TweetCard',
-  props: {
-    tweet: {
-      type: Object as () => Tweet,
-      required: true,
-    },
-  },
-  setup(props) {
-    const parsedCreatedAt = computed(() => {
-      dayjs.extend(relativeTime)
-      return dayjs(props.tweet.createdAt).fromNow()
-    })
-
-    return { parsedCreatedAt }
-  },
-})
-</script>

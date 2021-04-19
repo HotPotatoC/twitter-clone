@@ -1,31 +1,3 @@
-<template>
-  <Dialog :show="show" @close="close">
-    <form @submit.prevent="dispatch" class="w-full">
-      <textarea
-        v-model="newTweet.content"
-        placeholder="What's happening?"
-        class="mt-3 w-full focus:outline-none dark:bg-black dark:text-light"
-      />
-
-      <div class="mt-4 text-right">
-        <button
-          type="submit"
-          class="h-10 px-4 font-semibold focus:outline-none rounded-full transition-colors duration-75"
-          :class="
-            contentIsEmpty
-              ? ['bg-dark', 'text-light', 'cursor-default']
-              : ['bg-blue', 'hover:bg-darkblue', 'text-lightest']
-          "
-          @click="close"
-          :disabled="contentIsEmpty"
-        >
-          Tweet
-        </button>
-      </div>
-    </form>
-  </Dialog>
-</template>
-
 <script lang="ts">
 import { defineComponent, toRefs, ref, Ref, reactive, computed } from 'vue'
 import Dialog from '../../../components/common/Dialog.vue'
@@ -64,3 +36,31 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <Dialog :show="show" @close="close">
+    <form @submit.prevent="dispatch" class="w-full">
+      <textarea
+        v-model="newTweet.content"
+        placeholder="What's happening?"
+        class="mt-3 w-full focus:outline-none dark:bg-black dark:text-light"
+      />
+
+      <div class="mt-4 text-right">
+        <button
+          type="submit"
+          class="h-10 px-4 font-semibold focus:outline-none rounded-full transition-colors duration-75"
+          :class="
+            contentIsEmpty
+              ? ['bg-dark', 'text-light', 'cursor-default']
+              : ['bg-blue', 'hover:bg-darkblue', 'text-lightest']
+          "
+          @click="close"
+          :disabled="contentIsEmpty"
+        >
+          Tweet
+        </button>
+      </div>
+    </form>
+  </Dialog>
+</template>

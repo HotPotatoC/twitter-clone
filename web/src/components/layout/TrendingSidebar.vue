@@ -1,3 +1,40 @@
+<script lang="ts">
+import { computed, defineComponent, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+export default defineComponent({
+  name: 'TrendingSidebar',
+  setup() {
+    const router = useRouter()
+    const route = useRoute()
+    const searchFocused = ref<boolean>(false)
+    const searchQuery = ref<string>('')
+
+    const isInSearchPage = computed(() => route.path === '/search')
+
+    function redirectWithSearchQuery() {
+      router.push({
+        path: '/search',
+        query: { q: searchQuery.value },
+      })
+      return
+    }
+
+    return {
+      searchFocused,
+      searchQuery,
+      redirectWithSearchQuery,
+      isInSearchPage,
+      friends: [
+        { name: 'Elon Musk', handle: '@teslaBoy' },
+        { name: 'Adrian Monk', handle: '@detective' },
+        { name: 'Kevin Hart', handle: '@miniRock' },
+      ],
+    }
+  },
+})
+</script>
+
 <template>
   <div
     class="md:block hidden w-1/2 h-full border-l border-lighter dark:border-dark py-2 px-6 overflow-y-scroll relative"
@@ -50,40 +87,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-
-export default defineComponent({
-  name: 'TrendingSidebar',
-  setup() {
-    const router = useRouter()
-    const route = useRoute()
-    const searchFocused = ref<boolean>(false)
-    const searchQuery = ref<string>('')
-
-    const isInSearchPage = computed(() => route.path === '/search')
-
-    function redirectWithSearchQuery() {
-      router.push({
-        path: '/search',
-        query: { q: searchQuery.value },
-      })
-      return
-    }
-
-    return {
-      searchFocused,
-      searchQuery,
-      redirectWithSearchQuery,
-      isInSearchPage,
-      friends: [
-        { name: 'Elon Musk', handle: '@teslaBoy' },
-        { name: 'Adrian Monk', handle: '@detective' },
-        { name: 'Kevin Hart', handle: '@miniRock' },
-      ],
-    }
-  },
-})
-</script>
