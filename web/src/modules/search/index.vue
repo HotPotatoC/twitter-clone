@@ -1,55 +1,3 @@
-<template>
-  <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
-    ref="tweetsRef"
-    @scroll="handleScroll"
-  >
-    <div
-      class="relative px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-between"
-    >
-      <Return class="mr-6" />
-      <form @submit.prevent="redirectWithSearchQuery" class="w-full">
-        <input
-          class="pl-12 rounded-full w-full p-2 bg-lighter dark:bg-darkest dark:text-light text-sm focus:bg-black focus:outline-none border-2 border-lighter dark:border-darkest focus:border-blue dark:focus:text-lightest transition duration-150"
-          @focus="searchFocused = true"
-          @blur="searchFocused = false"
-          v-model="searchQuery"
-          type="search"
-          placeholder="Search Twitter"
-        />
-        <input type="submit" class="hidden" />
-      </form>
-      <FontAwesome
-        :icon="['fas', 'search']"
-        class="absolute left-0 top-0 mt-6 ml-20 text-base"
-        :class="searchFocused ? 'text-blue' : 'text-light'"
-      />
-    </div>
-    <div v-show="initialLoadDone" class="flex flex-col">
-      <div
-        v-for="tweet in tweets"
-        :key="tweet.id"
-        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
-      >
-        <div class="w-full">
-          <router-link :to="`/${tweet.name}/status/${tweet.id}`">
-            <TweetCard :tweet="tweet" />
-          </router-link>
-        </div>
-      </div>
-
-      <!-- <div
-        v-show="tweets.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
-      >
-        <div class="w-full text-center">
-          <loading-spinner />
-        </div>
-      </div> -->
-    </div>
-  </main>
-</template>
-
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, Ref, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -140,4 +88,54 @@ export default defineComponent({
 })
 </script>
 
-<style></style>
+<template>
+  <main
+    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
+    ref="tweetsRef"
+    @scroll="handleScroll"
+  >
+    <div
+      class="relative px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-between"
+    >
+      <Return class="mr-6" />
+      <form @submit.prevent="redirectWithSearchQuery" class="w-full">
+        <input
+          class="pl-12 rounded-full w-full p-2 bg-lighter dark:bg-darkest dark:text-light text-sm focus:bg-black focus:outline-none border-2 border-lighter dark:border-darkest focus:border-blue dark:focus:text-lightest transition duration-150"
+          @focus="searchFocused = true"
+          @blur="searchFocused = false"
+          v-model="searchQuery"
+          type="search"
+          placeholder="Search Twitter"
+        />
+        <input type="submit" class="hidden" />
+      </form>
+      <FontAwesome
+        :icon="['fas', 'search']"
+        class="absolute left-0 top-0 mt-6 ml-20 text-base"
+        :class="searchFocused ? 'text-blue' : 'text-light'"
+      />
+    </div>
+    <div v-show="initialLoadDone" class="flex flex-col">
+      <div
+        v-for="tweet in tweets"
+        :key="tweet.id"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+      >
+        <div class="w-full">
+          <router-link :to="`/${tweet.name}/status/${tweet.id}`">
+            <TweetCard :tweet="tweet" />
+          </router-link>
+        </div>
+      </div>
+
+      <!-- <div
+        v-show="tweets.length > 0 && loadNextBatch"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
+      >
+        <div class="w-full text-center">
+          <loading-spinner />
+        </div>
+      </div> -->
+    </div>
+  </main>
+</template>

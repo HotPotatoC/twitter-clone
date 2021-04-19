@@ -1,3 +1,40 @@
+<script lang="ts">
+import { computed, defineComponent, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from '../../store'
+import { ActionTypes } from './store/actions'
+
+export default defineComponent({
+  name: 'Login',
+  setup() {
+    const store = useStore()
+    const route = useRoute()
+    const router = useRouter()
+
+    const email = ref<string>('')
+    const password = ref<string>('')
+
+    const input = reactive({ email, password })
+
+    const inputEmpty = computed(
+      () => input.email === '' || input.password === ''
+    )
+
+    async function authenticate() {
+      await store.dispatch(ActionTypes.AUTHENTICATE_USER, input)
+      if (store.getters['isLoggedIn']) {
+        if (route.query && route.query.redirectTo) {
+          router.push(route.query.redirectTo as string)
+        } else {
+          router.push('/home')
+        }
+      }
+    }
+    return { input, authenticate, inputEmpty }
+  },
+})
+</script>
+
 <template>
   <div
     class="flex justify-center container mx-auto h-screen w-1/4 px-4 lg:px-0 py-8"
@@ -39,40 +76,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useStore } from '../../store'
-import { ActionTypes } from './store/actions'
-
-export default defineComponent({
-  name: 'Login',
-  setup() {
-    const store = useStore()
-    const route = useRoute()
-    const router = useRouter()
-
-    const email = ref<string>('')
-    const password = ref<string>('')
-
-    const input = reactive({ email, password })
-
-    const inputEmpty = computed(
-      () => input.email === '' || input.password === ''
-    )
-
-    async function authenticate() {
-      await store.dispatch(ActionTypes.AUTHENTICATE_USER, input)
-      if (store.getters['isLoggedIn']) {
-        if (route.query && route.query.redirectTo) {
-          router.push(route.query.redirectTo as string)
-        } else {
-          router.push('/home')
-        }
-      }
-    }
-    return { input, authenticate, inputEmpty }
-  },
-})
-</script>

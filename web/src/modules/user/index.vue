@@ -1,3 +1,132 @@
+<script lang="ts">
+import {
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  ref,
+  computed,
+  watch,
+} from 'vue'
+import { useRoute } from 'vue-router'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import { useStore } from '../../store'
+import { ActionTypes } from './store/actions'
+import Return from '../../components/common/Return.vue'
+import TweetCard from '../tweets/components/TweetCard.vue'
+import { Tweet } from '../tweets/store/state'
+import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
+
+export default defineComponent({
+  name: 'Profile',
+  components: { Return, TweetCard, LoadingSpinner },
+  setup() {
+    const store = useStore()
+    const route = useRoute()
+
+    const selectedTab = ref<number>(1)
+    const tweetsRef = ref<Element>(null)
+    const initialLoadDone = ref<boolean>(false)
+    const loadNextBatch = ref<boolean>(false)
+    const tweets = ref<Tweet[]>([])
+
+    const tabClasses = ['text-blue', 'border-b-2', 'border-blue']
+
+    const selectedTabClasses = [
+      'dark:text-gray',
+      'border-b-2',
+      'border-dark',
+      'border-opacity-0',
+    ]
+
+    const profile = computed(() => store.getters['profileInfo'])
+
+    const isCurrentUser = computed(
+      () => store.getters['userData'].id === store.getters['profileInfo'].id
+    )
+
+    // Check if profile birthdate is set or not because it is set to "" by default.
+    const validBirthDate = computed(() => {
+      dayjs.extend(relativeTime)
+      return dayjs(store.getters['profileInfo'].birthDate).isValid()
+    })
+
+    const parsedBirthDate = computed(() => {
+      dayjs.extend(relativeTime)
+      return dayjs(store.getters['profileInfo'].birthDate).format(
+        'MMMM D, YYYY'
+      )
+    })
+
+    const parsedJoinedAt = computed(() => {
+      dayjs.extend(relativeTime)
+      return dayjs(store.getters['profileInfo'].joinedAt).format('MMMM YYYY')
+    })
+
+    onBeforeMount(async () => {
+      await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, route.params.name)
+      await loadTweets()
+      initialLoadDone.value = true
+    })
+
+    onMounted(() => {
+      watch(
+        () => route.params.name,
+        async (name) => {
+          initialLoadDone.value = false
+          await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, name)
+          await loadTweets()
+          initialLoadDone.value = true
+        },
+        { flush: 'post' }
+      )
+    })
+
+    async function loadTweets() {
+      if (initialLoadDone.value && store.getters['profileTweets'].length > 0) {
+        const lastItem = store.getters['lastProfileTweet']
+        await store.dispatch(ActionTypes.LOAD_MORE_PROFILE_TWEETS, {
+          username: route.params.name,
+          cursor: lastItem.createdAt,
+        })
+      } else {
+        await store.dispatch(ActionTypes.GET_PROFILE_TWEETS, route.params.name)
+      }
+
+      tweets.value = store.getters['profileTweets']
+    }
+
+    async function handleScroll(e: Event) {
+      const element = tweetsRef.value
+      if (
+        !loadNextBatch.value &&
+        element.scrollTop + element.clientHeight + 1 >= element.scrollHeight
+      ) {
+        loadNextBatch.value = true
+        await loadTweets()
+        loadNextBatch.value = false
+      }
+    }
+
+    return {
+      selectedTab,
+      tabClasses,
+      selectedTabClasses,
+      tweetsRef,
+      initialLoadDone,
+      loadNextBatch,
+      profile,
+      tweets,
+      isCurrentUser,
+      validBirthDate,
+      parsedBirthDate,
+      parsedJoinedAt,
+      handleScroll,
+    }
+  },
+})
+</script>
+
 <template>
   <main
     class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
@@ -157,132 +286,3 @@
     </div>
   </main>
 </template>
-
-<script lang="ts">
-import {
-  defineComponent,
-  onBeforeMount,
-  onMounted,
-  ref,
-  computed,
-  watch,
-} from 'vue'
-import { useRoute } from 'vue-router'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import { useStore } from '../../store'
-import { ActionTypes } from './store/actions'
-import Return from '../../components/common/Return.vue'
-import TweetCard from '../tweets/components/TweetCard.vue'
-import { Tweet } from '../tweets/store/state'
-import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
-
-export default defineComponent({
-  name: 'Profile',
-  components: { Return, TweetCard, LoadingSpinner },
-  setup() {
-    const store = useStore()
-    const route = useRoute()
-
-    const selectedTab = ref<number>(1)
-    const tweetsRef = ref<Element>(null)
-    const initialLoadDone = ref<boolean>(false)
-    const loadNextBatch = ref<boolean>(false)
-    const tweets = ref<Tweet[]>([])
-
-    const tabClasses = ['text-blue', 'border-b-2', 'border-blue']
-
-    const selectedTabClasses = [
-      'dark:text-gray',
-      'border-b-2',
-      'border-dark',
-      'border-opacity-0',
-    ]
-
-    const profile = computed(() => store.getters['profileInfo'])
-
-    const isCurrentUser = computed(
-      () => store.getters['userData'].id === store.getters['profileInfo'].id
-    )
-
-    // Check if profile birthdate is set or not because it is set to "" by default.
-    const validBirthDate = computed(() => {
-      dayjs.extend(relativeTime)
-      return dayjs(store.getters['profileInfo'].birthDate).isValid()
-    })
-
-    const parsedBirthDate = computed(() => {
-      dayjs.extend(relativeTime)
-      return dayjs(store.getters['profileInfo'].birthDate).format(
-        'MMMM D, YYYY'
-      )
-    })
-
-    const parsedJoinedAt = computed(() => {
-      dayjs.extend(relativeTime)
-      return dayjs(store.getters['profileInfo'].joinedAt).format('MMMM YYYY')
-    })
-
-    onBeforeMount(async () => {
-      await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, route.params.name)
-      await loadTweets()
-      initialLoadDone.value = true
-    })
-
-    onMounted(() => {
-      watch(
-        () => route.params.name,
-        async (name) => {
-          initialLoadDone.value = false
-          await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, name)
-          await loadTweets()
-          initialLoadDone.value = true
-        },
-        { flush: 'post' }
-      )
-    })
-
-    async function loadTweets() {
-      if (initialLoadDone.value && store.getters['profileTweets'].length > 0) {
-        const lastItem = store.getters['lastProfileTweet']
-        await store.dispatch(ActionTypes.LOAD_MORE_PROFILE_TWEETS, {
-          username: route.params.name,
-          cursor: lastItem.createdAt,
-        })
-      } else {
-        await store.dispatch(ActionTypes.GET_PROFILE_TWEETS, route.params.name)
-      }
-
-      tweets.value = store.getters['profileTweets']
-    }
-
-    async function handleScroll(e: Event) {
-      const element = tweetsRef.value
-      if (
-        !loadNextBatch.value &&
-        element.scrollTop + element.clientHeight + 1 >= element.scrollHeight
-      ) {
-        loadNextBatch.value = true
-        await loadTweets()
-        loadNextBatch.value = false
-      }
-    }
-
-    return {
-      selectedTab,
-      tabClasses,
-      selectedTabClasses,
-      tweetsRef,
-      initialLoadDone,
-      loadNextBatch,
-      profile,
-      tweets,
-      isCurrentUser,
-      validBirthDate,
-      parsedBirthDate,
-      parsedJoinedAt,
-      handleScroll,
-    }
-  },
-})
-</script>

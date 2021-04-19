@@ -1,61 +1,3 @@
-<template>
-  <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
-    ref="tweetsRef"
-    @scroll="handleScroll"
-  >
-    <div
-      class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-between"
-    >
-      <h1 class="text-xl font-bold dark:text-lightest">Home</h1>
-      <FontAwesome :icon="['fas', 'star']" class="text-xl text-blue" />
-    </div>
-    <div class="px-5 py-3 border-b-8 border-lighter dark:border-dark flex">
-      <form @submit.prevent="addNewTweet" class="w-full px-4 relative">
-        <textarea
-          v-model="newTweet.content"
-          placeholder="What's happening?"
-          class="mt-3 pb-3 w-full focus:outline-none dark:bg-black dark:text-light"
-        />
-        <button
-          type="submit"
-          class="h-10 px-4 font-semibold focus:outline-none rounded-full absolute bottom-0 right-0 transition-colors duration-75"
-          :class="
-            newTweetContentIsEmpty
-              ? ['bg-dark', 'text-light', 'cursor-default']
-              : ['bg-blue', 'hover:bg-darkblue', 'text-lightest']
-          "
-          :disabled="newTweetContentIsEmpty"
-        >
-          Tweet
-        </button>
-      </form>
-    </div>
-    <div v-show="initialLoadDone" class="flex flex-col">
-      <div
-        v-for="tweet in tweets"
-        :key="tweet.id"
-        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer transition-colors duration-75"
-      >
-        <div class="w-full">
-          <router-link :to="`/${tweet.name}/status/${tweet.id}`">
-            <TweetCard :tweet="tweet" />
-          </router-link>
-        </div>
-      </div>
-
-      <div
-        v-show="tweets.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer"
-      >
-        <div class="w-full text-center">
-          <LoadingSpinner />
-        </div>
-      </div>
-    </div>
-  </main>
-</template>
-
 <script lang="ts">
 import {
   computed,
@@ -146,4 +88,60 @@ export default defineComponent({
 })
 </script>
 
-<style></style>
+<template>
+  <main
+    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
+    ref="tweetsRef"
+    @scroll="handleScroll"
+  >
+    <div
+      class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-between"
+    >
+      <h1 class="text-xl font-bold dark:text-lightest">Home</h1>
+      <FontAwesome :icon="['fas', 'star']" class="text-xl text-blue" />
+    </div>
+    <div class="px-5 py-3 border-b-8 border-lighter dark:border-dark flex">
+      <form @submit.prevent="addNewTweet" class="w-full px-4 relative">
+        <textarea
+          v-model="newTweet.content"
+          placeholder="What's happening?"
+          class="mt-3 pb-3 w-full focus:outline-none dark:bg-black dark:text-light"
+        />
+        <button
+          type="submit"
+          class="h-10 px-4 font-semibold focus:outline-none rounded-full absolute bottom-0 right-0 transition-colors duration-75"
+          :class="
+            newTweetContentIsEmpty
+              ? ['bg-dark', 'text-light', 'cursor-default']
+              : ['bg-blue', 'hover:bg-darkblue', 'text-lightest']
+          "
+          :disabled="newTweetContentIsEmpty"
+        >
+          Tweet
+        </button>
+      </form>
+    </div>
+    <div v-show="initialLoadDone" class="flex flex-col">
+      <div
+        v-for="tweet in tweets"
+        :key="tweet.id"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer transition-colors duration-75"
+      >
+        <div class="w-full">
+          <router-link :to="`/${tweet.name}/status/${tweet.id}`">
+            <TweetCard :tweet="tweet" />
+          </router-link>
+        </div>
+      </div>
+
+      <div
+        v-show="tweets.length > 0 && loadNextBatch"
+        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer"
+      >
+        <div class="w-full text-center">
+          <LoadingSpinner />
+        </div>
+      </div>
+    </div>
+  </main>
+</template>
