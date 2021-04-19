@@ -7,6 +7,6 @@ CS = Client Side
 - [x] Create reply (CS)
 - [x] Logout (CS)
 - [ ] Favorite tweet (CS)
-- [ ] Profile View (CS)
+- [x] Profile View (CS)
 - [ ] Retweets (SS & CS)
 - [ ] Only see followed user tweets in the feed (SS & CS)
