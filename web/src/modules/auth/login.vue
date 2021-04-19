@@ -52,13 +52,13 @@ export default defineComponent({
           v-model="input.email"
           type="text"
           placeholder="Email"
-          class="w-full px-2 py-4 my-6 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light"
+          class="w-full px-2 py-4 my-6 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue transition-colors duration-75"
         />
         <input
           v-model="input.password"
           type="password"
           placeholder="Password"
-          class="w-full px-2 py-4 mb-6 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light"
+          class="w-full px-2 py-4 mb-6 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue transition-colors duration-75"
         />
         <button
           type="submit"
