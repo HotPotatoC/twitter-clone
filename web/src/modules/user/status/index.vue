@@ -112,7 +112,7 @@ import {
 import { useRoute } from 'vue-router'
 import { useStore } from '../../../store'
 import Return from '../../../components/common/Return.vue'
-import TweetCard from '../../../components/common/TweetCard.vue'
+import TweetCard from '../../tweets/components/TweetCard.vue'
 import LoadingSpinner from '../../../components/common/LoadingSpinner.vue'
 import { ActionTypes } from '../../tweets/store/actions'
 import { TweetAndReplies } from '../../tweets/store/state'

@@ -45,7 +45,7 @@ export interface Actions {
   ): Promise<any>
 }
 
-interface TweetJSONSchema {
+export interface TweetJSONSchema {
   id: number
   content: string
   name: string
@@ -56,7 +56,7 @@ interface TweetJSONSchema {
   created_at: string
 }
 
-interface TweetsJSONSchema {
+export interface TweetsJSONSchema {
   items: TweetJSONSchema[]
   total_records: number
 }
@@ -83,7 +83,7 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.LOAD_MORE_TWEETS]({ commit }, cursor): Promise<any> {
     try {
       const response = await axios.get<TweetsJSONSchema>(
-        `/tweets${cursor ? `?cursor=${cursor}` : ''}`
+        `/tweets?cursor=${cursor}`
       )
 
       const tweetsFeed: Tweet[] = response.data.items.map((item) => ({

@@ -1,3 +1,5 @@
+import { Tweet } from '../../tweets/store/state'
+
 export interface ProfileStatus {
   statusCode: number
   message: string
@@ -18,6 +20,7 @@ export interface ProfileDetails {
 export interface State {
   status?: ProfileStatus
   profileDetails: ProfileDetails
+  profileTweets: Tweet[]
 }
 
 export const state: State = {
@@ -32,4 +35,5 @@ export const state: State = {
     followingsCount: 0,
     joinedAt: '',
   },
+  profileTweets: [],
 }

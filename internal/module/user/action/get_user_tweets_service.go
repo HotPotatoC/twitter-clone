@@ -22,7 +22,7 @@ func (a getUserTweetsAction) Execute(c *fiber.Ctx) error {
 	createdAtCursor := c.Query("cursor")
 	username := c.Params("username")
 
-	user, err := a.service.Execute(username, createdAtCursor)
+	tweets, err := a.service.Execute(username, createdAtCursor)
 	if err != nil {
 		fmt.Println(err)
 		if errors.Is(err, entity.ErrUserDoesNotExist) {
@@ -35,5 +35,8 @@ func (a getUserTweetsAction) Execute(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(user)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"items":       tweets,
+		"total_items": len(tweets),
+	})
 }

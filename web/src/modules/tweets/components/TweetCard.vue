@@ -33,7 +33,7 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { computed, defineComponent } from 'vue'
-import { Tweet } from '../../modules/tweets/store/state'
+import { Tweet } from '../store/state'
 
 export default defineComponent({
   name: 'TweetCard',
