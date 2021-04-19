@@ -186,6 +186,11 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <div v-show="!initialLoadDone" class="flex flex-col">
+      <div class="w-full text-center">
+        <LoadingSpinner />
+      </div>
+    </div>
     <div v-if="initialLoadDone && tweet.replies.length > 0">
       <div
         v-for="reply in tweet.replies"

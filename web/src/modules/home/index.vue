@@ -121,6 +121,11 @@ export default defineComponent({
         </button>
       </form>
     </div>
+    <div v-show="!initialLoadDone" class="flex flex-col">
+      <div class="w-full text-center">
+        <LoadingSpinner />
+      </div>
+    </div>
     <div v-show="initialLoadDone" class="flex flex-col">
       <div
         v-for="tweet in tweets"

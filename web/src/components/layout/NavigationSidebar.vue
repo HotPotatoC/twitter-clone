@@ -140,7 +140,7 @@ export default defineComponent({
   />
 
   <div
-    class="lg:w-1/5 border-r border-lighter dark:border-dark px-2 lg:px-8 py-2 flex flex-col justify-between"
+    class="lg:w-1/5 border-r border-lighter dark:border-dark lg:px-8 py-2 flex flex-col justify-between"
   >
     <div v-show="ready">
       <button
