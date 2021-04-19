@@ -20,6 +20,26 @@ export default defineComponent({
     BaseDialogDescription,
   },
   props: {
+    size: {
+      type: String as () =>
+        | 'xs'
+        | 'sm'
+        | 'md'
+        | 'lg'
+        | 'xl'
+        | '2xl'
+        | '3xl'
+        | '4xl'
+        | '5xl'
+        | '6xl'
+        | '7xl'
+        | 'full',
+      default: 'md',
+    },
+    closeButton: {
+      type: Boolean,
+      default: true,
+    },
     show: {
       type: Boolean,
       default: false,
@@ -74,16 +94,27 @@ export default defineComponent({
             leave-to="opacity-0 scale-95"
           >
             <div
-              class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-black shadow-xl rounded-2xl"
+              class="inline-block w-full p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-black shadow-xl rounded-2xl"
+              :class="`max-w-${size}`"
             >
               <BaseDialogTitle
+                v-if="closeButton"
                 as="button"
                 @click="onClose()"
                 class="text-lg font-medium leading-6 text-blue focus:outline-none"
               >
                 <FontAwesome :icon="['fas', 'times']" />
               </BaseDialogTitle>
-              <div class="mt-2 border-t border-lighter dark:border-dark">
+              <BaseDialogTitle v-else>
+                <slot name="title"></slot>
+              </BaseDialogTitle>
+              <div
+                :class="
+                  closeButton
+                    ? ['mt-2', 'border-t', 'border-lighter', 'dark:border-dark']
+                    : null
+                "
+              >
                 <slot></slot>
               </div>
             </div>

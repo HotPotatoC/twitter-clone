@@ -47,7 +47,7 @@ export default defineComponent({
       <h1 class="pt-12 text-4xl dark:text-lightest font-bold">
         Log in to Twitter
       </h1>
-      <form @submit.prevent="authenticate" class="w-full">
+      <form @submit.prevent="authenticate" class="w-full text-center">
         <input
           v-model="input.email"
           type="text"
@@ -72,6 +72,9 @@ export default defineComponent({
         >
           Log in
         </button>
+        <router-link to="/">
+          <span class="text-blue">Sign up for Twitter</span>
+        </router-link>
       </form>
     </div>
   </div>

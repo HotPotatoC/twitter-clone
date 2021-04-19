@@ -1,20 +1,46 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from '../../store'
+import { ActionTypes as UserActionTypes } from '../user/store/actions'
+import { ActionTypes as AuthActionTypes } from '../auth/store/actions'
+import RegisterDialog from './RegisterDialog.vue'
 
 export default defineComponent({
   name: 'Root',
-  setup() {},
+  components: { RegisterDialog },
+  setup() {
+    const store = useStore()
+    const router = useRouter()
+    const showRegisterDialog = ref<boolean>(false)
+
+    async function register({ name, email, password }) {
+      await store.dispatch(UserActionTypes.REGISTER_ACCOUNT, {
+        name,
+        email,
+        password,
+      })
+      router.push('/home')
+    }
+
+    return { showRegisterDialog, register }
+  },
 })
 </script>
 
 <template>
+  <RegisterDialog
+    :show="showRegisterDialog"
+    @close="showRegisterDialog = false"
+    @dispatch="register"
+  />
   <div class="flex flex-wrap flex-col-reverse md:flex-row">
     <div
       class="w-full md:w-1/2 h-full relative flex justify-center items-center"
     >
       <img
         src="../../assets/twitter-banner.png"
-        class="w-full h-screen object-cover"
+        class="w-full h-screen object-cover select-none"
         alt=""
       />
       <FontAwesome
@@ -37,6 +63,7 @@ export default defineComponent({
       <div class="flex flex-wrap flex-col space-y-6 mt-12">
         <button
           class="bg-blue text-lightest text-lg rounded-full font-semibold focus:outline-none h-auto p-4 hover:bg-darkblue transition-colors duration-75"
+          @click="showRegisterDialog = true"
         >
           Sign Up
         </button>

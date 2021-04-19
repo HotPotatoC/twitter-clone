@@ -8,12 +8,17 @@ import axios from '../../../services/axios'
 import { Tweet } from '../../tweets/store/state'
 
 export enum ActionTypes {
+  REGISTER_ACCOUNT = 'REGISTER_ACCOUNT',
   GET_PROFILE_DETAILS = 'GET_PROFILE_DETAILS',
   GET_PROFILE_TWEETS = 'GET_PROFILE_TWEETS',
   LOAD_MORE_PROFILE_TWEETS = 'LOAD_MORE_PROFILE_TWEETS',
 }
 
 export interface Actions {
+  [ActionTypes.REGISTER_ACCOUNT](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    payload: { name: string; email: string; password: string }
+  ): Promise<void>
   [ActionTypes.GET_PROFILE_DETAILS](
     { commit }: AugmentedActionContext<Mutations, State>,
     username: string | string[]
@@ -41,6 +46,16 @@ interface GetProfileDetailsJSON {
 }
 
 export const actions: ActionTree<State, State> & Actions = {
+  async [ActionTypes.REGISTER_ACCOUNT](
+    { commit },
+    { name, email, password }
+  ): Promise<void> {
+    try {
+      await axios.post('/users/register', { name, email, password })
+    } catch (error) {
+      return error
+    }
+  },
   async [ActionTypes.GET_PROFILE_DETAILS]({ commit }, username): Promise<void> {
     try {
       const profileDetailsResponse = await axios.get<GetProfileDetailsJSON>(
