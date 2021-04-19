@@ -8,6 +8,8 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
     "dotenv": "^8.2.0",
     "faker": "^5.5.2",
     "husky": "^6.0.0",
