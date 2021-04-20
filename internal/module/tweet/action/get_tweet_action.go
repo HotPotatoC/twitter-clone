@@ -2,6 +2,7 @@ package action
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/HotPotatoC/twitter-clone/internal/module"
@@ -27,6 +28,7 @@ func (a getTweetAction) Execute(c *fiber.Ctx) error {
 	}
 	tweet, err := a.service.Execute(tweetID)
 	if err != nil {
+		fmt.Println(err)
 		if errors.Is(err, entity.ErrTweetDoesNotExist) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Tweet not found",

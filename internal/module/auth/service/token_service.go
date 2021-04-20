@@ -44,15 +44,15 @@ func (s tokenService) Execute(refreshToken string) (*token.AccessToken, error) {
 	}
 
 	var id int
-	var name, email string
-	err = s.db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", claims["userID"]).Scan(&id, &name, &email)
+	var handle, email string
+	err = s.db.QueryRow("SELECT id, handle, email FROM users WHERE id = $1", claims["userID"]).Scan(&id, &handle, &email)
 	if err != nil {
 		return nil, errorspkg.Wrap(err, "service.tokenService.Execute")
 	}
 
 	at, err := token.NewAccessToken(jwt.MapClaims{
 		"userID": id,
-		"name":   name,
+		"handle": handle,
 		"email":  email,
 	})
 	if err != nil {

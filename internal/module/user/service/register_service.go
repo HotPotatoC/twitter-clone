@@ -13,7 +13,7 @@ import (
 )
 
 type RegisterInput struct {
-	Name     string `json:"name" validate:"required,alpha,excludesall= "`
+	Handle   string `json:"handle" validate:"required,alpha,excludesall= "`
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
 }
@@ -52,15 +52,15 @@ func (s registerService) Execute(input RegisterInput) (*token.AccessToken, *toke
 	}
 
 	var id int64
-	err = s.db.QueryRow("INSERT INTO users(name, email, password, created_at) VALUES($1, $2, $3, $4) RETURNING id",
-		input.Name, input.Email, hash, time.Now()).Scan(&id)
+	err = s.db.QueryRow("INSERT INTO users(name, handle, email, password, created_at) VALUES($1, $1, $2, $3, $4) RETURNING id",
+		input.Handle, input.Email, hash, time.Now()).Scan(&id)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "service.registerService.Execute")
 	}
 
 	at, err := token.NewAccessToken(jwt.MapClaims{
 		"userID": id,
-		"name":   input.Name,
+		"handle": input.Handle,
 		"email":  input.Email,
 	})
 	if err != nil {

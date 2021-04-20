@@ -12,11 +12,13 @@ import (
 
 type ListTweetOutput struct {
 	entity.Tweet
-	Name           string `json:"name"`
-	RepliedToTweet int64  `json:"replied_to_tweet_id,omitempty"`
-	RepliedToName  string `json:"replied_to_name,omitempty"`
-	FavoritesCount int    `json:"favorites_count"`
-	RepliesCount   int    `json:"replies_count"`
+	Name            string `json:"name"`
+	Handle          string `json:"handle"`
+	RepliedToTweet  int64  `json:"replied_to_tweet_id,omitempty"`
+	RepliedToName   string `json:"replied_to_name,omitempty"`
+	RepliedToHandle string `json:"replied_to_handle,omitempty"`
+	FavoritesCount  int    `json:"favorites_count"`
+	RepliesCount    int    `json:"replies_count"`
 }
 
 type ListTweetService interface {
@@ -60,13 +62,13 @@ func (s listTweetService) Execute(createdAtCursor string) ([]ListTweetOutput, er
 
 	for rows.Next() {
 		var id int64
-		var content, name string
+		var content, name, handle string
 		var repliedToTweetID sql.NullInt64
-		var repliedToName sql.NullString
+		var repliedToName, repliedToHandle sql.NullString
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
 
-		err = rows.Scan(&id, &content, &createdAt, &name, &repliedToTweetID, &repliedToName, &favoritesCount, &repliesCount)
+		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &repliedToTweetID, &repliedToName, &repliedToHandle, &favoritesCount, &repliesCount)
 		if err != nil {
 			return []ListTweetOutput{}, errors.Wrap(err, "service.listTweetService.Execute")
 		}
@@ -77,11 +79,13 @@ func (s listTweetService) Execute(createdAtCursor string) ([]ListTweetOutput, er
 				Content:   content,
 				CreatedAt: createdAt,
 			},
-			Name:           name,
-			RepliedToTweet: repliedToTweetID.Int64,
-			RepliedToName:  repliedToName.String,
-			FavoritesCount: favoritesCount,
-			RepliesCount:   repliesCount,
+			Name:            name,
+			Handle:          handle,
+			RepliedToTweet:  repliedToTweetID.Int64,
+			RepliedToName:   repliedToName.String,
+			RepliedToHandle: repliedToHandle.String,
+			FavoritesCount:  favoritesCount,
+			RepliesCount:    repliesCount,
 		})
 	}
 
@@ -101,8 +105,10 @@ func (s listTweetService) buildSQLQuery(withCursor bool) string {
 		tweets.content,
 		tweets.created_at,
 		(ARRAY_AGG(users.name))[1],
+		(ARRAY_AGG(users.handle))[1],
 		(ARRAY_AGG(sq.id_tweet))[1],
 		(ARRAY_AGG(sq.name))[1],
+		(ARRAY_AGG(sq.handle))[1],
 		COUNT(f.*),
 		COUNT(r1.*)
 	FROM
@@ -112,7 +118,8 @@ func (s listTweetService) buildSQLQuery(withCursor bool) string {
 			SELECT
 				replies.id_reply,
 				replies.id_tweet,
-				users.name
+				users.name,
+				users.handle
 			FROM
 				replies
 				INNER JOIN tweets AS t ON t.id = replies.id_tweet

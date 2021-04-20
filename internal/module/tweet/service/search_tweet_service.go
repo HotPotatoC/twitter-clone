@@ -12,12 +12,14 @@ import (
 
 type SearchTweetOutput struct {
 	entity.Tweet
-	Name           string  `json:"name"`
-	RepliedToTweet int64   `json:"replied_to_tweet_id,omitempty"`
-	RepliedToName  string  `json:"replied_to_name,omitempty"`
-	FavoritesCount int     `json:"favorites_count"`
-	RepliesCount   int     `json:"replies_count"`
-	Rank           float64 `json:"rank"`
+	Name            string  `json:"name"`
+	Handle          string  `json:"handle"`
+	RepliedToTweet  int64   `json:"replied_to_tweet_id,omitempty"`
+	RepliedToName   string  `json:"replied_to_name,omitempty"`
+	RepliedToHandle string  `json:"replied_to_handle,omitempty"`
+	FavoritesCount  int     `json:"favorites_count"`
+	RepliesCount    int     `json:"replies_count"`
+	Rank            float64 `json:"rank"`
 }
 
 type SearchTweetService interface {
@@ -57,14 +59,14 @@ func (s searchTweetService) Execute(searchQuery string, cursor string) ([]Search
 
 	for rows.Next() {
 		var id int64
-		var content, name string
+		var content, name, handle string
 		var repliedToTweetID sql.NullInt64
-		var repliedToName sql.NullString
+		var repliedToName, repliedToHandle sql.NullString
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
 		var rank float64
 
-		err = rows.Scan(&id, &content, &createdAt, &name, &repliedToTweetID, &repliedToName, &favoritesCount, &repliesCount, &rank)
+		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &repliedToTweetID, &repliedToName, &repliedToHandle, &favoritesCount, &repliesCount, &rank)
 		if err != nil {
 			return []SearchTweetOutput{}, errors.Wrap(err, "service.searchTweetService.Execute")
 		}
@@ -75,12 +77,14 @@ func (s searchTweetService) Execute(searchQuery string, cursor string) ([]Search
 				Content:   content,
 				CreatedAt: createdAt,
 			},
-			Name:           name,
-			RepliedToTweet: repliedToTweetID.Int64,
-			RepliedToName:  repliedToName.String,
-			FavoritesCount: favoritesCount,
-			RepliesCount:   repliesCount,
-			Rank:           rank,
+			Name:            name,
+			Handle:          handle,
+			RepliedToTweet:  repliedToTweetID.Int64,
+			RepliedToName:   repliedToName.String,
+			RepliedToHandle: repliedToHandle.String,
+			FavoritesCount:  favoritesCount,
+			RepliesCount:    repliesCount,
+			Rank:            rank,
 		})
 	}
 
@@ -100,8 +104,10 @@ func (s searchTweetService) buildSQLQuery(withCursor bool) string {
 		tweets.content,
 		tweets.created_at,
 		(ARRAY_AGG(users.name))[1],
+		(ARRAY_AGG(users.handle))[1],
 		(ARRAY_AGG(sq.id_tweet))[1],
 		(ARRAY_AGG(sq.name))[1],
+		(ARRAY_AGG(sq.handle))[1],
 		COUNT(f.*),
 		COUNT(r1.*),
 		ts_rank(tweets.content_tsv, plainto_tsquery($1))
@@ -112,7 +118,8 @@ func (s searchTweetService) buildSQLQuery(withCursor bool) string {
 			SELECT
 				replies.id_reply,
 				replies.id_tweet,
-				users.name
+				users.name,
+				users.handle
 			FROM
 				replies
 				INNER JOIN tweets AS t ON t.id = replies.id_tweet

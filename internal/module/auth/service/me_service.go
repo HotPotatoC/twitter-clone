@@ -28,13 +28,13 @@ func (s meService) Execute(accessToken string) (*entity.User, error) {
 	}
 
 	var id int64
-	var name, email string
+	var name, handle, email string
 
-	err = s.db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", claims["userID"]).Scan(&id, &name, &email)
+	err = s.db.QueryRow("SELECT id, name, handle, email FROM users WHERE id = $1", claims["userID"]).Scan(&id, &name, &handle, &email)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "service.meService.Execute")
 	}
 
-	return entity.NewUser(id, name, email, "", time.Now()), nil
+	return entity.NewUser(id, name, handle, email, "", time.Now()), nil
 }

@@ -12,6 +12,7 @@ import (
 type ListTweetRepliesOutput struct {
 	entity.Tweet
 	Name           string `json:"name"`
+	Handle         string `json:"handle"`
 	FavoritesCount int    `json:"favorites_count"`
 	RepliesCount   int    `json:"replies_count"`
 }
@@ -68,10 +69,10 @@ func (s listTweetRepliesService) Execute(tweetID int64, createdAtCursor string) 
 	for rows.Next() {
 		var id, userID int64
 		var favoritesCount, repliesCount int
-		var content, name string
+		var content, name, handle string
 		var createdAt time.Time
 
-		err = rows.Scan(&id, &content, &userID, &createdAt, &name, &favoritesCount, &repliesCount)
+		err = rows.Scan(&id, &content, &userID, &createdAt, &name, &handle, &favoritesCount, &repliesCount)
 		if err != nil {
 			return []ListTweetRepliesOutput{}, errors.Wrap(err, "service.listTweetRepliesService.Execute")
 		}
@@ -83,6 +84,7 @@ func (s listTweetRepliesService) Execute(tweetID int64, createdAtCursor string) 
 				CreatedAt: createdAt,
 			},
 			Name:           name,
+			Handle:         handle,
 			FavoritesCount: favoritesCount,
 			RepliesCount:   repliesCount,
 		})
@@ -105,6 +107,7 @@ func (s listTweetRepliesService) buildSQLQuery(withCursor bool) string {
 		t.id_user,
 		t.created_at,
 		(array_agg(u.name)) [1],
+		(array_agg(u.handle)) [1],
 		COUNT(f.*),
 		COUNT(r.*)
 	FROM

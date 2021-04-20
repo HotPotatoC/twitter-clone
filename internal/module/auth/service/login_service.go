@@ -37,8 +37,8 @@ func NewLoginService(db database.Database) LoginService {
 
 func (s loginService) Execute(input LoginInput) (*token.AccessToken, *token.RefreshToken, error) {
 	var id int
-	var name, email, password string
-	err := s.db.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", input.Email).Scan(&id, &name, &email, &password)
+	var handle, email, password string
+	err := s.db.QueryRow("SELECT id, handle, email, password FROM users WHERE email = $1", input.Email).Scan(&id, &handle, &email, &password)
 	if err != nil {
 		return nil, nil, entity.ErrUserDoesNotExist
 	}
@@ -49,7 +49,7 @@ func (s loginService) Execute(input LoginInput) (*token.AccessToken, *token.Refr
 
 	at, err := token.NewAccessToken(jwt.MapClaims{
 		"userID": id,
-		"name":   name,
+		"handle": handle,
 		"email":  email,
 	})
 	if err != nil {

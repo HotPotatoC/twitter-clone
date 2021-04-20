@@ -42,7 +42,7 @@ func (m authMiddleware) Execute() fiber.Handler {
 			})
 		}
 
-		name, ok := claims["name"]
+		handle, ok := claims["handle"]
 		if !ok {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"message": "Please try and login again",
@@ -57,7 +57,7 @@ func (m authMiddleware) Execute() fiber.Handler {
 		}
 
 		c.Locals("userID", userID)
-		c.Locals("name", name)
+		c.Locals("handle", handle)
 		c.Locals("email", email)
 		c.Locals("accessToken", accessToken)
 
