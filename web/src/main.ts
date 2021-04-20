@@ -1,10 +1,10 @@
 import { createApp, defineComponent, resolveComponent, h } from 'vue'
 import { useRouter } from 'vue-router'
+
 import { router } from './routes'
 import { store, useStore } from './store'
 import axios from './services/axios'
 import { ActionTypes } from './modules/auth/store/actions'
-import makeFontAwesomePlugin from './plugins/font-awesome'
 
 import './assets/styles/root.css'
 
@@ -35,8 +35,6 @@ const app = createApp(
     },
   })
 )
-
-app.component('FontAwesome', makeFontAwesomePlugin())
 
 app.use(store)
 app.use(router)

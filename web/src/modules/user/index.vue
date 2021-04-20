@@ -16,10 +16,24 @@ import Return from '../../components/common/Return.vue'
 import TweetCard from '../tweets/components/TweetCard.vue'
 import { Tweet } from '../tweets/store/state'
 import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
+import IconEllipsisH from '../../components/icons/IconEllipsisH.vue'
+import IconMapMarker from '../../components/icons/IconMapMarker.vue'
+import IconLink from '../../components/icons/IconLink.vue'
+import IconGift from '../../components/icons/IconGift.vue'
+import IconCalendar from '../../components/icons/IconCalendar.vue'
 
 export default defineComponent({
   name: 'Profile',
-  components: { Return, TweetCard, LoadingSpinner },
+  components: {
+    Return,
+    TweetCard,
+    LoadingSpinner,
+    IconEllipsisH,
+    IconMapMarker,
+    IconLink,
+    IconGift,
+    IconCalendar,
+  },
   setup() {
     const store = useStore()
     const route = useRoute()
@@ -163,7 +177,7 @@ export default defineComponent({
         v-show="!isCurrentUser"
         class="float-right text-blue font-bold py-2 px-3 mr-4 rounded-full border-2 border-blue hover:bg-blue hover:bg-opacity-25 focus:outline-none transition-colors duration-75"
       >
-        <FontAwesome :icon="['fas', 'ellipsis-h']" />
+        <IconEllipsisH />
       </button>
       <div class="w-full flex flex-col space-y-4">
         <div class="w-full block mt-4">
@@ -182,14 +196,14 @@ export default defineComponent({
             v-show="profile.location !== ''"
             class="flex items-center space-x-1 dark:text-gray"
           >
-            <FontAwesome :icon="['fas', 'map-marker-alt']" />
+            <IconMapMarker />
             <p>{{ profile.location }}</p>
           </div>
           <div
             v-show="profile.website !== ''"
             class="flex items-center space-x-1 dark:text-gray"
           >
-            <FontAwesome :icon="['fas', 'link']" />
+            <IconLink />
             <a
               :href="profile.website"
               target="_blank"
@@ -203,11 +217,11 @@ export default defineComponent({
             v-show="validBirthDate"
             class="flex items-center space-x-1 dark:text-gray"
           >
-            <FontAwesome :icon="['fas', 'birthday-cake']" />
+            <IconGift />
             <p>Born {{ parsedBirthDate }}</p>
           </div>
           <div class="flex items-center space-x-1 dark:text-gray">
-            <FontAwesome :icon="['fas', 'calendar-alt']" />
+            <IconCalendar />
             <p>Joined {{ parsedJoinedAt }}</p>
           </div>
         </div>

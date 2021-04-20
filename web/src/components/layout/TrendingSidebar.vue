@@ -1,8 +1,10 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import IconSearch from '../icons/IconSearch.vue'
 
 export default defineComponent({
+  components: { IconSearch },
   name: 'TrendingSidebar',
   setup() {
     const router = useRouter()
@@ -48,12 +50,12 @@ export default defineComponent({
         type="search"
         placeholder="Search Twitter"
       />
-      <input type="submit" class="hidden" />
-      <FontAwesome
-        :icon="['fas', 'search']"
-        class="absolute left-0 top-0 mt-6 ml-12 text-base"
+      <IconSearch
+        :size="24"
+        class="absolute left-0 top-0 mt-5 ml-10"
         :class="searchFocused ? 'text-blue' : 'text-light'"
       />
+      <input type="submit" class="hidden" />
     </form>
     <div
       class="w-full rounded-2xl bg-lightest dark:bg-darkest my-4 hidden lg:block"

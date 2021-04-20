@@ -1,11 +1,15 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import IconTwitter from '../../components/icons/IconTwitter.vue'
 import { useStore } from '../../store'
 import { ActionTypes } from './store/actions'
 
 export default defineComponent({
   name: 'Login',
+  components: {
+    IconTwitter,
+  },
   setup() {
     const store = useStore()
     const route = useRoute()
@@ -40,9 +44,9 @@ export default defineComponent({
     class="flex justify-center container mx-auto h-screen w-1/4 px-4 lg:px-0 py-8"
   >
     <div>
-      <FontAwesome
-        :icon="['fab', 'twitter']"
-        class="h-12 w-12 text-6xl text-blue rounded-full"
+      <IconTwitter
+        :size="60"
+        class="h-12 w-12 text-blue"
       />
       <h1 class="pt-12 text-4xl dark:text-lightest font-bold">
         Log in to Twitter

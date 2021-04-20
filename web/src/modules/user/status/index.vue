@@ -16,9 +16,24 @@ import LoadingSpinner from '../../../components/common/LoadingSpinner.vue'
 import { ActionTypes } from '../../tweets/store/actions'
 import { TweetAndReplies } from '../../tweets/store/state'
 import TweetCreateReplyDialog from '../../tweets/components/TweetCreateReplyDialog.vue'
+import IconEllipsisH from '../../../components/icons/IconEllipsisH.vue'
+import IconComment from '../../../components/icons/IconComment.vue'
+import IconRetweet from '../../../components/icons/IconRetweet.vue'
+import IconShare from '../../../components/icons/IconShare.vue'
+import IconHeart from '../../../components/icons/IconHeart.vue'
 
 export default defineComponent({
-  components: { TweetCard, LoadingSpinner, TweetCreateReplyDialog, Return },
+  components: {
+    TweetCard,
+    LoadingSpinner,
+    TweetCreateReplyDialog,
+    Return,
+    IconEllipsisH,
+    IconComment,
+    IconRetweet,
+    IconHeart,
+    IconShare,
+  },
   name: 'Status',
   setup() {
     const store = useStore()
@@ -134,10 +149,7 @@ export default defineComponent({
             <p class="font-semibold dark:text-lightest">{{ tweet.name }}</p>
             <p class="text-sm text-dark dark:text-light">@{{ tweet.handle }}</p>
           </div>
-          <FontAwesome
-            :icon="['fas', 'angle-down']"
-            class="text-dark ml-auto"
-          />
+          <IconEllipsisH class="text-dark ml-auto" />
         </div>
         <p class="text-2xl py-2 break-words dark:text-lightest">
           {{ tweet.content }}
@@ -166,22 +178,22 @@ export default defineComponent({
             class="flex justify-center hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full p-3 cursor-pointer transition duration-75"
             @click="showCreateReplyDialog = true"
           >
-            <FontAwesome :icon="['fas', 'comment']" />
+            <IconComment :size="20" />
           </div>
           <div
             class="flex justify-center hover:bg-success hover:text-success hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
           >
-            <FontAwesome :icon="['fas', 'retweet']" />
+            <IconRetweet :size="20" />
           </div>
           <div
             class="flex justify-center hover:bg-danger hover:text-danger hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
           >
-            <FontAwesome :icon="['fas', 'heart']" />
+            <IconHeart :size="20" />
           </div>
           <div
             class="flex justify-center hover:bg-darkblue hover:text-darkblue hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
           >
-            <FontAwesome :icon="['fas', 'share-square']" />
+            <IconShare :size="20" />
           </div>
         </div>
       </div>

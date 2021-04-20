@@ -6,18 +6,29 @@ import { ActionTypes as AuthActionTypes } from '../../modules/auth/store/actions
 import { ActionTypes as TweetActionTypes } from '../../modules/tweets/store/actions'
 import Dialog from '../common/Dialog.vue'
 import TweetCreateTweetDialog from '../../modules/tweets/components/TweetCreateTweetDialog.vue'
+import IconTwitter from '../icons/IconTwitter.vue'
+import IconPlus from '../icons/IconPlus.vue'
+import IconArrowDown from '../icons/IconArrowDown.vue'
+import IconChevronDown from '../icons/IconChevronDown.vue'
+import IconCheck from '../icons/IconCheck.vue'
 
 interface Tab {
   id: string
   icon: string
-  iconPrefix: string
   label: string
   to: string
 }
 
 export default defineComponent({
   name: 'ProfileSidebar',
-  components: { Dialog, TweetCreateTweetDialog },
+  components: {
+    Dialog,
+    TweetCreateTweetDialog,
+    IconTwitter,
+    IconPlus,
+    IconChevronDown,
+    IconCheck,
+  },
   setup() {
     const store = useStore()
     const router = useRouter()
@@ -28,57 +39,177 @@ export default defineComponent({
     const tabs = ref<Tab[]>([
       {
         id: 'home',
-        icon: 'home',
-        iconPrefix: 'fas',
+        icon: `
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="feather feather-home"
+  >
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+  </svg>`,
         label: 'Home',
         to: '/home',
       },
       {
         id: 'explore',
-        icon: 'hashtag',
-        iconPrefix: 'fas',
+        icon: `
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="feather feather-hash"
+  >
+    <line x1="4" y1="9" x2="20" y2="9"></line>
+    <line x1="4" y1="15" x2="20" y2="15"></line>
+    <line x1="10" y1="3" x2="8" y2="21"></line>
+    <line x1="16" y1="3" x2="14" y2="21"></line>
+  </svg>`,
         label: 'Explore',
         to: '/home',
       },
       {
         id: 'notifications',
-        icon: 'bell',
-        iconPrefix: 'fas',
+        icon: `
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="feather feather-bell"
+  >
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+  </svg>`,
         label: 'Notifications',
         to: '/home',
       },
       {
         id: 'messages',
-        icon: 'envelope',
-        iconPrefix: 'fas',
+        icon: `
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="feather feather-mail"
+  >
+    <path
+      d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+    ></path>
+    <polyline points="22,6 12,13 2,6"></polyline>
+  </svg>`,
         label: 'Messages',
         to: '/home',
       },
       {
         id: 'bookmarks',
-        icon: 'bookmark',
-        iconPrefix: 'fas',
+        icon: `
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="feather feather-bookmark"
+  >
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+  </svg>`,
         label: 'Bookmarks',
         to: '/home',
       },
       {
         id: 'lists',
-        icon: 'clipboard-list',
-        iconPrefix: 'fas',
+        icon: `
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="feather feather-list"
+  >
+    <line x1="8" y1="6" x2="21" y2="6"></line>
+    <line x1="8" y1="12" x2="21" y2="12"></line>
+    <line x1="8" y1="18" x2="21" y2="18"></line>
+    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+  </svg>`,
         label: 'Lists',
         to: '/home',
       },
       {
         id: 'profile',
-        icon: 'user',
-        iconPrefix: 'fas',
+        icon: `
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="feather feather-user"
+  >
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+    <circle cx="12" cy="7" r="4"></circle>
+  </svg>`,
         label: 'Profile',
         to: '',
       },
       {
         id: 'more',
-        icon: 'ellipsis-h',
-        iconPrefix: 'fas',
+        icon: `
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="feather feather-more-horizontal"
+  >
+    <circle cx="12" cy="12" r="1"></circle>
+    <circle cx="19" cy="12" r="1"></circle>
+    <circle cx="5" cy="12" r="1"></circle>
+  </svg>`,
         label: 'More',
         to: '/home',
       },
@@ -144,9 +275,9 @@ export default defineComponent({
   >
     <div v-show="ready">
       <button
-        class="h-12 w-12 hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 text-3xl text-blue rounded-full transition-colors duration-75"
+        class="h-12 w-12 inline-flex items-center justify-center hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 text-blue rounded-full transition-colors duration-75"
       >
-        <FontAwesome :icon="['fab', 'twitter']" />
+        <IconTwitter :size="32" />
       </button>
       <div>
         <router-link v-for="tab in tabs" :key="tab.id" :to="tab.to">
@@ -156,14 +287,11 @@ export default defineComponent({
             :class="
               selectedTab === tab.id
                 ? 'text-blue dark:text-blue'
-                : 'dark:text-light'
+                : 'dark:text-lighter'
             "
           >
-            <FontAwesome
-              :icon="[tab.iconPrefix, tab.icon]"
-              class="text-left text-2xl mr-4"
-            />
-            <p class="text-left text-lg font-semibold hidden lg:block">
+            <div class="mr-4" v-html="tab.icon"></div>
+            <p class="text-left text-lg font-bold hidden lg:block">
               {{ tab.label }}
             </p>
           </button>
@@ -173,7 +301,10 @@ export default defineComponent({
           @click="showCreateFormDialog = true"
         >
           <p class="hidden lg:block">Tweet</p>
-          <FontAwesome :icon="['fas', 'plus']" class="lg:hidden" />
+          <IconPlus
+            :size="24"
+            class="inline-flex items-center justify-center lg:hidden"
+          />
         </button>
       </div>
     </div>
@@ -190,10 +321,7 @@ export default defineComponent({
             @{{ user.handle }}
           </p>
         </div>
-        <FontAwesome
-          :icon="['fas', 'angle-down']"
-          class="ml-auto text-lg dark:text-lightest"
-        />
+        <IconChevronDown :size="18" class="ml-auto dark:text-lightest" />
       </button>
 
       <div
@@ -212,7 +340,7 @@ export default defineComponent({
               @{{ user.handle }}
             </p>
           </div>
-          <FontAwesome :icon="['fas', 'check']" class="ml-auto text-blue" />
+          <IconCheck class="ml-auto text-blue" />
         </button>
         <button
           @click="logout"

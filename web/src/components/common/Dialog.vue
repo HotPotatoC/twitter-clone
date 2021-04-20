@@ -8,6 +8,7 @@ import {
   DialogTitle as BaseDialogTitle,
   DialogDescription as BaseDialogDescription,
 } from '@headlessui/vue'
+import IconX from '../icons/IconX.vue'
 
 export default defineComponent({
   name: 'Dialog',
@@ -18,6 +19,7 @@ export default defineComponent({
     BaseDialogOverlay,
     BaseDialogTitle,
     BaseDialogDescription,
+    IconX,
   },
   props: {
     size: {
@@ -103,7 +105,7 @@ export default defineComponent({
                 @click="onClose()"
                 class="text-lg font-medium leading-6 text-blue focus:outline-none"
               >
-                <FontAwesome :icon="['fas', 'times']" />
+                <IconX :size="24" />
               </BaseDialogTitle>
               <BaseDialogTitle v-else>
                 <slot name="title"></slot>

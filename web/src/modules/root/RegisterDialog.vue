@@ -1,10 +1,11 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, computed } from 'vue'
 import Dialog from '../../components/common/Dialog.vue'
+import IconTwitterWhite from '../../components/icons/IconTwitterWhite.vue'
 
 export default defineComponent({
   name: 'RegisterDialog',
-  components: { Dialog },
+  components: { Dialog, IconTwitterWhite },
   props: {
     show: {
       type: Boolean,
@@ -48,10 +49,7 @@ export default defineComponent({
   <Dialog :show="show" @close="close" :closeButton="false" size="xl">
     <template #title>
       <div class="text-center mb-6">
-        <FontAwesome
-          :icon="['fab', 'twitter']"
-          class="text-lightest text-4xl"
-        />
+        <IconTwitterWhite :size="36" />
       </div>
       <h1 class="font-bold text-lightest text-2xl mb-6">Create your account</h1>
     </template>

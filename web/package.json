@@ -7,10 +7,6 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.35",
-    "@fortawesome/free-brands-svg-icons": "^5.15.3",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@fortawesome/vue-fontawesome": "^3.0.0-3",
     "@headlessui/vue": "^1.0.0",
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",

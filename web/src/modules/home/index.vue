@@ -12,13 +12,14 @@ import { Tweet } from '../tweets/store/state'
 import { ActionTypes } from '../tweets/store/actions'
 import TweetCard from '../tweets/components/TweetCard.vue'
 import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
+import IconStar from '../../components/icons/IconStar.vue'
 
 interface NewTweet {
   content: string | Ref<string>
 }
 
 export default defineComponent({
-  components: { TweetCard, LoadingSpinner },
+  components: { TweetCard, LoadingSpinner, IconStar },
   name: 'Home',
   setup() {
     const store = useStore()
@@ -98,7 +99,7 @@ export default defineComponent({
       class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-between"
     >
       <h1 class="text-xl font-bold dark:text-lightest">Home</h1>
-      <FontAwesome :icon="['fas', 'star']" class="text-xl text-blue" />
+      <IconStar :size="20" class="text-blue fill-current" />
     </div>
     <div class="px-5 py-3 border-b-8 border-lighter dark:border-dark flex">
       <form @submit.prevent="addNewTweet" class="w-full px-4 relative">

@@ -5,10 +5,11 @@ import { useStore } from '../../store'
 import { ActionTypes as UserActionTypes } from '../user/store/actions'
 import { ActionTypes as AuthActionTypes } from '../auth/store/actions'
 import RegisterDialog from './RegisterDialog.vue'
+import IconTwitterWhite from '../../components/icons/IconTwitterWhite.vue'
 
 export default defineComponent({
   name: 'Root',
-  components: { RegisterDialog },
+  components: { RegisterDialog, IconTwitterWhite },
   setup() {
     const store = useStore()
     const router = useRouter()
@@ -43,16 +44,10 @@ export default defineComponent({
         class="w-full h-screen object-cover select-none"
         alt=""
       />
-      <FontAwesome
-        :icon="['fab', 'twitter']"
-        class="__twitter-banner-icon-overlay absolute text-white"
-      />
+      <IconTwitterWhite :size="326" class="absolute" />
     </div>
     <div class="w-full md:w-1/2 h-screen px-6 md:px-12">
-      <FontAwesome
-        :icon="['fab', 'twitter']"
-        class="mt-32 text-white text-5xl md:text-7xl"
-      />
+      <IconTwitterWhite :size="56" class="mt-32" />
       <h1 class="mt-32 text-lighter text-5xl md:text-7xl font-bold">
         Happening now
       </h1>
@@ -77,17 +72,3 @@ export default defineComponent({
     </div>
   </div>
 </template>
-
-<style scoped>
-.__twitter-banner-icon-overlay {
-  font-size: 12rem;
-  line-height: 1;
-}
-
-@media (min-width: 768px) {
-  .__twitter-banner-icon-overlay {
-    font-size: 26rem;
-    line-height: 1;
-  }
-}
-</style>

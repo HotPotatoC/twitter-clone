@@ -7,13 +7,15 @@ import { ActionTypes } from '../tweets/store/actions'
 import TweetCard from '../tweets/components/TweetCard.vue'
 import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
 import Return from '../../components/common/Return.vue'
+import IconSearch from '../../components/icons/IconSearch.vue'
+import IconSearch from '../../components/icons/IconSearch.vue'
 
 interface NewTweet {
   content: string | Ref<string>
 }
 
 export default defineComponent({
-  components: { TweetCard, LoadingSpinner, Return },
+  components: { TweetCard, LoadingSpinner, Return, IconSearch },
   name: 'Home',
   setup() {
     const store = useStore()
@@ -109,9 +111,9 @@ export default defineComponent({
         />
         <input type="submit" class="hidden" />
       </form>
-      <FontAwesome
-        :icon="['fas', 'search']"
-        class="absolute left-0 top-0 mt-6 ml-20 text-base"
+      <IconSearch
+        :size="24"
+        class="absolute left-0 top-0 mt-5 ml-20"
         :class="searchFocused ? 'text-blue' : 'text-light'"
       />
     </div>

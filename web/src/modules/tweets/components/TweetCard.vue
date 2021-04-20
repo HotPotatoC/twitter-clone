@@ -3,9 +3,15 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { computed, defineComponent } from 'vue'
 import { Tweet } from '../store/state'
+import IconEllipsisH from '../../../components/icons/IconEllipsisH.vue'
+import IconComment from '../../../components/icons/IconComment.vue'
+import IconRetweet from '../../../components/icons/IconRetweet.vue'
+import IconHeart from '../../../components/icons/IconHeart.vue'
+import IconShare from '../../../components/icons/IconShare.vue'
 
 export default defineComponent({
   name: 'TweetCard',
+  components: { IconComment, IconEllipsisH, IconRetweet, IconHeart, IconShare },
   props: {
     tweet: {
       type: Object as () => Tweet,
@@ -30,26 +36,26 @@ export default defineComponent({
     <p class="text-sm text-dark dark:text-light ml-2">
       {{ parsedCreatedAt }}
     </p>
-    <FontAwesome :icon="['fas', 'ellipsis-h']" class="text-gray ml-auto" />
+    <IconEllipsisH class="text-gray ml-auto" />
   </div>
   <p class="py-2 break-words dark:text-lightest">
     {{ tweet.content }}
   </p>
   <div class="flex items-center justify-between w-full">
     <div class="flex items-center text-sm text-dark dark:text-light">
-      <FontAwesome :icon="['fas', 'comment']" class="mr-3" />
+      <IconComment class="mr-3" />
       <p>{{ tweet.repliesCount }}</p>
     </div>
     <div class="flex items-center text-sm text-dark dark:text-light">
-      <FontAwesome :icon="['fas', 'retweet']" class="mr-3" />
+      <IconRetweet class="mr-3" />
       <p>{{ tweet.repliesCount }}</p>
     </div>
     <div class="flex items-center text-sm text-dark dark:text-light">
-      <FontAwesome :icon="['fas', 'heart']" class="mr-3" />
+      <IconHeart class="mr-3" />
       <p>{{ tweet.favoritesCount }}</p>
     </div>
     <div class="flex items-center text-sm text-dark dark:text-light">
-      <FontAwesome :icon="['fas', 'share-square']" class="mr-3" />
+      <IconShare class="mr-3" />
     </div>
   </div>
 </template>
