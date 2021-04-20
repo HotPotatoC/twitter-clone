@@ -198,7 +198,7 @@ export default defineComponent({
         class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full">
-          <router-link :to="`/${reply.name}/status/${reply.id}`">
+          <router-link :to="`/${reply.handle}/status/${reply.id}`">
             <TweetCard :tweet="reply" />
           </router-link>
         </div>
