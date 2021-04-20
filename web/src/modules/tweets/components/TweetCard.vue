@@ -26,7 +26,7 @@ export default defineComponent({
 <template>
   <div class="flex items-center w-full">
     <p class="font-semibold dark:text-lightest">{{ tweet.name }}</p>
-    <p class="text-sm text-dark dark:text-light ml-2">@{{ tweet.name }} ·</p>
+    <p class="text-sm text-dark dark:text-light ml-2">@{{ tweet.handle }} ·</p>
     <p class="text-sm text-dark dark:text-light ml-2">
       {{ parsedCreatedAt }}
     </p>

@@ -133,7 +133,7 @@ export default defineComponent({
         class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full">
-          <router-link :to="`/${tweet.name}/status/${tweet.id}`">
+          <router-link :to="`/${tweet.handle}/status/${tweet.id}`">
             <TweetCard :tweet="tweet" />
           </router-link>
         </div>

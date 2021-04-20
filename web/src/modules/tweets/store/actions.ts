@@ -49,8 +49,10 @@ export interface TweetJSONSchema {
   id: number
   content: string
   name: string
+  handle: string
   replied_to_tweet: number
   replied_to_name: string
+  replied_to_handle: string
   favorites_count: number
   replies_count: number
   created_at: string
@@ -89,6 +91,7 @@ export const actions: ActionTree<State, State> & Actions = {
       const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
         repliedToTweet: item.replied_to_tweet,
         repliedToName: item.replied_to_name,
+        repliedToHandle: item.replied_to_handle,
         favoritesCount: item.favorites_count,
         repliesCount: item.replies_count,
         createdAt: item.created_at,
@@ -166,6 +169,7 @@ export const actions: ActionTree<State, State> & Actions = {
       const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
         repliedToTweet: item.replied_to_tweet,
         repliedToName: item.replied_to_name,
+        repliedToHandle: item.replied_to_handle,
         favoritesCount: item.favorites_count,
         repliesCount: item.replies_count,
         createdAt: item.created_at,

@@ -8,6 +8,7 @@ export interface ProfileStatus {
 export interface ProfileDetails {
   id: number
   name: string
+  handle: string
   bio: string
   location: string
   website: string
@@ -27,6 +28,7 @@ export const state: State = {
   profileDetails: {
     id: 0,
     name: '',
+    handle: '',
     bio: '',
     location: '',
     website: '',

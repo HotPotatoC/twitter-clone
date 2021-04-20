@@ -36,6 +36,7 @@ export interface Actions {
 interface GetProfileDetailsJSON {
   id: number
   name: string
+  handle: string
   bio: string
   location: string
   website: string
@@ -69,6 +70,7 @@ export const actions: ActionTree<State, State> & Actions = {
       const profile: ProfileDetails = {
         id: profileDetailsResponse.data.id,
         name: profileDetailsResponse.data.name,
+        handle: profileDetailsResponse.data.handle,
         bio: profileDetailsResponse.data.bio,
         location: profileDetailsResponse.data.location,
         website: profileDetailsResponse.data.website,

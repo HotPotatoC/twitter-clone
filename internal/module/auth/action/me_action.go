@@ -25,6 +25,7 @@ func (a meAction) Execute(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"user_id": user.ID,
 		"name":    user.Name,
+		"handle":  user.Handle,
 		"email":   user.Email,
 	})
 }

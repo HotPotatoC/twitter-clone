@@ -15,6 +15,7 @@ func NewUser(id int64, name, handle, email, password string, createdAt time.Time
 	return &User{
 		ID:        id,
 		Name:      name,
+		Handle:    handle,
 		Email:     email,
 		Password:  password,
 		CreatedAt: createdAt,

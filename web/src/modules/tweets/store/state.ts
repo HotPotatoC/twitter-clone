@@ -2,8 +2,10 @@ export interface Tweet {
   id: number
   content: string
   name: string
+  handle: string
   repliedToTweet?: number
   repliedToName?: string
+  repliedToHandle?: string
   favoritesCount: number
   repliesCount: number
   createdAt: string
@@ -25,8 +27,10 @@ export const state: State = {
     id: 0,
     content: '',
     name: '',
+    handle: '',
     repliedToTweet: 0,
     repliedToName: '',
+    repliedToHandle: '',
     favoritesCount: 0,
     repliesCount: 0,
     createdAt: '',

@@ -113,6 +113,7 @@ export const actions: ActionTree<State, State> & Actions = {
       id: 0,
       email: '',
       name: '',
+      handle: '',
     })
   },
 }

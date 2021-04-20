@@ -126,7 +126,7 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 				INNER JOIN users ON users.id = t.id_user) AS sq ON sq.id_reply = tweets.id
 		LEFT JOIN favorites AS f ON f.id_tweet = tweets.id
 		LEFT JOIN replies AS r1 ON r1.id_tweet = tweets.id
-	WHERE users.name = $1
+	WHERE users.handle = $1
 	`)
 
 	if withCursor {

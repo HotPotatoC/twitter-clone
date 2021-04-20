@@ -91,7 +91,7 @@ export default defineComponent({
       // Use watch to wait for the user data mutation to finish
       // then show the navigation tabs
       watch(
-        () => store.getters['userData'].name,
+        () => store.getters['userData'].handle,
         (value) => {
           // Update the link for profile tab to current user data name
           tabs.value[index].to = `/${value}`
@@ -186,7 +186,9 @@ export default defineComponent({
           <p class="text-sm font-bold leading-tight dark:text-lightest">
             {{ user.name }}
           </p>
-          <p class="text-sm leading-tight dark:text-light">@{{ user.name }}</p>
+          <p class="text-sm leading-tight dark:text-light">
+            @{{ user.handle }}
+          </p>
         </div>
         <FontAwesome
           :icon="['fas', 'angle-down']"
@@ -207,7 +209,7 @@ export default defineComponent({
               {{ user.name }}
             </p>
             <p class="text-sm leading-tight dark:text-light">
-              @{{ user.name }}
+              @{{ user.handle }}
             </p>
           </div>
           <FontAwesome :icon="['fas', 'check']" class="ml-auto text-blue" />
@@ -216,7 +218,7 @@ export default defineComponent({
           @click="logout"
           class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-darkest border-t border-lighter dark:border-dark p-3 text-sm dark:text-lightest focus:outline-none"
         >
-          Log Out @{{ user.name }}
+          Log Out @{{ user.handle }}
         </button>
       </div>
     </div>

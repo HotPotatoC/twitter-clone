@@ -132,7 +132,7 @@ export default defineComponent({
         <div class="flex items-center w-full">
           <div class="block">
             <p class="font-semibold dark:text-lightest">{{ tweet.name }}</p>
-            <p class="text-sm text-dark dark:text-light">@{{ tweet.name }}</p>
+            <p class="text-sm text-dark dark:text-light">@{{ tweet.handle }}</p>
           </div>
           <FontAwesome
             :icon="['fas', 'angle-down']"

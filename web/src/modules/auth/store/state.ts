@@ -7,6 +7,7 @@ export interface AuthStatus {
 export interface UserData {
   id: number
   name: string
+  handle: string
   email: string
 }
 
@@ -23,7 +24,8 @@ export const state: State = {
   accessToken: '',
   user: {
     id: 0,
-    email: '',
     name: '',
+    handle: '',
+    email: '',
   },
 }
