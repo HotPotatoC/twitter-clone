@@ -1,9 +1,5 @@
-<template>
-  <router-view />
-</template>
-
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, resolveComponent, h } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from './store'
 import axios from './services/axios'
@@ -14,6 +10,7 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
+    const RouterView = resolveComponent('router-view')
 
     const responseInterceptor = axios.interceptors.response.use(
       (res) => res,
@@ -30,52 +27,8 @@ export default defineComponent({
         }
       }
     )
+
+    return () => h(RouterView)
   },
 })
 </script>
-
-<style>
-@import url('https://rsms.me/inter/inter.css');
-html {
-  font-family: 'Inter', sans-serif;
-}
-@supports (font-variation-settings: normal) {
-  html {
-    font-family: 'Inter var', sans-serif;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    --tw-bg-opacity: 1;
-    background-color: rgba(0, 0, 0, var(--tw-bg-opacity));
-  }
-}
-
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.overflow-y-auto::-webkit-scrollbar,
-.overflow-y-scroll::-webkit-scrollbar,
-.overflow-x-auto::-webkit-scrollbar,
-.overflow-x::-webkit-scrollbar,
-.overflow-x-scroll::-webkit-scrollbar,
-.overflow-y::-webkit-scrollbar,
-.hide-scrollbar::-webkit-scrollbar {
-  width: 0px;
-  background: transparent; /* Chrome/Safari/Webkit */
-}
-
-.overflow-y-auto,
-.overflow-y-scroll,
-.overflow-x-auto,
-.overflow-x,
-.overflow-x-scroll,
-.overflow-y,
-.hide-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-}
-</style>

@@ -3,7 +3,8 @@ import App from './App.vue'
 import makeFontAwesomePlugin from './plugins/font-awesome'
 import { router } from './routes'
 import { store } from './store'
-import './assets/tailwind.css'
+
+import './assets/styles/root.css'
 
 const app = createApp(App)
 
