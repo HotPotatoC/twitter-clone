@@ -11,15 +11,6 @@ export const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some((route) => route.meta.requiresAuth)) {
     await store.dispatch(ActionTypes.REFRESH_AUTH_TOKEN)
-    if (!store.getters['isLoggedIn']) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath },
-      })
-    } else {
-      next()
-    }
-
     await store.dispatch(ActionTypes.GET_USER_DATA)
     if (!store.getters['isLoggedIn']) {
       next({
@@ -30,6 +21,9 @@ router.beforeEach(async (to, from, next) => {
       next()
     }
   } else {
-    next()
+    await store.dispatch(ActionTypes.REFRESH_AUTH_TOKEN)
+    await store.dispatch(ActionTypes.GET_USER_DATA)
+    if (store.getters['isLoggedIn']) next('/home')
+    else next()
   }
 })

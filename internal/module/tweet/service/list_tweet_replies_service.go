@@ -106,10 +106,10 @@ func (s listTweetRepliesService) buildSQLQuery(withCursor bool) string {
 		t.content,
 		t.id_user,
 		t.created_at,
-		(array_agg(u.name)) [1],
-		(array_agg(u.handle)) [1],
-		COUNT(f.*),
-		COUNT(r.*)
+		u.name,
+		u.handle,
+		COUNT(f.id),
+		COUNT(r.id_reply)
 	FROM
 		replies
 		INNER JOIN tweets AS t ON t.id = replies.id_reply
@@ -125,7 +125,9 @@ func (s listTweetRepliesService) buildSQLQuery(withCursor bool) string {
 
 	queryBuilder.WriteString(`
 	GROUP BY
-		t.id
+		t.id,
+		u.name,
+		u.handle
 	ORDER BY
 		t.created_at DESC
 	LIMIT 10`)

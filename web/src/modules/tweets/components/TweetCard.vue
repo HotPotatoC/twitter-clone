@@ -36,26 +36,57 @@ export default defineComponent({
     <p class="text-sm text-dark dark:text-light ml-2">
       {{ parsedCreatedAt }}
     </p>
-    <IconEllipsisH class="text-gray ml-auto" />
+    <div
+      class="text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
+    >
+      <IconEllipsisH />
+    </div>
   </div>
   <p class="py-2 break-words dark:text-lightest">
     {{ tweet.content }}
   </p>
-  <div class="flex items-center justify-between w-full">
-    <div class="flex items-center text-sm text-dark dark:text-light">
-      <IconComment class="mr-3" />
-      <p>{{ tweet.repliesCount }}</p>
+  <div class="flex items-center justify-between w-full mt-2">
+    <div class="flex items-center">
+      <div
+        class="mr-3 p-2 text-dark dark:text-light hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
+      >
+        <IconComment />
+      </div>
+      <p class="text-sm text-dark dark:text-light">
+        {{ tweet.repliesCount }}
+      </p>
     </div>
-    <div class="flex items-center text-sm text-dark dark:text-light">
-      <IconRetweet class="mr-3" />
-      <p>{{ tweet.repliesCount }}</p>
+    <div class="flex items-center">
+      <div
+        class="mr-3 p-2 text-dark dark:text-light hover:bg-success hover:text-success hover:bg-opacity-20 rounded-full"
+      >
+        <IconRetweet />
+      </div>
+      <p class="text-sm text-dark dark:text-light">
+        {{ tweet.repliesCount }}
+      </p>
     </div>
-    <div class="flex items-center text-sm text-dark dark:text-light">
-      <IconHeart class="mr-3" />
-      <p>{{ tweet.favoritesCount }}</p>
+    <div class="flex items-center">
+      <div
+        class="mr-3 p-2 hover:bg-danger hover:bg-opacity-20 rounded-full"
+        :class="
+          tweet.alreadyLiked
+            ? ['text-danger']
+            : ['text-dark', 'dark:text-light', 'hover:text-danger']
+        "
+      >
+        <IconHeart :class="tweet.alreadyLiked ? 'fill-current' : null" />
+      </div>
+      <p class="text-sm text-dark dark:text-light">
+        {{ tweet.favoritesCount }}
+      </p>
     </div>
-    <div class="flex items-center text-sm text-dark dark:text-light">
-      <IconShare class="mr-3" />
+    <div class="flex items-center">
+      <div
+        class="mr-3 p-2 text-dark dark:text-light hover:bg-darkblue hover:text-darkblue hover:bg-opacity-20 rounded-full"
+      >
+        <IconShare />
+      </div>
     </div>
   </div>
 </template>

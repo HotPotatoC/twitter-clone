@@ -103,13 +103,13 @@ func (s searchTweetService) buildSQLQuery(withCursor bool) string {
 		tweets.id,
 		tweets.content,
 		tweets.created_at,
-		(ARRAY_AGG(users.name))[1],
-		(ARRAY_AGG(users.handle))[1],
-		(ARRAY_AGG(sq.id_tweet))[1],
-		(ARRAY_AGG(sq.name))[1],
-		(ARRAY_AGG(sq.handle))[1],
-		COUNT(f.*),
-		COUNT(r1.*),
+		users.name,
+		users.handle,
+		reply_details.id_tweet,
+		reply_details.name,
+		reply_details.handle,
+		COUNT(favorites.id),
+		COUNT(replies.id_reply),
 		ts_rank(tweets.content_tsv, plainto_tsquery($1))
 	FROM
 		tweets
@@ -123,9 +123,9 @@ func (s searchTweetService) buildSQLQuery(withCursor bool) string {
 			FROM
 				replies
 				INNER JOIN tweets AS t ON t.id = replies.id_tweet
-				INNER JOIN users ON users.id = t.id_user) AS sq ON sq.id_reply = tweets.id
-		LEFT JOIN favorites AS f ON f.id_tweet = tweets.id
-		LEFT JOIN replies AS r1 ON r1.id_tweet = tweets.id
+				INNER JOIN users ON users.id = t.id_user) AS reply_details ON reply_details.id_reply = tweets.id
+		LEFT JOIN favorites ON favorites.id_tweet = tweets.id
+		LEFT JOIN replies ON replies.id_tweet = tweets.id
 	WHERE tweets.content_tsv @@ plainto_tsquery($1)
 	`)
 
@@ -135,7 +135,12 @@ func (s searchTweetService) buildSQLQuery(withCursor bool) string {
 
 	queryBuilder.WriteString(`
 	GROUP BY
-		tweets.id
+		tweets.id,
+		users.name,
+		users.handle,
+		reply_details.id_tweet,
+		reply_details.name,
+		reply_details.handle
 	ORDER BY
 		ts_rank(tweets.content_tsv, plainto_tsquery($1)) DESC
 	LIMIT 10`)

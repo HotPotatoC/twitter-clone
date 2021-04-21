@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type ListTweetOutput struct {
+type ListTweetFeedOutput struct {
 	entity.Tweet
 	Name            string `json:"name"`
 	Handle          string `json:"handle"`
@@ -19,22 +19,23 @@ type ListTweetOutput struct {
 	RepliedToHandle string `json:"replied_to_handle,omitempty"`
 	FavoritesCount  int    `json:"favorites_count"`
 	RepliesCount    int    `json:"replies_count"`
+	AlreadyLiked    bool   `json:"already_liked"`
 }
 
-type ListTweetService interface {
-	Execute(createdAtCursor string) ([]ListTweetOutput, error)
+type ListTweetFeedService interface {
+	Execute(userID int64, createdAtCursor string) ([]ListTweetFeedOutput, error)
 }
 
-type listTweetService struct {
+type listTweetFeedService struct {
 	db database.Database
 }
 
-func NewListTweetService(db database.Database) ListTweetService {
-	return listTweetService{db: db}
+func NewListTweetFeedService(db database.Database) ListTweetFeedService {
+	return listTweetFeedService{db: db}
 }
 
-func (s listTweetService) Execute(createdAtCursor string) ([]ListTweetOutput, error) {
-	var tweets []ListTweetOutput
+func (s listTweetFeedService) Execute(userID int64, createdAtCursor string) ([]ListTweetFeedOutput, error) {
+	var tweets []ListTweetFeedOutput
 
 	var rows database.Rows
 	var err error
@@ -45,17 +46,17 @@ func (s listTweetService) Execute(createdAtCursor string) ([]ListTweetOutput, er
 	if withCursor {
 		cursor, err := time.Parse(time.RFC3339, createdAtCursor)
 		if err != nil {
-			return []ListTweetOutput{}, ErrInvalidCursor
+			return []ListTweetFeedOutput{}, ErrInvalidCursor
 		}
 
-		rows, err = s.db.Query(query, cursor)
+		rows, err = s.db.Query(query, userID, cursor)
 		if err != nil {
-			return []ListTweetOutput{}, errors.Wrap(err, "service.listTweetService.Execute")
+			return []ListTweetFeedOutput{}, errors.Wrap(err, "service.listTweetFeedService.Execute")
 		}
 	} else {
-		rows, err = s.db.Query(query)
+		rows, err = s.db.Query(query, userID)
 		if err != nil {
-			return []ListTweetOutput{}, errors.Wrap(err, "service.listTweetService.Execute")
+			return []ListTweetFeedOutput{}, errors.Wrap(err, "service.listTweetFeedService.Execute")
 		}
 	}
 	defer rows.Close()
@@ -67,13 +68,14 @@ func (s listTweetService) Execute(createdAtCursor string) ([]ListTweetOutput, er
 		var repliedToName, repliedToHandle sql.NullString
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
+		var alreadyLiked bool
 
-		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &repliedToTweetID, &repliedToName, &repliedToHandle, &favoritesCount, &repliesCount)
+		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &repliedToTweetID, &repliedToName, &repliedToHandle, &favoritesCount, &repliesCount, &alreadyLiked)
 		if err != nil {
-			return []ListTweetOutput{}, errors.Wrap(err, "service.listTweetService.Execute")
+			return []ListTweetFeedOutput{}, errors.Wrap(err, "service.listTweetFeedService.Execute")
 		}
 
-		tweets = append(tweets, ListTweetOutput{
+		tweets = append(tweets, ListTweetFeedOutput{
 			Tweet: entity.Tweet{
 				ID:        id,
 				Content:   content,
@@ -86,17 +88,18 @@ func (s listTweetService) Execute(createdAtCursor string) ([]ListTweetOutput, er
 			RepliedToHandle: repliedToHandle.String,
 			FavoritesCount:  favoritesCount,
 			RepliesCount:    repliesCount,
+			AlreadyLiked:    alreadyLiked,
 		})
 	}
 
 	if err := rows.Err(); err != nil {
-		return []ListTweetOutput{}, errors.Wrap(err, "service.listTweetService.Execute")
+		return []ListTweetFeedOutput{}, errors.Wrap(err, "service.listTweetFeedService.Execute")
 	}
 
 	return tweets, nil
 }
 
-func (s listTweetService) buildSQLQuery(withCursor bool) string {
+func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 	var queryBuilder strings.Builder
 
 	queryBuilder.WriteString(`
@@ -110,10 +113,17 @@ func (s listTweetService) buildSQLQuery(withCursor bool) string {
 		reply_details.name,
 		reply_details.handle,
 		COUNT(favorites.id),
-		COUNT(replies.id_reply)
+		COUNT(replies.id_reply),
+		CASE WHEN favorites.id_user = 5
+			AND favorites.id_tweet = tweets.id THEN
+			TRUE
+		ELSE
+			FALSE
+		END already_liked
 	FROM
 		tweets
-		LEFT JOIN users ON users.id = tweets.id_user
+		INNER JOIN users ON users.id = tweets.id_user
+		INNER JOIN follows on follows.followed_id = users.id
 		LEFT JOIN (
 			SELECT
 				replies.id_reply,
@@ -126,10 +136,11 @@ func (s listTweetService) buildSQLQuery(withCursor bool) string {
 				INNER JOIN users ON users.id = t.id_user) AS reply_details ON reply_details.id_reply = tweets.id
 		LEFT JOIN favorites ON favorites.id_tweet = tweets.id
 		LEFT JOIN replies ON replies.id_tweet = tweets.id
+	WHERE follows.follower_id = $1
 	`)
 
 	if withCursor {
-		queryBuilder.WriteString("WHERE tweets.created_at < $1")
+		queryBuilder.WriteString("AND tweets.created_at < $2")
 	}
 
 	queryBuilder.WriteString(`
@@ -139,7 +150,8 @@ func (s listTweetService) buildSQLQuery(withCursor bool) string {
 		users.handle,
 		reply_details.id_tweet,
 		reply_details.name,
-		reply_details.handle
+		reply_details.handle,
+		already_liked
 	ORDER BY
 		tweets.created_at DESC
 	LIMIT 10`)

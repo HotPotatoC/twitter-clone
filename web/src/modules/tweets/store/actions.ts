@@ -56,6 +56,7 @@ export interface TweetJSONSchema {
   favorites_count: number
   replies_count: number
   created_at: string
+  already_liked: boolean
 }
 
 export interface TweetsJSONSchema {
@@ -66,7 +67,7 @@ export interface TweetsJSONSchema {
 export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.GET_TWEETS_FEED]({ commit }): Promise<any> {
     try {
-      const response = await axios.get<TweetsJSONSchema>(`/tweets`)
+      const response = await axios.get<TweetsJSONSchema>(`/tweets/feed`)
 
       const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
         repliedToTweet: item.replied_to_tweet,
@@ -74,6 +75,7 @@ export const actions: ActionTree<State, State> & Actions = {
         favoritesCount: item.favorites_count,
         repliesCount: item.replies_count,
         createdAt: item.created_at,
+        alreadyLiked: item.already_liked,
         ...item,
       }))
 
@@ -85,7 +87,7 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.LOAD_MORE_TWEETS]({ commit }, cursor): Promise<any> {
     try {
       const response = await axios.get<TweetsJSONSchema>(
-        `/tweets?cursor=${cursor}`
+        `/tweets/feed?cursor=${cursor}`
       )
 
       const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
@@ -95,6 +97,7 @@ export const actions: ActionTree<State, State> & Actions = {
         favoritesCount: item.favorites_count,
         repliesCount: item.replies_count,
         createdAt: item.created_at,
+        alreadyLiked: item.already_liked,
         ...item,
       }))
 
@@ -166,7 +169,7 @@ export const actions: ActionTree<State, State> & Actions = {
         `/tweets/search?query=${query}`
       )
 
-      const tweetsFeed: Tweet[] = response.data.items.map((item) => ({
+      const searchResults: Tweet[] = response.data.items.map((item) => ({
         repliedToTweet: item.replied_to_tweet,
         repliedToName: item.replied_to_name,
         repliedToHandle: item.replied_to_handle,
@@ -176,7 +179,7 @@ export const actions: ActionTree<State, State> & Actions = {
         ...item,
       }))
 
-      commit(MutationTypes.SET_TWEET_SEARCH_RESULTS, tweetsFeed)
+      commit(MutationTypes.SET_TWEET_SEARCH_RESULTS, searchResults)
     } catch (error) {
       return error
     }

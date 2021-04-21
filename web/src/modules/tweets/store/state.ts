@@ -8,6 +8,7 @@ export interface Tweet {
   repliedToHandle?: string
   favoritesCount: number
   repliesCount: number
+  alreadyLiked?: boolean
   createdAt: string
 }
 
@@ -34,6 +35,7 @@ export const state: State = {
     favoritesCount: 0,
     repliesCount: 0,
     createdAt: '',
+    alreadyLiked: false,
     replies: [],
   },
   tweetSearchResult: [],
