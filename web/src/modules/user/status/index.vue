@@ -21,6 +21,7 @@ import IconComment from '../../../components/icons/IconComment.vue'
 import IconRetweet from '../../../components/icons/IconRetweet.vue'
 import IconShare from '../../../components/icons/IconShare.vue'
 import IconHeart from '../../../components/icons/IconHeart.vue'
+import PageDoesNotExists from '../../../components/common/PageDoesNotExists.vue'
 
 export default defineComponent({
   components: {
@@ -33,12 +34,14 @@ export default defineComponent({
     IconRetweet,
     IconHeart,
     IconShare,
+    PageDoesNotExists,
   },
   name: 'Status',
   setup() {
     const store = useStore()
     const route = useRoute()
-    const elRef = ref<Element>(null)
+    const elRef = ref<Element>()
+    const notFound = ref<boolean>(false)
     const initialLoadDone = ref<boolean>(false)
     const loadNextBatch = ref<boolean>(false)
     const tweet = ref<TweetAndReplies | null>(null)
@@ -69,9 +72,16 @@ export default defineComponent({
     })
 
     async function getTweetStatus(tweetId: string | string[]) {
-      await store.dispatch(ActionTypes.GET_TWEET_STATUS, tweetId)
-
-      tweet.value = store.getters['tweetStatus']
+      try {
+        await store
+          .dispatch(ActionTypes.GET_TWEET_STATUS, tweetId)
+          .catch(() => {
+            notFound.value = true
+          })
+        tweet.value = store.getters['tweetStatus']
+      } catch (error) {
+        notFound.value = true
+      }
     }
 
     async function loadMoreReplies(tweetId: string | string[]) {
@@ -102,6 +112,7 @@ export default defineComponent({
       const element = elRef.value
       if (
         !loadNextBatch.value &&
+        element &&
         element.scrollTop + element.clientHeight + 1 >= element.scrollHeight
       ) {
         loadNextBatch.value = true
@@ -112,6 +123,7 @@ export default defineComponent({
 
     return {
       elRef,
+      notFound,
       initialLoadDone,
       loadNextBatch,
       tweet,
@@ -142,8 +154,11 @@ export default defineComponent({
       <Return />
       <h1 class="text-2xl font-bold dark:text-lightest">Tweet</h1>
     </div>
-    <div class="px-5 py-3 border-b border-lighter dark:border-dark">
-      <div v-if="initialLoadDone" class="w-full">
+    <div v-if="notFound" class="mt-12 px-5 py-3">
+      <PageDoesNotExists />
+    </div>
+    <div v-else class="px-5 py-3 border-b border-lighter dark:border-dark">
+      <div v-if="initialLoadDone && tweet" class="w-full">
         <div class="flex items-center w-full">
           <div class="block">
             <p class="font-semibold dark:text-lightest">{{ tweet.name }}</p>
@@ -203,7 +218,15 @@ export default defineComponent({
         <LoadingSpinner />
       </div>
     </div>
-    <div v-if="initialLoadDone && tweet.replies.length > 0">
+    <div
+      v-if="
+        initialLoadDone &&
+        !notFound &&
+        tweet &&
+        tweet.replies &&
+        tweet.replies.length > 0
+      "
+    >
       <div
         v-for="reply in tweet.replies"
         :key="reply.id"
@@ -216,7 +239,9 @@ export default defineComponent({
         </div>
       </div>
       <div
-        v-show="tweet.replies.length > 0 && loadNextBatch"
+        v-show="
+          tweet && tweet.replies && tweet.replies.length > 0 && loadNextBatch
+        "
         class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full text-center">

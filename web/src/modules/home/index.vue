@@ -25,7 +25,7 @@ export default defineComponent({
     const store = useStore()
     const initialLoadDone = ref<boolean>(false)
     const loadNextBatch = ref<boolean>(false)
-    const tweetsRef = ref<Element>(null)
+    const tweetsRef = ref<Element>()
     const tweets = ref<Tweet[]>([])
 
     const tweetContent = ref<string>('')
@@ -67,6 +67,7 @@ export default defineComponent({
       const element = tweetsRef.value
       if (
         !loadNextBatch.value &&
+        element &&
         element.scrollTop + element.clientHeight + 1 >= element.scrollHeight
       ) {
         loadNextBatch.value = true

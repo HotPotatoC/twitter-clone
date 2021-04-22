@@ -81,7 +81,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
       commit(MutationTypes.SET_TWEETS_FEED, tweetsFeed)
     } catch (error) {
-      return error
+      throw error
     }
   },
   async [ActionTypes.LOAD_MORE_TWEETS]({ commit }, cursor): Promise<any> {
@@ -103,7 +103,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
       commit(MutationTypes.PUSH_TWEET_FEED, tweetsFeed)
     } catch (error) {
-      return error
+      throw error
     }
   },
   async [ActionTypes.GET_TWEET_STATUS]({ commit }, tweetId): Promise<any> {
@@ -135,7 +135,7 @@ export const actions: ActionTree<State, State> & Actions = {
         ...tweetResponse.data,
       })
     } catch (error) {
-      return error
+      throw error
     }
   },
   async [ActionTypes.LOAD_MORE_REPLIES](
@@ -160,7 +160,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
       commit(MutationTypes.PUSH_REPLIES_TO_TWEET_STATUS, replies)
     } catch (error) {
-      return error
+      throw error
     }
   },
   async [ActionTypes.SEARCH_TWEETS]({ commit }, query): Promise<any> {
@@ -181,14 +181,14 @@ export const actions: ActionTree<State, State> & Actions = {
 
       commit(MutationTypes.SET_TWEET_SEARCH_RESULTS, searchResults)
     } catch (error) {
-      return error
+      throw error
     }
   },
   async [ActionTypes.NEW_TWEET]({ commit }, content): Promise<any> {
     try {
       await axios.post<TweetsJSONSchema>('/tweets', { content })
     } catch (error) {
-      return error
+      throw error
     }
   },
   async [ActionTypes.NEW_REPLY](
@@ -200,7 +200,7 @@ export const actions: ActionTree<State, State> & Actions = {
         content,
       })
     } catch (error) {
-      return error
+      throw error
     }
   },
 }

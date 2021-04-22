@@ -39,7 +39,7 @@ export default defineComponent({
     const route = useRoute()
 
     const selectedTab = ref<number>(1)
-    const tweetsRef = ref<Element>(null)
+    const tweetsRef = ref<Element>()
     const initialLoadDone = ref<boolean>(false)
     const loadNextBatch = ref<boolean>(false)
     const tweets = ref<Tweet[]>([])
@@ -114,6 +114,7 @@ export default defineComponent({
       const element = tweetsRef.value
       if (
         !loadNextBatch.value &&
+        element &&
         element.scrollTop + element.clientHeight + 1 >= element.scrollHeight
       ) {
         loadNextBatch.value = true

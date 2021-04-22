@@ -3,9 +3,14 @@ import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../../store'
 import { ActionTypes as UserActionTypes } from '../user/store/actions'
-import { ActionTypes as AuthActionTypes } from '../auth/store/actions'
 import RegisterDialog from './RegisterDialog.vue'
 import IconTwitterWhite from '../../components/icons/IconTwitterWhite.vue'
+
+interface RegisterData {
+  name: string
+  email: string
+  password: string
+}
 
 export default defineComponent({
   name: 'Root',
@@ -15,7 +20,7 @@ export default defineComponent({
     const router = useRouter()
     const showRegisterDialog = ref<boolean>(false)
 
-    async function register({ name, email, password }) {
+    async function register({ name, email, password }: RegisterData) {
       await store.dispatch(UserActionTypes.REGISTER_ACCOUNT, {
         name,
         email,

@@ -109,7 +109,7 @@ export default defineComponent({
         label="Home"
         to="/home"
         :selected="selectedTab === 'home'"
-        @select="selectTab"
+        @selectTab="selectTab"
       >
         <template #icon>
           <IconHome :size="28" class="mr-4" />
@@ -120,7 +120,7 @@ export default defineComponent({
         label="Explore"
         to="/home"
         :selected="selectedTab === 'explore'"
-        @select="selectTab"
+        @selectTab="selectTab"
       >
         <template #icon>
           <IconHashtag :size="28" class="mr-4" />
@@ -131,7 +131,7 @@ export default defineComponent({
         label="Notifications"
         to="/home"
         :selected="selectedTab === 'notifications'"
-        @select="selectTab"
+        @selectTab="selectTab"
       >
         <template #icon>
           <IconBell :size="28" class="mr-4" />
@@ -142,7 +142,7 @@ export default defineComponent({
         label="Messages"
         to="/home"
         :selected="selectedTab === 'messages'"
-        @select="selectTab"
+        @selectTab="selectTab"
       >
         <template #icon>
           <IconEnvelope :size="28" class="mr-4" />
@@ -153,7 +153,7 @@ export default defineComponent({
         label="Bookmarks"
         to="/home"
         :selected="selectedTab === 'bookmarks'"
-        @select="selectTab"
+        @selectTab="selectTab"
       >
         <template #icon>
           <IconBookmark :size="28" class="mr-4" />
@@ -164,7 +164,7 @@ export default defineComponent({
         label="Lists"
         to="/home"
         :selected="selectedTab === 'lists'"
-        @select="selectTab"
+        @selectTab="selectTab"
       >
         <template #icon>
           <IconList :size="28" class="mr-4" />
@@ -175,7 +175,7 @@ export default defineComponent({
         label="Profile"
         :to="`/${user.handle}`"
         :selected="selectedTab === 'profile'"
-        @select="selectTab"
+        @selectTab="selectTab"
       >
         <template #icon>
           <IconUser :size="28" class="mr-4" />
@@ -186,7 +186,7 @@ export default defineComponent({
         label="More"
         to="/home"
         :selected="selectedTab === 'more'"
-        @select="selectTab"
+        @selectTab="selectTab"
       >
         <template #icon>
           <IconEllipsisH :size="28" class="mr-4" />

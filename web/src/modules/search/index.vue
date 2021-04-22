@@ -8,7 +8,6 @@ import TweetCard from '../tweets/components/TweetCard.vue'
 import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
 import Return from '../../components/common/Return.vue'
 import IconSearch from '../../components/icons/IconSearch.vue'
-import IconSearch from '../../components/icons/IconSearch.vue'
 
 interface NewTweet {
   content: string | Ref<string>
@@ -23,7 +22,7 @@ export default defineComponent({
     const router = useRouter()
     const initialLoadDone = ref<boolean>(false)
     const loadNextBatch = ref<boolean>(false)
-    const tweetsRef = ref<Element>(null)
+    const tweetsRef = ref<Element>()
     const tweets = ref<Tweet[]>([])
     const searchFocused = ref<boolean>(false)
     const searchQuery = ref<string>('')
