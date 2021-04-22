@@ -26,7 +26,10 @@ func (a getTweetAction) Execute(c *fiber.Ctx) error {
 			"message": "There was a problem on our side",
 		})
 	}
-	tweet, err := a.service.Execute(tweetID)
+
+	userID := c.Locals("userID").(float64)
+
+	tweet, err := a.service.Execute(int64(userID), tweetID)
 	if err != nil {
 		fmt.Println(err)
 		if errors.Is(err, entity.ErrTweetDoesNotExist) {

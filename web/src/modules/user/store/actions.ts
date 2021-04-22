@@ -44,6 +44,7 @@ interface GetProfileDetailsJSON {
   followers_count: number
   followings_count: number
   joined_at: string
+  already_liked: boolean
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -110,6 +111,7 @@ export const actions: ActionTree<State, State> & Actions = {
               favoritesCount: item.favorites_count,
               repliesCount: item.replies_count,
               createdAt: item.created_at,
+              alreadyLiked: item.already_liked,
               ...item,
             }))
           : []

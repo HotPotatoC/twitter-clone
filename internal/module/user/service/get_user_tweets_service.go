@@ -19,10 +19,11 @@ type GetUserTweetsOutput struct {
 	RepliedToHandle string `json:"replied_to_handle,omitempty"`
 	FavoritesCount  int    `json:"favorites_count"`
 	RepliesCount    int    `json:"replies_count"`
+	AlreadyLiked    bool   `json:"already_liked"`
 }
 
 type GetUserTweetsService interface {
-	Execute(username string, createdAtCursor string) ([]GetUserTweetsOutput, error)
+	Execute(userID int64, username string, createdAtCursor string) ([]GetUserTweetsOutput, error)
 }
 
 type getUserTweetsService struct {
@@ -33,7 +34,7 @@ func NewGetUserTweetsService(db database.Database) GetUserTweetsService {
 	return getUserTweetsService{db: db}
 }
 
-func (s getUserTweetsService) Execute(username string, createdAtCursor string) ([]GetUserTweetsOutput, error) {
+func (s getUserTweetsService) Execute(userID int64, username string, createdAtCursor string) ([]GetUserTweetsOutput, error) {
 	var tweets []GetUserTweetsOutput
 
 	var rows database.Rows
@@ -48,12 +49,12 @@ func (s getUserTweetsService) Execute(username string, createdAtCursor string) (
 			return []GetUserTweetsOutput{}, ErrInvalidCursor
 		}
 
-		rows, err = s.db.Query(query, username, cursor)
+		rows, err = s.db.Query(query, userID, username, cursor)
 		if err != nil {
 			return []GetUserTweetsOutput{}, errors.Wrap(err, "service.getUserTweetsService.Execute")
 		}
 	} else {
-		rows, err = s.db.Query(query, username)
+		rows, err = s.db.Query(query, userID, username)
 		if err != nil {
 			return []GetUserTweetsOutput{}, errors.Wrap(err, "service.getUserTweetsService.Execute")
 		}
@@ -67,8 +68,9 @@ func (s getUserTweetsService) Execute(username string, createdAtCursor string) (
 		var repliedToName, repliedToHandle sql.NullString
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
+		var alreadyLiked bool
 
-		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &repliedToTweetID, &repliedToName, &repliedToHandle, &favoritesCount, &repliesCount)
+		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &repliedToTweetID, &repliedToName, &repliedToHandle, &favoritesCount, &repliesCount, &alreadyLiked)
 		if err != nil {
 			return []GetUserTweetsOutput{}, errors.Wrap(err, "service.getUserTweetsService.Execute")
 		}
@@ -86,6 +88,7 @@ func (s getUserTweetsService) Execute(username string, createdAtCursor string) (
 			RepliedToHandle: repliedToHandle.String,
 			FavoritesCount:  favoritesCount,
 			RepliesCount:    repliesCount,
+			AlreadyLiked:    alreadyLiked,
 		})
 	}
 
@@ -110,7 +113,13 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 		reply_details.name,
 		reply_details.handle,
 		COUNT(favorites.id),
-		COUNT(replies.id_reply)
+		COUNT(replies.id_reply),
+		CASE WHEN favorites.id_user = $1
+			AND favorites.id_tweet = tweets.id THEN
+			TRUE
+		ELSE
+			FALSE
+		END already_liked
 	FROM
 		tweets
 		LEFT JOIN users ON users.id = tweets.id_user
@@ -126,11 +135,11 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 				INNER JOIN users ON users.id = t.id_user) AS reply_details ON reply_details.id_reply = tweets.id
 		LEFT JOIN favorites ON favorites.id_tweet = tweets.id
 		LEFT JOIN replies ON replies.id_tweet = tweets.id
-	WHERE users.handle = $1
+	WHERE users.handle = $2
 	`)
 
 	if withCursor {
-		queryBuilder.WriteString("AND tweets.created_at < $2")
+		queryBuilder.WriteString("AND tweets.created_at < $3")
 	}
 
 	queryBuilder.WriteString(`
@@ -140,7 +149,8 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 		users.handle,
 		reply_details.id_tweet,
 		reply_details.name,
-		reply_details.handle
+		reply_details.handle,
+		already_liked
 	ORDER BY
 		tweets.created_at DESC
 	LIMIT 10`)

@@ -108,6 +108,17 @@ export default defineComponent({
       } catch (error) {}
     }
 
+    async function likeTweet() {
+      await store.dispatch(ActionTypes.FAVORITE_TWEET, route.params.tweetId)
+
+      tweet.value.alreadyLiked = !tweet.value.alreadyLiked
+      if (tweet.value.alreadyLiked) {
+        tweet.value.favoritesCount++
+      } else {
+        tweet.value.favoritesCount--
+      }
+    }
+
     async function handleScroll(e: Event) {
       const element = elRef.value
       if (
@@ -129,6 +140,7 @@ export default defineComponent({
       tweet,
       showCreateReplyDialog,
       createReply,
+      likeTweet,
       parsedCreatedAt,
       handleScroll,
     }
@@ -160,11 +172,17 @@ export default defineComponent({
     <div v-else class="px-5 py-3 border-b border-lighter dark:border-dark">
       <div v-if="initialLoadDone && tweet" class="w-full">
         <div class="flex items-center w-full">
-          <div class="block">
-            <p class="font-semibold dark:text-lightest">{{ tweet.name }}</p>
-            <p class="text-sm text-dark dark:text-light">@{{ tweet.handle }}</p>
+          <router-link :to="`/${tweet.handle}`">
+              <p class="font-semibold dark:text-lightest hover:underline">{{ tweet.name }}</p>
+              <p class="text-sm text-dark dark:text-light">
+                @{{ tweet.handle }}
+              </p>
+          </router-link>
+          <div
+            class="cursor-pointer text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
+          >
+            <IconEllipsisH />
           </div>
-          <IconEllipsisH class="text-dark ml-auto" />
         </div>
         <p class="text-2xl py-2 break-words dark:text-lightest">
           {{ tweet.content }}
@@ -202,8 +220,17 @@ export default defineComponent({
           </div>
           <div
             class="flex justify-center hover:bg-danger hover:text-danger hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+            :class="
+              tweet.alreadyLiked
+                ? ['text-danger']
+                : ['text-dark', 'dark:text-light', 'hover:text-danger']
+            "
+            @click="likeTweet"
           >
-            <IconHeart :size="20" />
+            <IconHeart
+              :size="20"
+              :class="tweet.alreadyLiked ? 'fill-current' : null"
+            />
           </div>
           <div
             class="flex justify-center hover:bg-darkblue hover:text-darkblue hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
@@ -233,9 +260,7 @@ export default defineComponent({
         class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full">
-          <router-link :to="`/${reply.handle}/status/${reply.id}`">
-            <TweetCard :tweet="reply" />
-          </router-link>
+          <TweetCard :tweet="reply" />
         </div>
       </div>
       <div

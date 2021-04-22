@@ -114,7 +114,7 @@ func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 		reply_details.handle,
 		COUNT(favorites.id),
 		COUNT(replies.id_reply),
-		CASE WHEN favorites.id_user = 5
+		CASE WHEN favorites.id_user = $1
 			AND favorites.id_tweet = tweets.id THEN
 			TRUE
 		ELSE

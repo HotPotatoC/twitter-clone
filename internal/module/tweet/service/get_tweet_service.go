@@ -18,10 +18,11 @@ type GetTweetOutput struct {
 	RepliedToHandle string `json:"replied_to_handle,omitempty"`
 	FavoritesCount  int    `json:"favorites_count"`
 	RepliesCount    int    `json:"replies_count"`
+	AlreadyLiked    bool   `json:"already_liked"`
 }
 
 type GetTweetService interface {
-	Execute(tweetID int64) (GetTweetOutput, error)
+	Execute(userID, tweetID int64) (GetTweetOutput, error)
 }
 
 type getTweetService struct {
@@ -32,7 +33,7 @@ func NewGetTweetService(db database.Database) GetTweetService {
 	return getTweetService{db: db}
 }
 
-func (s getTweetService) Execute(tweetID int64) (GetTweetOutput, error) {
+func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) {
 	var tweetExists bool
 	err := s.db.QueryRow("SELECT EXISTS (SELECT 1 FROM tweets WHERE id = $1)", tweetID).Scan(&tweetExists)
 	if err != nil {
@@ -49,6 +50,7 @@ func (s getTweetService) Execute(tweetID int64) (GetTweetOutput, error) {
 	var repliedToName, repliedToHandle sql.NullString
 	var createdAt time.Time
 	var favoritesCount, repliesCount int
+	var alreadyLiked bool
 
 	err = s.db.QueryRow(`
 	SELECT tweets.id,
@@ -60,9 +62,16 @@ func (s getTweetService) Execute(tweetID int64) (GetTweetOutput, error) {
 		reply_details.name,
 		reply_details.handle,
 		COUNT(favorites.id),
-		COUNT(replies.id_reply)
-	FROM tweets
-		LEFT JOIN users ON users.id = tweets.id_user
+		COUNT(replies.id_reply),
+		CASE WHEN favorites.id_user = $1
+			AND favorites.id_tweet = tweets.id THEN
+			TRUE
+		ELSE
+			FALSE
+		END already_liked
+	FROM
+		tweets
+		INNER JOIN users ON users.id = tweets.id_user
 		LEFT JOIN (
 			SELECT replies.id_reply,
 				replies.id_tweet,
@@ -74,15 +83,16 @@ func (s getTweetService) Execute(tweetID int64) (GetTweetOutput, error) {
 		) as reply_details ON reply_details.id_reply = tweets.id
 		LEFT JOIN favorites ON favorites.id_tweet = tweets.id
 		LEFT JOIN replies ON replies.id_tweet = tweets.id
-	WHERE tweets.id = $1
+	WHERE tweets.id = $2
 	GROUP BY
 		tweets.id,
 		users.name,
 		users.handle,
 		reply_details.id_tweet,
 		reply_details.name,
-		reply_details.handle
-	`, tweetID).Scan(&id, &content, &createdAt, &name, &handle, &repliedToTweetID, &repliedToName, &repliedToHandle, &favoritesCount, &repliesCount)
+		reply_details.handle,
+		already_liked
+	`, userID, tweetID).Scan(&id, &content, &createdAt, &name, &handle, &repliedToTweetID, &repliedToName, &repliedToHandle, &favoritesCount, &repliesCount, &alreadyLiked)
 	if err != nil {
 		return GetTweetOutput{}, errors.Wrap(err, "service.getTweetService.Execute")
 	}
@@ -100,5 +110,6 @@ func (s getTweetService) Execute(tweetID int64) (GetTweetOutput, error) {
 		RepliedToHandle: repliedToHandle.String,
 		FavoritesCount:  favoritesCount,
 		RepliesCount:    favoritesCount,
+		AlreadyLiked:    alreadyLiked,
 	}, nil
 }

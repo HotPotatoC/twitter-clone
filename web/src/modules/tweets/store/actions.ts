@@ -13,6 +13,7 @@ export enum ActionTypes {
   SEARCH_TWEETS = 'SEARCH_TWEETS',
   NEW_TWEET = 'NEW_TWEET',
   NEW_REPLY = 'NEW_REPLY',
+  FAVORITE_TWEET = 'FAVORITE_TWEET',
 }
 
 export interface Actions {
@@ -42,6 +43,10 @@ export interface Actions {
   [ActionTypes.NEW_REPLY](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: { tweetId: string | string[]; content: string | string[] }
+  ): Promise<any>
+  [ActionTypes.FAVORITE_TWEET](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    payload: string | string[]
   ): Promise<any>
 }
 
@@ -121,6 +126,7 @@ export const actions: ActionTree<State, State> & Actions = {
         favoritesCount: tweetResponse.data.favorites_count,
         repliesCount: tweetResponse.data.replies_count,
         createdAt: tweetResponse.data.created_at,
+        alreadyLiked: tweetResponse.data.already_liked,
         replies:
           repliesResponse.data.items !== null
             ? repliesResponse.data.items.map((item) => ({
@@ -186,7 +192,7 @@ export const actions: ActionTree<State, State> & Actions = {
   },
   async [ActionTypes.NEW_TWEET]({ commit }, content): Promise<any> {
     try {
-      await axios.post<TweetsJSONSchema>('/tweets', { content })
+      await axios.post('/tweets', { content })
     } catch (error) {
       throw error
     }
@@ -196,9 +202,16 @@ export const actions: ActionTree<State, State> & Actions = {
     { tweetId, content }
   ): Promise<any> {
     try {
-      await axios.post<TweetsJSONSchema>(`/tweets/${tweetId}/reply`, {
+      await axios.post(`/tweets/${tweetId}/reply`, {
         content,
       })
+    } catch (error) {
+      throw error
+    }
+  },
+  async [ActionTypes.FAVORITE_TWEET]({ commit }, tweetId): Promise<any> {
+    try {
+      await axios.post(`/tweets/${tweetId}/favorite`)
     } catch (error) {
       throw error
     }

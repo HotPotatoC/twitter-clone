@@ -22,7 +22,9 @@ func (a getUserTweetsAction) Execute(c *fiber.Ctx) error {
 	createdAtCursor := c.Query("cursor")
 	username := c.Params("username")
 
-	tweets, err := a.service.Execute(username, createdAtCursor)
+	userID := c.Locals("userID").(float64)
+
+	tweets, err := a.service.Execute(int64(userID), username, createdAtCursor)
 	if err != nil {
 		fmt.Println(err)
 		if errors.Is(err, entity.ErrUserDoesNotExist) {

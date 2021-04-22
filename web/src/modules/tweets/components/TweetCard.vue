@@ -1,13 +1,15 @@
 <script lang="ts">
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { computed, defineComponent } from 'vue'
+import { ref, computed, defineComponent, toRefs } from 'vue'
+import { useStore } from '../../../store'
 import { Tweet } from '../store/state'
 import IconEllipsisH from '../../../components/icons/IconEllipsisH.vue'
 import IconComment from '../../../components/icons/IconComment.vue'
 import IconRetweet from '../../../components/icons/IconRetweet.vue'
 import IconHeart from '../../../components/icons/IconHeart.vue'
 import IconShare from '../../../components/icons/IconShare.vue'
+import { ActionTypes } from '../store/actions'
 
 export default defineComponent({
   name: 'TweetCard',
@@ -19,32 +21,59 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const store = useStore()
+    const { tweet } = toRefs(props)
+    const favoritesCount = ref(tweet.value.favoritesCount)
+    const alreadyLiked = ref(tweet.value.alreadyLiked)
+
     const parsedCreatedAt = computed(() => {
       dayjs.extend(relativeTime)
-      return dayjs(props.tweet.createdAt).fromNow()
+      return dayjs(tweet.value.createdAt).fromNow()
     })
 
-    return { parsedCreatedAt }
+    async function likeTweet() {
+      await store.dispatch(
+        ActionTypes.FAVORITE_TWEET,
+        tweet.value.id.toString()
+      )
+
+      alreadyLiked.value = !alreadyLiked.value
+      if (alreadyLiked.value) {
+        favoritesCount.value++
+      } else {
+        favoritesCount.value--
+      }
+    }
+
+    return { alreadyLiked, favoritesCount, parsedCreatedAt, likeTweet }
   },
 })
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center w-full">
-    <p class="font-semibold dark:text-lightest">{{ tweet.name }}</p>
-    <p class="text-sm text-dark dark:text-light ml-2">@{{ tweet.handle }} ·</p>
-    <p class="text-sm text-dark dark:text-light ml-2">
-      {{ parsedCreatedAt }}
-    </p>
-    <div
-      class="text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
-    >
-      <IconEllipsisH />
+  <router-link :to="`/${tweet.handle}/status/${tweet.id}`">
+    <div class="flex flex-wrap items-center w-full">
+      <router-link :to="`/${tweet.handle}`" class="flex flex-wrap items-center">
+        <p class="font-semibold dark:text-lightest hover:underline">
+          {{ tweet.name }}
+        </p>
+        <p class="text-sm text-dark dark:text-light ml-2">
+          @{{ tweet.handle }} ·
+        </p>
+        <p class="text-sm text-dark dark:text-light ml-2">
+          {{ parsedCreatedAt }}
+        </p>
+      </router-link>
+      <div
+        class="text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
+      >
+        <IconEllipsisH />
+      </div>
     </div>
-  </div>
-  <p class="py-2 break-words dark:text-lightest">
-    {{ tweet.content }}
-  </p>
+    <p class="py-2 break-words dark:text-lightest">
+      {{ tweet.content }}
+    </p>
+  </router-link>
   <div class="flex items-center justify-between w-full mt-2">
     <div class="flex items-center">
       <div
@@ -70,15 +99,16 @@ export default defineComponent({
       <div
         class="mr-3 p-2 hover:bg-danger hover:bg-opacity-20 rounded-full"
         :class="
-          tweet.alreadyLiked
+          alreadyLiked
             ? ['text-danger']
             : ['text-dark', 'dark:text-light', 'hover:text-danger']
         "
+        @click="likeTweet"
       >
-        <IconHeart :class="tweet.alreadyLiked ? 'fill-current' : null" />
+        <IconHeart :class="alreadyLiked ? 'fill-current' : null" />
       </div>
       <p class="text-sm text-dark dark:text-light">
-        {{ tweet.favoritesCount }}
+        {{ favoritesCount }}
       </p>
     </div>
     <div class="flex items-center">

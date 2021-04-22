@@ -13,10 +13,10 @@ func Routes(r fiber.Router, db database.Database, cache cache.Cache) {
 	authMiddleware := middleware.NewAuthMiddleware()
 	r.Get("/", buildListTweetHandler(db))
 	r.Get("/feed", authMiddleware.Execute(), buildListTweetFeedHandler(db))
-	r.Get("/search", buildSearchTweetHandler(db))
-	r.Get("/:tweetID", buildGetTweetHandler(db))
+	r.Get("/search", authMiddleware.Execute(), buildSearchTweetHandler(db))
+	r.Get("/:tweetID", authMiddleware.Execute(), buildGetTweetHandler(db))
 	r.Post("/", authMiddleware.Execute(), buildCreateTweetHandler(db))
-	r.Get("/:tweetID/replies", buildListTweetRepliesHandler(db))
+	r.Get("/:tweetID/replies", authMiddleware.Execute(), buildListTweetRepliesHandler(db))
 	r.Post("/:tweetID/reply", authMiddleware.Execute(), buildCreateReplyHandler(db))
 	r.Post("/:tweetID/favorite", authMiddleware.Execute(), buildFavoriteTweetHandler(db))
 }
