@@ -45,7 +45,7 @@ export default defineComponent({
       class="w-full md:w-1/2 h-full relative flex justify-center items-center"
     >
       <img
-        src="../../assets/twitter-banner.png"
+        src="../../assets/images/twitter-banner.png"
         class="w-full h-screen object-cover select-none"
         alt=""
       />
