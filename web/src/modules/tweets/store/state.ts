@@ -1,20 +1,4 @@
-export interface Tweet {
-  id: number
-  content: string
-  name: string
-  handle: string
-  repliedToTweet?: number
-  repliedToName?: string
-  repliedToHandle?: string
-  favoritesCount: number
-  repliesCount: number
-  alreadyLiked?: boolean
-  createdAt: string
-}
-
-export interface TweetAndReplies extends Tweet {
-  replies: Tweet[]
-}
+import { Tweet, TweetAndReplies } from '../types'
 
 export interface State {
   tweetsFeed: Tweet[]

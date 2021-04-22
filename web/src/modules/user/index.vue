@@ -6,21 +6,23 @@ import {
   ref,
   computed,
   watch,
+  watchEffect,
 } from 'vue'
 import { useRoute } from 'vue-router'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useStore } from '../../store'
 import { ActionTypes } from './store/actions'
-import Return from '../../components/common/Return.vue'
-import TweetCard from '../tweets/components/TweetCard.vue'
-import { Tweet } from '../tweets/store/state'
-import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
-import IconEllipsisH from '../../components/icons/IconEllipsisH.vue'
-import IconMapMarker from '../../components/icons/IconMapMarker.vue'
-import IconLink from '../../components/icons/IconLink.vue'
-import IconGift from '../../components/icons/IconGift.vue'
-import IconCalendar from '../../components/icons/IconCalendar.vue'
+import { useScroll } from '../../hooks/useScroll'
+import TweetCard from '../tweets/TweetCard.vue'
+import { Tweet } from '../tweets/types'
+import Return from '../../shared/Return.vue'
+import LoadingSpinner from '../../shared/LoadingSpinner.vue'
+import IconEllipsisH from '../../icons/IconEllipsisH.vue'
+import IconMapMarker from '../../icons/IconMapMarker.vue'
+import IconLink from '../../icons/IconLink.vue'
+import IconGift from '../../icons/IconGift.vue'
+import IconCalendar from '../../icons/IconCalendar.vue'
 
 export default defineComponent({
   name: 'Profile',
@@ -38,11 +40,13 @@ export default defineComponent({
     const store = useStore()
     const route = useRoute()
 
-    const selectedTab = ref<number>(1)
-    const tweetsRef = ref<Element>()
-    const initialLoadDone = ref<boolean>(false)
-    const loadNextBatch = ref<boolean>(false)
+    const selectedTab = ref(1)
+    const initialLoadDone = ref(false)
+    const loadNextBatch = ref(false)
     const tweets = ref<Tweet[]>([])
+    const handle = ref(route.params.name as string)
+
+    const [scrollRef, isBottom] = useScroll()
 
     const tabClasses = ['text-blue', 'border-b-2', 'border-blue']
 
@@ -78,7 +82,7 @@ export default defineComponent({
     })
 
     onBeforeMount(async () => {
-      await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, route.params.name)
+      await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, handle.value)
       await loadTweets()
       initialLoadDone.value = true
     })
@@ -88,46 +92,42 @@ export default defineComponent({
         () => route.params.name,
         async (name) => {
           initialLoadDone.value = false
-          await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, name)
+          await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, name as string)
           await loadTweets()
           initialLoadDone.value = true
         },
         { flush: 'post' }
       )
+
+      watchEffect(async () => {
+        if (!loadNextBatch.value && isBottom.value) {
+          loadNextBatch.value = true
+          await loadTweets()
+          loadNextBatch.value = false
+          isBottom.value = false
+        }
+      })
     })
 
     async function loadTweets() {
       if (initialLoadDone.value && store.getters['profileTweets'].length > 0) {
         const lastItem = store.getters['lastProfileTweet']
         await store.dispatch(ActionTypes.LOAD_MORE_PROFILE_TWEETS, {
-          username: route.params.name,
+          handle: handle.value,
           cursor: lastItem.createdAt,
         })
       } else {
-        await store.dispatch(ActionTypes.GET_PROFILE_TWEETS, route.params.name)
+        await store.dispatch(ActionTypes.GET_PROFILE_TWEETS, handle.value)
       }
 
       tweets.value = store.getters['profileTweets']
-    }
-
-    async function handleScroll(e: Event) {
-      const element = tweetsRef.value
-      if (
-        !loadNextBatch.value &&
-        element &&
-        element.scrollTop + element.clientHeight + 1 >= element.scrollHeight
-      ) {
-        loadNextBatch.value = true
-        await loadTweets()
-        loadNextBatch.value = false
-      }
     }
 
     return {
       selectedTab,
       tabClasses,
       selectedTabClasses,
-      tweetsRef,
+      scrollRef,
       initialLoadDone,
       loadNextBatch,
       profile,
@@ -136,7 +136,6 @@ export default defineComponent({
       validBirthDate,
       parsedBirthDate,
       parsedJoinedAt,
-      handleScroll,
     }
   },
 })
@@ -145,8 +144,7 @@ export default defineComponent({
 <template>
   <main
     class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
-    ref="tweetsRef"
-    @scroll="handleScroll"
+    ref="scrollRef"
   >
     <div
       class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-start space-x-6"

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import IconTwitter from '../../components/icons/IconTwitter.vue'
+import IconTwitter from '../../icons/IconTwitter.vue'
 import { useStore } from '../../store'
 import { ActionTypes } from './store/actions'
 
@@ -15,8 +15,8 @@ export default defineComponent({
     const route = useRoute()
     const router = useRouter()
 
-    const email = ref<string>('')
-    const password = ref<string>('')
+    const email = ref('')
+    const password = ref('')
 
     const input = reactive({ email, password })
 

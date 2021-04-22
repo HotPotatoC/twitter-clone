@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, computed } from 'vue'
-import Dialog from '../../components/common/Dialog.vue'
-import IconTwitterWhite from '../../components/icons/IconTwitterWhite.vue'
+import Dialog from '../../shared/Dialog.vue'
+import IconTwitterWhite from '../../icons/IconTwitterWhite.vue'
 
 export default defineComponent({
   name: 'RegisterDialog',
@@ -14,9 +14,9 @@ export default defineComponent({
   },
   emit: ['close', 'dispatch'],
   setup(props, { emit }) {
-    const name = ref<string>('')
-    const email = ref<string>('')
-    const password = ref<string>('')
+    const name = ref('')
+    const email = ref('')
+    const password = ref('')
     const registerContent = reactive({
       name,
       email,

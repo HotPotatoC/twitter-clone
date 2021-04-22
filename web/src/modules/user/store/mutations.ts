@@ -1,6 +1,7 @@
 import { MutationTree } from 'vuex'
-import { Tweet } from '../../tweets/store/state'
-import { State, ProfileDetails, ProfileStatus } from './state'
+import { Tweet } from '../../tweets/types'
+import { State } from './state'
+import { ProfileStatus, ProfileDetails } from '../types'
 
 export enum MutationTypes {
   SET_PROFILE_STATUS = 'SET_PROFILE_STATUS',

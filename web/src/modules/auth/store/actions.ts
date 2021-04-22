@@ -1,9 +1,9 @@
 import { ActionTree } from 'vuex'
-import { AugmentedActionContext } from '../../../store/types'
+import { AugmentedActionContext } from '../../../store'
 import { Mutations, MutationTypes } from './mutations'
 import { State } from './state'
 
-import axios from '../../../services/axios'
+import axios from '../../../utils/axios'
 
 export enum ActionTypes {
   AUTHENTICATE_USER = 'AUTHENTICATE_USER',

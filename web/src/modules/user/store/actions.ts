@@ -1,11 +1,9 @@
 import { ActionTree } from 'vuex'
-import { AugmentedActionContext } from '../../../store/types'
-import { TweetsJSONSchema } from '../../tweets/store/actions'
 import { Mutations, MutationTypes } from './mutations'
-import { ProfileDetails, State } from './state'
-
-import axios from '../../../services/axios'
-import { Tweet } from '../../tweets/store/state'
+import { State } from './state'
+import { fetchProfileDetails, registerAccount } from '../service'
+import { fetchUserTweets } from '../../tweets/service'
+import { AugmentedActionContext } from '../../../store'
 
 export enum ActionTypes {
   REGISTER_ACCOUNT = 'REGISTER_ACCOUNT',
@@ -21,30 +19,16 @@ export interface Actions {
   ): Promise<void>
   [ActionTypes.GET_PROFILE_DETAILS](
     { commit }: AugmentedActionContext<Mutations, State>,
-    username: string | string[]
+    handle: string
   ): Promise<void>
   [ActionTypes.GET_PROFILE_TWEETS](
     { commit }: AugmentedActionContext<Mutations, State>,
-    username: string | string[]
+    handle: string
   ): Promise<void>
   [ActionTypes.LOAD_MORE_PROFILE_TWEETS](
     { commit }: AugmentedActionContext<Mutations, State>,
-    payload: { username: string | string[]; cursor: string }
+    payload: { handle: string; cursor: string }
   ): Promise<void>
-}
-
-interface GetProfileDetailsJSON {
-  id: number
-  name: string
-  handle: string
-  bio: string
-  location: string
-  website: string
-  birth_date: string
-  followers_count: number
-  followings_count: number
-  joined_at: string
-  already_liked: boolean
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -53,76 +37,29 @@ export const actions: ActionTree<State, State> & Actions = {
     { name, email, password }
   ): Promise<void> {
     try {
-      await axios.post('/users/register', { name, email, password })
+      await registerAccount({ name, email, password })
     } catch (error) {
       return error
     }
   },
-  async [ActionTypes.GET_PROFILE_DETAILS]({ commit }, username): Promise<void> {
+  async [ActionTypes.GET_PROFILE_DETAILS]({ commit }, handle): Promise<void> {
     try {
-      const profileDetailsResponse = await axios.get<GetProfileDetailsJSON>(
-        `/users/${username}`
-      )
-
-      const profileTweetsResponse = await axios.get<TweetsJSONSchema>(
-        `/users/${username}/tweets`
-      )
-
-      const profile: ProfileDetails = {
-        id: profileDetailsResponse.data.id,
-        name: profileDetailsResponse.data.name,
-        handle: profileDetailsResponse.data.handle,
-        bio: profileDetailsResponse.data.bio,
-        location: profileDetailsResponse.data.location,
-        website: profileDetailsResponse.data.website,
-        birthDate:
-          profileDetailsResponse.data.birth_date !== '0001-01-01T00:00:00Z'
-            ? profileDetailsResponse.data.birth_date
-            : '',
-        followersCount: profileDetailsResponse.data.followers_count,
-        followingsCount: profileDetailsResponse.data.followings_count,
-        joinedAt: profileDetailsResponse.data.joined_at,
-      }
+      const profile = await fetchProfileDetails(handle)
 
       commit(MutationTypes.SET_PROFILE_DETAILS, profile)
-      commit(MutationTypes.SET_PROFILE_STATUS, {
-        statusCode: profileDetailsResponse.status,
-        message: '',
-      })
     } catch (error) {
-      console.log(error)
       commit(MutationTypes.SET_PROFILE_STATUS, {
         statusCode: error.response.status,
         message: error.response.data.message,
       })
     }
   },
-  async [ActionTypes.GET_PROFILE_TWEETS]({ commit }, username): Promise<void> {
+  async [ActionTypes.GET_PROFILE_TWEETS]({ commit }, handle): Promise<void> {
     try {
-      const response = await axios.get<TweetsJSONSchema>(
-        `/users/${username}/tweets`
-      )
-
-      const tweets: Tweet[] =
-        response.data !== null
-          ? response.data.items.map((item) => ({
-              repliedToTweet: item.replied_to_tweet,
-              repliedToName: item.replied_to_name,
-              favoritesCount: item.favorites_count,
-              repliesCount: item.replies_count,
-              createdAt: item.created_at,
-              alreadyLiked: item.already_liked,
-              ...item,
-            }))
-          : []
+      const tweets = await fetchUserTweets(handle)
 
       commit(MutationTypes.SET_PROFILE_TWEETS, tweets)
-      commit(MutationTypes.SET_PROFILE_STATUS, {
-        statusCode: response.status,
-        message: '',
-      })
     } catch (error) {
-      console.log(error)
       commit(MutationTypes.SET_PROFILE_STATUS, {
         statusCode: error.response.status,
         message: error.response.data.message,
@@ -131,24 +68,10 @@ export const actions: ActionTree<State, State> & Actions = {
   },
   async [ActionTypes.LOAD_MORE_PROFILE_TWEETS](
     { commit },
-    { username, cursor }
+    { handle, cursor }
   ): Promise<void> {
     try {
-      const response = await axios.get<TweetsJSONSchema>(
-        `/users/${username}/tweets?cursor=${cursor}`
-      )
-
-      const tweets: Tweet[] =
-        response.data !== null
-          ? response.data.items.map((item) => ({
-              repliedToTweet: item.replied_to_tweet,
-              repliedToName: item.replied_to_name,
-              favoritesCount: item.favorites_count,
-              repliesCount: item.replies_count,
-              createdAt: item.created_at,
-              ...item,
-            }))
-          : []
+      const tweets = await fetchUserTweets(handle, cursor)
 
       commit(MutationTypes.PUSH_PROFILE_TWEETS, tweets)
     } catch (error) {

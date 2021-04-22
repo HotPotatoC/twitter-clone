@@ -6,12 +6,10 @@ import { RouteRecordRaw } from 'vue-router'
 import Root from './root/index.vue'
 
 const routes: RouteRecordRaw[] = [
-  ...[
-    {
-      path: '/',
-      component: Root,
-    },
-  ],
+  {
+    path: '/',
+    component: Root,
+  },
   ...authRoutes,
   homeRoutes,
   searchRoutes,

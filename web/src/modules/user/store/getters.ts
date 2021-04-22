@@ -1,6 +1,7 @@
 import { GetterTree } from 'vuex'
-import { Tweet } from '../../tweets/store/state'
-import { State, ProfileDetails } from './state'
+import { Tweet } from '../../tweets/types'
+import { State } from './state'
+import { ProfileDetails } from '../types'
 
 export interface Getters {
   profileInfo(state: State): ProfileDetails

@@ -2,12 +2,12 @@
 import { defineComponent, onBeforeMount, onMounted, Ref, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../../store'
-import { Tweet } from '../tweets/store/state'
+import { Tweet } from '../tweets/types'
 import { ActionTypes } from '../tweets/store/actions'
-import TweetCard from '../tweets/components/TweetCard.vue'
-import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
-import Return from '../../components/common/Return.vue'
-import IconSearch from '../../components/icons/IconSearch.vue'
+import TweetCard from '../tweets/TweetCard.vue'
+import LoadingSpinner from '../../shared/LoadingSpinner.vue'
+import Return from '../../shared/Return.vue'
+import IconSearch from '../../icons/IconSearch.vue'
 
 interface NewTweet {
   content: string | Ref<string>
@@ -20,12 +20,12 @@ export default defineComponent({
     const store = useStore()
     const route = useRoute()
     const router = useRouter()
-    const initialLoadDone = ref<boolean>(false)
-    const loadNextBatch = ref<boolean>(false)
+    const initialLoadDone = ref(false)
+    const loadNextBatch = ref(false)
     const tweetsRef = ref<Element>()
     const tweets = ref<Tweet[]>([])
-    const searchFocused = ref<boolean>(false)
-    const searchQuery = ref<string>('')
+    const searchFocused = ref(false)
+    const searchQuery = ref('')
 
     onBeforeMount(async () => {
       await loadSearchResults()
@@ -57,7 +57,7 @@ export default defineComponent({
       //   const lastItem = store.getters['LastTweetFeedItem']
       //   await store.dispatch(ActionTypes.LOAD_MORE_TWEETS, lastItem.createdAt)
       // } else {
-      await store.dispatch(ActionTypes.SEARCH_TWEETS, route.query.q)
+      await store.dispatch(ActionTypes.SEARCH_TWEETS, route.query.q as string)
       // }
 
       tweets.value = store.getters['tweetsSearchResults']

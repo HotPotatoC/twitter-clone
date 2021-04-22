@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router'
 
 import { router } from './routes'
 import { store, useStore } from './store'
-import axios from './services/axios'
+import axios from './utils/axios'
 import { ActionTypes } from './modules/auth/store/actions'
 
 import './assets/styles/root.css'

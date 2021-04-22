@@ -1,22 +1,5 @@
-import { Tweet } from '../../tweets/store/state'
-
-export interface ProfileStatus {
-  statusCode: number
-  message: string
-}
-
-export interface ProfileDetails {
-  id: number
-  name: string
-  handle: string
-  bio: string
-  location: string
-  website: string
-  birthDate: string
-  followersCount: number
-  followingsCount: number
-  joinedAt: string
-}
+import { Tweet } from '../../tweets/types'
+import { ProfileStatus, ProfileDetails } from '../types'
 
 export interface State {
   status?: ProfileStatus

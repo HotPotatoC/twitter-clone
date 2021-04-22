@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, toRefs, ref, Ref, reactive, computed } from 'vue'
-import Dialog from '../../../components/common/Dialog.vue'
+import Dialog from '../../shared/Dialog.vue'
 
 interface NewTweet {
   content: string | Ref<string>
@@ -17,7 +17,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { show } = toRefs(props)
-    const tweetContent = ref<string>('')
+    const tweetContent = ref('')
     const newTweet = reactive<NewTweet>({
       content: tweetContent,
     })

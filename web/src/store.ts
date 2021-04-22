@@ -1,9 +1,16 @@
 import {
-  ActionContext,
+  createStore,
+  createLogger,
+  useStore as useVuexStore,
+  ModuleTree,
   Store as VuexStore,
+  ActionContext,
   CommitOptions,
   DispatchOptions,
 } from 'vuex'
+import { authModule, AuthModule } from './modules/auth/store'
+import { tweetsModule, TweetsModule } from './modules/tweets/store'
+import { profileModule, ProfileModule } from './modules/user/store'
 
 export type AnyRecord = Record<any, any>
 
@@ -35,4 +42,29 @@ export type AugmentedModule<
     payload?: Parameters<A[K]>[1],
     options?: DispatchOptions
   ): ReturnType<A[K]>
+}
+
+type StoreModules = {
+  auth: AuthModule
+  tweets: TweetsModule
+  profile: ProfileModule
+}
+
+type Store = AuthModule<Pick<StoreModules, 'auth'>> &
+  TweetsModule<Pick<StoreModules, 'tweets'>> &
+  ProfileModule<Pick<StoreModules, 'profile'>>
+
+const modules: ModuleTree<any> = {
+  authModule,
+  tweetsModule,
+  profileModule,
+}
+
+export const store = createStore({
+  plugins: process.env.NODE_ENV === 'production' ? [] : [createLogger()],
+  modules,
+})
+
+export function useStore() {
+  return useVuexStore() as Store
 }

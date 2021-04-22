@@ -1,5 +1,6 @@
 import { MutationTree } from 'vuex'
-import { State, Tweet, TweetAndReplies } from './state'
+import { State } from './state'
+import { Tweet, TweetAndReplies } from '../types'
 
 export enum MutationTypes {
   SET_TWEETS_FEED = 'SET_TWEETS_FEED',

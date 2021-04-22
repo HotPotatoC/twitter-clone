@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, toRefs, ref, Ref, reactive, computed } from 'vue'
-import Dialog from '../../../components/common/Dialog.vue'
+import Dialog from '../../shared/Dialog.vue'
 
 interface NewReply {
   content: string | Ref<string>
@@ -18,7 +18,7 @@ export default defineComponent({
   emit: ['close', 'dispatch'],
   setup(props, { emit }) {
     const { show } = toRefs(props)
-    const replyContent = ref<string>('')
+    const replyContent = ref('')
     const newReply = reactive<NewReply>({
       content: replyContent,
     })

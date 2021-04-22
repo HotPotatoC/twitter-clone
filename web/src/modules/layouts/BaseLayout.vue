@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import NavigationSidebar from '../components/layout/NavigationSidebar.vue'
-import TrendingSidebar from '../components/layout/TrendingSidebar.vue'
+import NavigationSidebar from './NavigationSidebar.vue'
+import TrendingSidebar from './TrendingSidebar.vue'
 
 export default defineComponent({
   components: { NavigationSidebar, TrendingSidebar },

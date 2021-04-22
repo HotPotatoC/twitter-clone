@@ -1,32 +1,24 @@
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../../store'
-import { ActionTypes as AuthActionTypes } from '../../modules/auth/store/actions'
-import { ActionTypes as TweetActionTypes } from '../../modules/tweets/store/actions'
-import Dialog from '../common/Dialog.vue'
-import TweetCreateTweetDialog from '../../modules/tweets/components/TweetCreateTweetDialog.vue'
-import IconTwitter from '../icons/IconTwitter.vue'
-import IconPlus from '../icons/IconPlus.vue'
-import IconArrowDown from '../icons/IconArrowDown.vue'
-import IconChevronDown from '../icons/IconChevronDown.vue'
-import IconCheck from '../icons/IconCheck.vue'
+import { ActionTypes as AuthActionTypes } from '../auth/store/actions'
+import { ActionTypes as TweetActionTypes } from '../tweets/store/actions'
+import TweetCreateTweetDialog from '../tweets/TweetCreateTweetDialog.vue'
+import Dialog from '../../shared/Dialog.vue'
+import IconTwitter from '../../icons/IconTwitter.vue'
+import IconPlus from '../../icons/IconPlus.vue'
+import IconChevronDown from '../../icons/IconChevronDown.vue'
+import IconCheck from '../../icons/IconCheck.vue'
 import NavigationSidebarTab from './NavigationSidebarTab.vue'
-import IconHome from '../icons/IconHome.vue'
-import IconHashtag from '../icons/IconHashtag.vue'
-import IconBell from '../icons/IconBell.vue'
-import IconEnvelope from '../icons/IconEnvelope.vue'
-import IconBookmark from '../icons/IconBookmark.vue'
-import IconList from '../icons/IconList.vue'
-import IconUser from '../icons/IconUser.vue'
-import IconEllipsisH from '../icons/IconEllipsisH.vue'
-
-interface Tab {
-  id: string
-  icon: string
-  label: string
-  to: string
-}
+import IconHome from '../../icons/IconHome.vue'
+import IconHashtag from '../../icons/IconHashtag.vue'
+import IconBell from '../../icons/IconBell.vue'
+import IconEnvelope from '../../icons/IconEnvelope.vue'
+import IconBookmark from '../../icons/IconBookmark.vue'
+import IconList from '../../icons/IconList.vue'
+import IconUser from '../../icons/IconUser.vue'
+import IconEllipsisH from '../../icons/IconEllipsisH.vue'
 
 export default defineComponent({
   name: 'ProfileSidebar',
@@ -50,9 +42,9 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
-    const selectedTab = ref<string>('home')
-    const showDropdown = ref<boolean>(false)
-    const showCreateFormDialog = ref<boolean>(false)
+    const selectedTab = ref('home')
+    const showDropdown = ref(false)
+    const showCreateFormDialog = ref(false)
 
     const user = computed(() => store.getters['userData'])
 
@@ -192,6 +184,16 @@ export default defineComponent({
           <IconEllipsisH :size="28" class="mr-4" />
         </template>
       </NavigationSidebarTab>
+      <button
+        class="text-lightest bg-blue rounded-full font-semibold focus:outline-none w-12 h-12 lg:w-full lg:h-auto p-3 hover:bg-darkblue transition-colors duration-75"
+        @click="showCreateFormDialog = true"
+      >
+        <p class="hidden lg:block">Tweet</p>
+        <IconPlus
+          :size="24"
+          class="inline-flex items-center justify-center lg:hidden"
+        />
+      </button>
     </div>
     <div class="lg:w-full relative">
       <button

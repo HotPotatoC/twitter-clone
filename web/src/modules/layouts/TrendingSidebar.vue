@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import IconSearch from '../icons/IconSearch.vue'
+import IconSearch from '../../icons/IconSearch.vue'
 
 export default defineComponent({
   components: { IconSearch },
@@ -9,8 +9,8 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const route = useRoute()
-    const searchFocused = ref<boolean>(false)
-    const searchQuery = ref<string>('')
+    const searchFocused = ref(false)
+    const searchQuery = ref('')
 
     const isInSearchPage = computed(() => route.path === '/search')
 

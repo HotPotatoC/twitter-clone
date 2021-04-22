@@ -3,16 +3,19 @@ import {
   computed,
   defineComponent,
   onBeforeMount,
+  onMounted,
   reactive,
   Ref,
   ref,
+  watchEffect,
 } from 'vue'
 import { useStore } from '../../store'
-import { Tweet } from '../tweets/store/state'
+import { Tweet } from '../tweets/types'
 import { ActionTypes } from '../tweets/store/actions'
-import TweetCard from '../tweets/components/TweetCard.vue'
-import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
-import IconStar from '../../components/icons/IconStar.vue'
+import TweetCard from '../tweets/TweetCard.vue'
+import LoadingSpinner from '../../shared/LoadingSpinner.vue'
+import IconStar from '../../icons/IconStar.vue'
+import { useScroll } from '../../hooks/useScroll'
 
 interface NewTweet {
   content: string | Ref<string>
@@ -23,12 +26,13 @@ export default defineComponent({
   name: 'Home',
   setup() {
     const store = useStore()
-    const initialLoadDone = ref<boolean>(false)
-    const loadNextBatch = ref<boolean>(false)
-    const tweetsRef = ref<Element>()
+    const initialLoadDone = ref(false)
+    const loadNextBatch = ref(false)
     const tweets = ref<Tweet[]>([])
 
-    const tweetContent = ref<string>('')
+    const [scrollRef, isBottom] = useScroll()
+
+    const tweetContent = ref('')
     const newTweet = reactive<NewTweet>({
       content: tweetContent,
     })
@@ -38,6 +42,17 @@ export default defineComponent({
     onBeforeMount(async () => {
       await loadTweets()
       initialLoadDone.value = true
+    })
+
+    onMounted(() => {
+      watchEffect(async () => {
+        if (!loadNextBatch.value && isBottom.value) {
+          loadNextBatch.value = true
+          await loadTweets()
+          loadNextBatch.value = false
+          isBottom.value = false
+        }
+      })
     })
 
     async function loadTweets() {
@@ -63,28 +78,14 @@ export default defineComponent({
       }
     }
 
-    async function handleScroll(e: Event) {
-      const element = tweetsRef.value
-      if (
-        !loadNextBatch.value &&
-        element &&
-        element.scrollTop + element.clientHeight + 1 >= element.scrollHeight
-      ) {
-        loadNextBatch.value = true
-        await loadTweets()
-        loadNextBatch.value = false
-      }
-    }
-
     return {
       initialLoadDone,
       loadNextBatch,
       tweets,
       newTweet,
       newTweetContentIsEmpty,
-      tweetsRef,
+      scrollRef,
       addNewTweet,
-      handleScroll,
     }
   },
 })
@@ -93,8 +94,7 @@ export default defineComponent({
 <template>
   <main
     class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
-    ref="tweetsRef"
-    @scroll="handleScroll"
+    ref="scrollRef"
   >
     <div
       class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-between"

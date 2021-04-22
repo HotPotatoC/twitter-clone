@@ -2,14 +2,14 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { ref, computed, defineComponent, toRefs } from 'vue'
-import { useStore } from '../../../store'
-import { Tweet } from '../store/state'
-import IconEllipsisH from '../../../components/icons/IconEllipsisH.vue'
-import IconComment from '../../../components/icons/IconComment.vue'
-import IconRetweet from '../../../components/icons/IconRetweet.vue'
-import IconHeart from '../../../components/icons/IconHeart.vue'
-import IconShare from '../../../components/icons/IconShare.vue'
-import { ActionTypes } from '../store/actions'
+import { useStore } from '../../store'
+import { Tweet } from './types'
+import IconEllipsisH from '../../icons/IconEllipsisH.vue'
+import IconComment from '../../icons/IconComment.vue'
+import IconRetweet from '../../icons/IconRetweet.vue'
+import IconHeart from '../../icons/IconHeart.vue'
+import IconShare from '../../icons/IconShare.vue'
+import { ActionTypes } from './store/actions'
 
 export default defineComponent({
   name: 'TweetCard',

@@ -7,21 +7,23 @@ import {
   onMounted,
   ref,
   watch,
+  watchEffect,
 } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '../../../store'
-import Return from '../../../components/common/Return.vue'
-import TweetCard from '../../tweets/components/TweetCard.vue'
-import LoadingSpinner from '../../../components/common/LoadingSpinner.vue'
+import { useScroll } from '../../../hooks/useScroll'
+import TweetCard from '../../tweets/TweetCard.vue'
 import { ActionTypes } from '../../tweets/store/actions'
-import { TweetAndReplies } from '../../tweets/store/state'
-import TweetCreateReplyDialog from '../../tweets/components/TweetCreateReplyDialog.vue'
-import IconEllipsisH from '../../../components/icons/IconEllipsisH.vue'
-import IconComment from '../../../components/icons/IconComment.vue'
-import IconRetweet from '../../../components/icons/IconRetweet.vue'
-import IconShare from '../../../components/icons/IconShare.vue'
-import IconHeart from '../../../components/icons/IconHeart.vue'
-import PageDoesNotExists from '../../../components/common/PageDoesNotExists.vue'
+import { TweetAndReplies } from '../../tweets/types'
+import TweetCreateReplyDialog from '../../tweets/TweetCreateReplyDialog.vue'
+import Return from '../../../shared/Return.vue'
+import LoadingSpinner from '../../../shared/LoadingSpinner.vue'
+import PageDoesNotExists from '../../../shared/PageDoesNotExists.vue'
+import IconEllipsisH from '../../../icons/IconEllipsisH.vue'
+import IconComment from '../../../icons/IconComment.vue'
+import IconRetweet from '../../../icons/IconRetweet.vue'
+import IconShare from '../../../icons/IconShare.vue'
+import IconHeart from '../../../icons/IconHeart.vue'
 
 export default defineComponent({
   components: {
@@ -40,13 +42,15 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const route = useRoute()
-    const elRef = ref<Element>()
-    const notFound = ref<boolean>(false)
-    const initialLoadDone = ref<boolean>(false)
-    const loadNextBatch = ref<boolean>(false)
+    const notFound = ref(false)
+    const initialLoadDone = ref(false)
+    const loadNextBatch = ref(false)
     const tweet = ref<TweetAndReplies | null>(null)
+    const tweetId = ref<string>(route.params.tweetId as string)
 
-    const showCreateReplyDialog = ref<boolean>(false)
+    const [scrollRef, isBottom] = useScroll()
+
+    const showCreateReplyDialog = ref(false)
 
     const parsedCreatedAt = computed(() =>
       dayjs(store.getters['tweetStatus'].createdAt).format(
@@ -55,7 +59,7 @@ export default defineComponent({
     )
 
     onBeforeMount(async () => {
-      await getTweetStatus(route.params.tweetId)
+      await getTweetStatus(tweetId.value)
       initialLoadDone.value = true
     })
 
@@ -64,14 +68,23 @@ export default defineComponent({
         () => route.params.tweetId,
         async (tweetId) => {
           initialLoadDone.value = false
-          await getTweetStatus(tweetId)
+          await getTweetStatus(tweetId as string)
           initialLoadDone.value = true
         },
         { flush: 'post' }
       )
+
+      watchEffect(async () => {
+        if (!loadNextBatch.value && isBottom.value) {
+          loadNextBatch.value = true
+          await loadMoreReplies(tweetId.value)
+          loadNextBatch.value = false
+          isBottom.value = false
+        }
+      })
     })
 
-    async function getTweetStatus(tweetId: string | string[]) {
+    async function getTweetStatus(tweetId: string) {
       try {
         await store
           .dispatch(ActionTypes.GET_TWEET_STATUS, tweetId)
@@ -84,7 +97,7 @@ export default defineComponent({
       }
     }
 
-    async function loadMoreReplies(tweetId: string | string[]) {
+    async function loadMoreReplies(tweetId: string) {
       if (
         initialLoadDone.value &&
         store.getters['tweetStatus'].replies.length > 0
@@ -97,11 +110,11 @@ export default defineComponent({
     async function createReply(content: string) {
       try {
         await store.dispatch(ActionTypes.NEW_REPLY, {
-          tweetId: route.params.tweetId,
+          tweetId: tweetId.value,
           content,
         })
         initialLoadDone.value = false
-        await store.dispatch(ActionTypes.GET_TWEET_STATUS, route.params.tweetId)
+        await store.dispatch(ActionTypes.GET_TWEET_STATUS, tweetId.value)
         initialLoadDone.value = true
 
         tweet.value = store.getters['tweetStatus']
@@ -109,7 +122,7 @@ export default defineComponent({
     }
 
     async function likeTweet() {
-      await store.dispatch(ActionTypes.FAVORITE_TWEET, route.params.tweetId)
+      await store.dispatch(ActionTypes.FAVORITE_TWEET, tweetId.value)
 
       tweet.value.alreadyLiked = !tweet.value.alreadyLiked
       if (tweet.value.alreadyLiked) {
@@ -119,21 +132,8 @@ export default defineComponent({
       }
     }
 
-    async function handleScroll(e: Event) {
-      const element = elRef.value
-      if (
-        !loadNextBatch.value &&
-        element &&
-        element.scrollTop + element.clientHeight + 1 >= element.scrollHeight
-      ) {
-        loadNextBatch.value = true
-        await loadMoreReplies(route.params.tweetId)
-        loadNextBatch.value = false
-      }
-    }
-
     return {
-      elRef,
+      scrollRef,
       notFound,
       initialLoadDone,
       loadNextBatch,
@@ -142,7 +142,6 @@ export default defineComponent({
       createReply,
       likeTweet,
       parsedCreatedAt,
-      handleScroll,
     }
   },
 })
@@ -157,8 +156,7 @@ export default defineComponent({
 
   <main
     class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
-    ref="elRef"
-    @scroll="handleScroll"
+    ref="scrollRef"
   >
     <div
       class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-start space-x-6"
@@ -173,10 +171,10 @@ export default defineComponent({
       <div v-if="initialLoadDone && tweet" class="w-full">
         <div class="flex items-center w-full">
           <router-link :to="`/${tweet.handle}`">
-              <p class="font-semibold dark:text-lightest hover:underline">{{ tweet.name }}</p>
-              <p class="text-sm text-dark dark:text-light">
-                @{{ tweet.handle }}
-              </p>
+            <p class="font-semibold dark:text-lightest hover:underline">
+              {{ tweet.name }}
+            </p>
+            <p class="text-sm text-dark dark:text-light">@{{ tweet.handle }}</p>
           </router-link>
           <div
             class="cursor-pointer text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"

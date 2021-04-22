@@ -1,5 +1,6 @@
 import { GetterTree } from 'vuex'
-import { State, Tweet, TweetAndReplies } from './state'
+import { State } from './state'
+import { Tweet, TweetAndReplies } from '../types'
 
 export interface Getters {
   tweetsFeed(state: State): Tweet[]
