@@ -1,7 +1,7 @@
 import { Tweet } from '../../tweets/types'
 import { ProfileStatus, ProfileDetails } from '../types'
 
-export interface State {
+export type State = {
   status?: ProfileStatus
   profileDetails: ProfileDetails
   profileTweets: Tweet[]

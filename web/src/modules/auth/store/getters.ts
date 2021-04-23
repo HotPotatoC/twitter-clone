@@ -1,7 +1,8 @@
 import { GetterTree } from 'vuex'
-import { State, UserData } from './state'
+import { State } from './state'
+import { UserData } from '../types'
 
-export interface Getters {
+export type Getters = {
   isLoggedIn(state: State): boolean
   accessToken(state: State): string
   userData(state: State): UserData

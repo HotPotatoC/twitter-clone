@@ -1,4 +1,4 @@
-export interface TweetJSONSchema {
+export type TweetJSONSchema = {
   id: number
   content: string
   name: string
@@ -13,7 +13,7 @@ export interface TweetJSONSchema {
   replies?: TweetJSONSchema[]
 }
 
-export interface Tweet {
+export type Tweet = {
   id: number
   content: string
   name: string
@@ -27,6 +27,6 @@ export interface Tweet {
   createdAt: string
 }
 
-export interface TweetAndReplies extends Tweet {
+export type TweetAndReplies = Tweet & {
   replies: Tweet[]
 }

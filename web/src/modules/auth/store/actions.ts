@@ -12,7 +12,7 @@ export enum ActionTypes {
   LOGOUT_USER = 'LOGOUT_USER',
 }
 
-export interface Actions {
+export type Actions = {
   [ActionTypes.AUTHENTICATE_USER](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: { email: string; password: string }

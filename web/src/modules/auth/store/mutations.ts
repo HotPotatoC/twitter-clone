@@ -1,5 +1,6 @@
 import { MutationTree } from 'vuex'
-import { AuthStatus, State, UserData } from './state'
+import { AuthStatus, State } from './state'
+import { UserData } from '../types'
 
 export enum MutationTypes {
   SET_AUTHENTICATION_STATUS = 'SET_AUTHENTICATION_STATUS',
@@ -7,7 +8,7 @@ export enum MutationTypes {
   SET_USER_DATA = 'SET_USER_DATA',
 }
 
-export interface Mutations<S = State> {
+export type Mutations<S = State> = {
   [MutationTypes.SET_AUTHENTICATION_STATUS](state: S, payload: AuthStatus): void
   [MutationTypes.SET_ACCESS_TOKEN](state: S, payload: string): void
   [MutationTypes.SET_USER_DATA](state: S, payload: UserData): void

@@ -24,7 +24,7 @@ export enum ActionTypes {
   FAVORITE_TWEET = 'FAVORITE_TWEET',
 }
 
-export interface Actions {
+export type Actions = {
   [ActionTypes.GET_TWEETS_FEED]({
     commit,
   }: AugmentedActionContext<Mutations, State>): Promise<any>

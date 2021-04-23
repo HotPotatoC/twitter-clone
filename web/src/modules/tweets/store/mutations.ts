@@ -11,7 +11,7 @@ export enum MutationTypes {
   PUSH_TWEET_SEARCH_RESULTS = 'PUSH_TWEET_SEARCH_RESULTS',
 }
 
-export interface Mutations<S = State> {
+export type Mutations<S = State> = {
   [MutationTypes.SET_TWEETS_FEED](state: S, payload: Tweet[]): void
   [MutationTypes.PUSH_TWEET_FEED](state: S, payload: Tweet[]): void
   [MutationTypes.SET_TWEET_STATUS](state: S, payload: TweetAndReplies): void

@@ -1,17 +1,12 @@
-export interface AuthStatus {
+import { UserData } from '../types'
+
+export type AuthStatus = {
   statusCode?: number
   message?: string
   isLoggedIn: boolean
 }
 
-export interface UserData {
-  id: number
-  name: string
-  handle: string
-  email: string
-}
-
-export interface State {
+export type State = {
   accessToken: string
   authStatus: AuthStatus
   user: UserData

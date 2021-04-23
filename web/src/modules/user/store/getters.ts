@@ -3,7 +3,7 @@ import { Tweet } from '../../tweets/types'
 import { State } from './state'
 import { ProfileDetails } from '../types'
 
-export interface Getters {
+export type Getters = {
   profileInfo(state: State): ProfileDetails
   profileTweets(state: State): Tweet[]
   lastProfileTweet(state: State): Tweet

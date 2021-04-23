@@ -1,7 +1,7 @@
 import axios from '../../utils/axios'
 import { ProfileDetailsJSONSchema, ProfileDetails } from './types'
 
-interface RegisterPayload {
+type RegisterPayload = {
   name: string
   email: string
   password: string

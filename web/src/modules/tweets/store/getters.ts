@@ -2,7 +2,7 @@ import { GetterTree } from 'vuex'
 import { State } from './state'
 import { Tweet, TweetAndReplies } from '../types'
 
-export interface Getters {
+export type Getters = {
   tweetsFeed(state: State): Tweet[]
   lastTweetFeedItem(state: State): Tweet
   tweetStatus(state: State): TweetAndReplies

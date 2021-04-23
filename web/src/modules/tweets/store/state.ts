@@ -1,6 +1,6 @@
 import { Tweet, TweetAndReplies } from '../types'
 
-export interface State {
+export type State = {
   tweetsFeed: Tweet[]
   tweetStatus: TweetAndReplies
   tweetSearchResult: Tweet[]

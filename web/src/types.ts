@@ -1,4 +1,4 @@
-export interface ResponseItems<T> {
+export type ResponseItems<T> = {
   items: T[]
   total_items: number
 }

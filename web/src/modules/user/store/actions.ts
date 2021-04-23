@@ -12,7 +12,7 @@ export enum ActionTypes {
   LOAD_MORE_PROFILE_TWEETS = 'LOAD_MORE_PROFILE_TWEETS',
 }
 
-export interface Actions {
+export type Actions = {
   [ActionTypes.REGISTER_ACCOUNT](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: { name: string; email: string; password: string }

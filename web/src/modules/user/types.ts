@@ -1,4 +1,4 @@
-export interface ProfileDetailsJSONSchema {
+export type ProfileDetailsJSONSchema = {
   id: number
   name: string
   handle: string
@@ -12,12 +12,12 @@ export interface ProfileDetailsJSONSchema {
   already_liked: boolean
 }
 
-export interface ProfileStatus {
+export type ProfileStatus = {
   statusCode: number
   message: string
 }
 
-export interface ProfileDetails {
+export type ProfileDetails = {
   id: number
   name: string
   handle: string

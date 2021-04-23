@@ -10,7 +10,7 @@ export enum MutationTypes {
   PUSH_PROFILE_TWEETS = 'PUSH_PROFILE_TWEETS',
 }
 
-export interface Mutations<S = State> {
+export type Mutations<S = State> = {
   [MutationTypes.SET_PROFILE_STATUS](state: S, payload: ProfileStatus): void
   [MutationTypes.SET_PROFILE_DETAILS](state: S, payload: ProfileDetails): void
   [MutationTypes.SET_PROFILE_TWEETS](state: S, payload: Tweet[]): void
