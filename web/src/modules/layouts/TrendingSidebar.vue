@@ -43,7 +43,7 @@ export default defineComponent({
   >
     <form v-show="!isInSearchPage" @submit.prevent="redirectWithSearchQuery">
       <input
-        class="pl-12 rounded-full w-full p-3 bg-lighter dark:bg-darkest dark:text-light text-sm mb-4 focus:bg-black focus:outline-none border-2 border-lighter dark:border-darkest focus:border-blue dark:focus:text-lightest transition duration-150"
+        class="pl-12 rounded-full w-full p-3 bg-lighter dark:bg-darkest dark:text-light text-sm mb-4 focus:bg-white dark:focus:bg-black focus:outline-none border-2 border-lighter dark:border-darkest focus:border-blue dark:focus:text-lightest transition duration-150"
         @focus="searchFocused = true"
         @blur="searchFocused = false"
         v-model="searchQuery"

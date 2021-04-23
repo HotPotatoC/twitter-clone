@@ -255,7 +255,7 @@ export default defineComponent({
       <div
         v-for="reply in tweet.replies"
         :key="reply.id"
-        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
+        class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full">
           <TweetCard :tweet="reply" />
@@ -265,7 +265,7 @@ export default defineComponent({
         v-show="
           tweet && tweet.replies && tweet.replies.length > 0 && loadNextBatch
         "
-        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
+        class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
       >
         <div class="w-full text-center">
           <LoadingSpinner />

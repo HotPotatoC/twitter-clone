@@ -101,7 +101,7 @@ export default defineComponent({
       <Return class="mr-6" />
       <form @submit.prevent="redirectWithSearchQuery" class="w-full">
         <input
-          class="pl-12 rounded-full w-full p-2 bg-lighter dark:bg-darkest dark:text-light text-sm focus:bg-black focus:outline-none border-2 border-lighter dark:border-darkest focus:border-blue dark:focus:text-lightest transition duration-150"
+          class="pl-12 rounded-full w-full p-2 bg-lighter dark:bg-darkest dark:text-light text-sm focus:bg-white dark:focus:bg-black focus:outline-none border-2 border-lighter dark:border-darkest focus:border-blue dark:focus:text-lightest transition duration-150"
           @focus="searchFocused = true"
           @blur="searchFocused = false"
           v-model="searchQuery"

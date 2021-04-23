@@ -53,10 +53,10 @@ export default defineComponent({
     </div>
     <div class="w-full md:w-1/2 h-screen px-6 md:px-12">
       <IconTwitterWhite :size="56" class="mt-32" />
-      <h1 class="mt-32 text-lighter text-5xl md:text-7xl font-bold">
+      <h1 class="mt-32 dark:text-lighter text-5xl md:text-7xl font-bold">
         Happening now
       </h1>
-      <h2 class="mt-12 text-lighter text-2xl md:text-4xl font-bold">
+      <h2 class="mt-12 dark:text-lighter text-2xl md:text-4xl font-bold">
         Join Twitter today.
       </h2>
 
@@ -69,7 +69,7 @@ export default defineComponent({
         </button>
         <router-link
           to="/login"
-          class="border-2 border-blue text-lightest text-lg rounded-full font-semibold focus:outline-none h-auto p-4 hover:bg-blue hover:bg-opacity-10 transition-colors duration-75 text-center"
+          class="border-2 border-blue dark:text-lightest text-lg rounded-full font-semibold focus:outline-none h-auto p-4 hover:bg-blue hover:bg-opacity-10 transition-colors duration-75 text-center"
         >
           Log in
         </router-link>

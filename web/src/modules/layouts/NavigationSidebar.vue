@@ -231,7 +231,7 @@ export default defineComponent({
         </button>
         <button
           @click="logout"
-          class="w-full text-left hover:bg-lightest dark:bg-black dark:hover:bg-darkest border-t border-lighter dark:border-dark p-3 text-sm dark:text-lightest focus:outline-none"
+          class="w-full text-left bg-white hover:bg-lightest dark:bg-black dark:hover:bg-darkest border-t border-lighter dark:border-dark p-3 text-sm dark:text-lightest focus:outline-none"
         >
           Log Out @{{ user.handle }}
         </button>
