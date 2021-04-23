@@ -61,7 +61,7 @@ const modules: ModuleTree<any> = {
 }
 
 export const store = createStore({
-  plugins: process.env.NODE_ENV === 'production' ? [] : [createLogger()],
+  plugins: process.env.APP_ENV === 'production' ? [] : [createLogger()],
   modules,
 })
 
