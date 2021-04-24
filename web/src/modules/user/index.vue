@@ -12,6 +12,7 @@ import { useRoute } from 'vue-router'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useStore } from '../../store'
+import { ProfileDetails } from './types'
 import { ActionTypes } from './store/actions'
 import { useScroll } from '../../hooks/useScroll'
 import TweetCard from '../tweets/TweetCard.vue'
@@ -23,6 +24,7 @@ import IconMapMarker from '../../icons/IconMapMarker.vue'
 import IconLink from '../../icons/IconLink.vue'
 import IconGift from '../../icons/IconGift.vue'
 import IconCalendar from '../../icons/IconCalendar.vue'
+import EditProfileDialog from './EditProfileDialog.vue'
 
 export default defineComponent({
   name: 'Profile',
@@ -35,6 +37,7 @@ export default defineComponent({
     IconLink,
     IconGift,
     IconCalendar,
+    EditProfileDialog,
   },
   setup() {
     const store = useStore()
@@ -43,6 +46,7 @@ export default defineComponent({
     const selectedTab = ref(1)
     const initialLoadDone = ref(false)
     const loadNextBatch = ref(false)
+    const showEditProfileDialog = ref(false)
     const tweets = ref<Tweet[]>([])
     const handle = ref(route.params.name as string)
 
@@ -123,10 +127,15 @@ export default defineComponent({
       tweets.value = store.getters['profileTweets']
     }
 
+    async function updateProfile(payload: ProfileDetails) {
+      await store.dispatch(ActionTypes.UPDATE_PROFILE_DETAILS, payload)
+    }
+
     return {
       selectedTab,
       tabClasses,
       selectedTabClasses,
+      showEditProfileDialog,
       scrollRef,
       initialLoadDone,
       loadNextBatch,
@@ -136,12 +145,20 @@ export default defineComponent({
       validBirthDate,
       parsedBirthDate,
       parsedJoinedAt,
+      updateProfile,
     }
   },
 })
 </script>
 
 <template>
+  <EditProfileDialog
+    :profile="profile"
+    :show="showEditProfileDialog"
+    @close="showEditProfileDialog = false"
+    @dispatch="updateProfile"
+  />
+
   <main
     class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
     ref="scrollRef"
@@ -162,6 +179,7 @@ export default defineComponent({
     <div class="mt-5 px-6">
       <button
         v-show="isCurrentUser"
+        @click="showEditProfileDialog = true"
         class="float-right text-blue font-bold py-2 px-5 rounded-full border-2 border-blue hover:bg-blue hover:bg-opacity-25 focus:outline-none transition-colors duration-75"
       >
         Edit Profile

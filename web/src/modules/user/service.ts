@@ -7,6 +7,14 @@ type RegisterPayload = {
   password: string
 }
 
+type UpdateProfilePayload = {
+  name: string
+  bio: string
+  location: string
+  website: string
+  birthDate: string
+}
+
 export async function registerAccount({
   name,
   email,
@@ -14,6 +22,27 @@ export async function registerAccount({
 }: RegisterPayload) {
   try {
     await axios.post('/users/register', { name, email, password })
+  } catch (error) {
+    throw error
+  }
+}
+
+function parseUpdateProfilePayload(payload: UpdateProfilePayload) {
+  return {
+    display_name: payload.name,
+    bio: payload.bio,
+    location: payload.location,
+    website: payload.website,
+    birth_date: payload.birthDate,
+  }
+}
+
+export async function updateProfile(
+  payload: UpdateProfilePayload
+): Promise<void> {
+  const jsonPayload = parseUpdateProfilePayload(payload)
+  try {
+    await axios.patch('/users/profile', jsonPayload)
   } catch (error) {
     throw error
   }

@@ -1,3 +1,6 @@
+import { Ref } from 'vue'
+import { Birthdate } from '../../types'
+
 export type ProfileDetailsJSONSchema = {
   id: number
   name: string
@@ -17,15 +20,26 @@ export type ProfileStatus = {
   message: string
 }
 
-export type ProfileDetails = {
-  id: number
+export type ProfileDescription = {
   name: string
-  handle: string
   bio: string
   location: string
   website: string
   birthDate: string
+}
+
+export type ProfileDetails = {
+  id: number
+  handle: string
   followersCount: number
   followingsCount: number
   joinedAt: string
+} & ProfileDescription
+
+export type EditProfilePayload = {
+  name?: string | Ref<string>
+  bio?: string | Ref<string>
+  location?: string | Ref<string>
+  website?: string | Ref<string>
+  birthDate?: Birthdate | Ref<Birthdate>
 }
