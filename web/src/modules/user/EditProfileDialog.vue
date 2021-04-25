@@ -151,24 +151,24 @@ export default defineComponent({
       v-model="name"
       type="text"
       placeholder="Name"
-      class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue transition-colors duration-75"
+      class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
     />
     <textarea
       v-model="bio"
       placeholder="Bio"
-      class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue transition-colors duration-75"
+      class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
     />
     <input
       v-model="location"
       type="text"
       placeholder="Location"
-      class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue transition-colors duration-75"
+      class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
     />
     <input
       v-model="website"
       type="text"
       placeholder="Website"
-      class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue transition-colors duration-75"
+      class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
     />
     <div class="mt-6">
       <span class="font-bold text-2xl dark:text-lightest">Birth date</span>
@@ -176,7 +176,7 @@ export default defineComponent({
     <div class="flex space-x-4">
       <select
         v-model="selectedYear"
-        class="relative appearance-none w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue cursor-pointer transition-colors duration-75"
+        class="relative appearance-none w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue cursor-pointer transition-colors duration-75"
       >
         <option v-for="(year, index) in years" :key="index" :value="year">
           {{ year }}
@@ -184,7 +184,7 @@ export default defineComponent({
       </select>
       <select
         v-model="selectedMonth"
-        class="relative appearance-none w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue cursor-pointer transition-colors duration-75"
+        class="relative appearance-none w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue cursor-pointer transition-colors duration-75"
       >
         <option v-for="(month, index) in months" :key="index" :value="index">
           {{ month }}
@@ -192,7 +192,7 @@ export default defineComponent({
       </select>
       <select
         v-model="selectedDay"
-        class="relative appearance-none w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue cursor-pointer transition-colors duration-75"
+        class="relative appearance-none w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue cursor-pointer transition-colors duration-75"
       >
         <option
           v-for="(day, index) in availableDays"
