@@ -4,6 +4,8 @@ go 1.16
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/go-playground/locales v0.13.0 // indirect
+	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.4.2
 	github.com/go-redis/redis/v8 v8.8.0
 	github.com/gofiber/fiber/v2 v2.7.1

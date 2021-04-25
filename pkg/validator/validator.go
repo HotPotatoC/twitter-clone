@@ -1,26 +1,41 @@
 package validator
 
-import "github.com/go-playground/validator/v10"
+import (
+	"strings"
+
+	"github.com/go-playground/locales/en"
+	ut "github.com/go-playground/universal-translator"
+	"github.com/go-playground/validator/v10"
+	enTranslations "github.com/go-playground/validator/v10/translations/en"
+)
 
 type ValidationError struct {
-	FailedField string
-	Tag         string
-	Value       string
+	Key     string `json:"key"`
+	Message string `json:"message"`
 }
 
 func ValidateStruct(input interface{}) []*ValidationError {
+	v := validator.New()
+	en := en.New()
+	uniTranslator := ut.New(en, en)
+
+	translator, _ := uniTranslator.GetTranslator("en")
+
+	enTranslations.RegisterDefaultTranslations(v, translator)
+
+	err := v.Struct(input).(validator.ValidationErrors)
+
+	return buildTranslatedErrorMessages(err, translator)
+}
+
+func buildTranslatedErrorMessages(err validator.ValidationErrors, translator ut.Translator) []*ValidationError {
 	var errors []*ValidationError
 
-	v := validator.New()
-	err := v.Struct(input)
-	if err != nil {
-		for _, err := range err.(validator.ValidationErrors) {
-			var element ValidationError
-			element.FailedField = err.StructNamespace()
-			element.Tag = err.Tag()
-			element.Value = err.Param()
-			errors = append(errors, &element)
-		}
+	for _, err := range err {
+		var element ValidationError
+		element.Key = strings.ToLower(err.Field())
+		element.Message = err.Translate(translator)
+		errors = append(errors, &element)
 	}
 
 	return errors
