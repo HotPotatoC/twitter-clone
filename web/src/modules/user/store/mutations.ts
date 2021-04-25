@@ -9,6 +9,7 @@ export enum MutationTypes {
   SET_PROFILE_TWEETS = 'SET_PROFILE_TWEETS',
   PUSH_PROFILE_TWEETS = 'PUSH_PROFILE_TWEETS',
   UPDATE_PROFILE = 'UPDATE_PROFILE',
+  SET_IS_FOLLOWING_USER = 'SET_IS_FOLLOWING_USER',
 }
 
 export type Mutations<S = State> = {
@@ -17,6 +18,7 @@ export type Mutations<S = State> = {
   [MutationTypes.SET_PROFILE_TWEETS](state: S, payload: Tweet[]): void
   [MutationTypes.PUSH_PROFILE_TWEETS](state: S, payload: Tweet[]): void
   [MutationTypes.UPDATE_PROFILE](state: S, payload: ProfileDescription): void
+  [MutationTypes.SET_IS_FOLLOWING_USER](state: S, payload: boolean): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -34,5 +36,8 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.UPDATE_PROFILE](state, payload) {
     state.profileDetails = { ...state.profileDetails, ...payload }
+  },
+  [MutationTypes.SET_IS_FOLLOWING_USER](state, payload) {
+    state.profileDetails.isFollowing = payload
   },
 }

@@ -19,11 +19,12 @@ type GetUserOutput struct {
 	BirthDate       time.Time `json:"birth_date"`
 	FollowersCount  int       `json:"followers_count"`
 	FollowingsCount int       `json:"followings_count"`
+	IsFollowing     bool      `json:"is_following"`
 	JoinedAt        time.Time `json:"joined_at"`
 }
 
 type GetUserService interface {
-	Execute(username string) (GetUserOutput, error)
+	Execute(userID int64, username string) (GetUserOutput, error)
 }
 
 type getUserService struct {
@@ -34,7 +35,7 @@ func NewGetUserService(db database.Database) GetUserService {
 	return getUserService{db: db}
 }
 
-func (s getUserService) Execute(username string) (GetUserOutput, error) {
+func (s getUserService) Execute(userID int64, username string) (GetUserOutput, error) {
 	var userExists bool
 	err := s.db.QueryRow("SELECT EXISTS (SELECT 1 FROM users WHERE handle = $1)", username).Scan(&userExists)
 	if err != nil {
@@ -51,23 +52,33 @@ func (s getUserService) Execute(username string) (GetUserOutput, error) {
 	var birthDate sql.NullTime
 	var joinedAt time.Time
 	var followingsCount, followersCount int
+	var isFollowing bool
+
 	err = s.db.QueryRow(`
-	SELECT u.id,
-		u.name,
-		u.handle,
-		u.bio,
-		u.location,
-		u.website,
-		u.birth_date,
-		u.created_at,
+	SELECT users.id,
+		users.name,
+		users.handle,
+		users.bio,
+		users.location,
+		users.website,
+		users.birth_date,
+		users.created_at,
 		COUNT(f1.*) AS followings_count,
-		COUNT(f2.*) AS followers_count
-	FROM users AS u
-		LEFT JOIN follows AS f1 ON f1.follower_id = u.id
-		LEFT JOIN follows AS f2 ON f2.followed_id = u.id
-	WHERE u.handle = $1
-	GROUP BY u.id
-	`, username).Scan(&id, &name, &handle, &bio, &location, &website, &birthDate, &joinedAt, &followingsCount, &followersCount)
+		COUNT(f2.*) AS followers_count,
+		CASE WHEN f2.follower_id = $1
+			AND f2.followed_id = users.id THEN
+			TRUE
+		ELSE
+			FALSE
+		END is_following
+	FROM users
+		LEFT JOIN follows AS f1 ON f1.follower_id = users.id
+		LEFT JOIN follows AS f2 ON f2.followed_id = users.id
+	WHERE users.handle = $2
+	GROUP BY
+		users.id,
+		is_following
+	`, userID, username).Scan(&id, &name, &handle, &bio, &location, &website, &birthDate, &joinedAt, &followingsCount, &followersCount, &isFollowing)
 	if err != nil {
 		return GetUserOutput{}, errors.Wrap(err, "service.getUserService.Execute")
 	}
@@ -82,6 +93,7 @@ func (s getUserService) Execute(username string) (GetUserOutput, error) {
 		BirthDate:       birthDate.Time,
 		FollowersCount:  followersCount,
 		FollowingsCount: followingsCount,
+		IsFollowing:     isFollowing,
 		JoinedAt:        joinedAt,
 	}, nil
 }

@@ -11,8 +11,8 @@ export type ProfileDetailsJSONSchema = {
   birth_date: string
   followers_count: number
   followings_count: number
+  is_following: boolean
   joined_at: string
-  already_liked: boolean
 }
 
 export type ProfileStatus = {
@@ -33,6 +33,7 @@ export type ProfileDetails = {
   handle: string
   followersCount: number
   followingsCount: number
+  isFollowing: boolean
   joinedAt: string
 } & ProfileDescription
 

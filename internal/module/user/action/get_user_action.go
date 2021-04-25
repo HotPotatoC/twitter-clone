@@ -2,6 +2,7 @@ package action
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/HotPotatoC/twitter-clone/internal/module"
 	"github.com/HotPotatoC/twitter-clone/internal/module/user/entity"
@@ -19,9 +20,11 @@ func NewGetUserAction(service service.GetUserService) module.Action {
 
 func (a getUserAction) Execute(c *fiber.Ctx) error {
 	username := c.Params("username")
+	userID := c.Locals("userID").(float64)
 
-	user, err := a.service.Execute(username)
+	user, err := a.service.Execute(int64(userID), username)
 	if err != nil {
+		fmt.Println(err)
 		if errors.Is(err, entity.ErrUserDoesNotExist) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "User not found",

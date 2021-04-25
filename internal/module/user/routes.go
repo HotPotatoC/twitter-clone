@@ -12,7 +12,7 @@ import (
 func Routes(r fiber.Router, db database.Database, cache cache.Cache) {
 	authMiddleware := middleware.NewAuthMiddleware()
 	r.Post("/register", buildRegisterHandler(db))
-	r.Get("/:username", buildGetUserHandler(db))
+	r.Get("/:username", authMiddleware.Execute(), buildGetUserHandler(db))
 	r.Get("/:username/tweets", authMiddleware.Execute(), buildGetUserTweetsHandler(db))
 	r.Patch("/profile", authMiddleware.Execute(), buildUpdateUserHandler(db))
 }

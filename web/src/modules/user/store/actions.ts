@@ -1,7 +1,13 @@
 import { ActionTree } from 'vuex'
 import { Mutations, MutationTypes } from './mutations'
 import { State } from './state'
-import { fetchProfileDetails, registerAccount, updateProfile } from '../service'
+import {
+  fetchProfileDetails,
+  followUser,
+  registerAccount,
+  unfollowUser,
+  updateProfile,
+} from '../service'
 import { fetchUserTweets } from '../../tweets/service'
 import { AugmentedActionContext } from '../../../store'
 import { ProfileDescription } from '../types'
@@ -12,6 +18,8 @@ export enum ActionTypes {
   GET_PROFILE_TWEETS = 'GET_PROFILE_TWEETS',
   LOAD_MORE_PROFILE_TWEETS = 'LOAD_MORE_PROFILE_TWEETS',
   UPDATE_PROFILE_DETAILS = 'UPDATE_PROFILE_DETAILS',
+  FOLLOW_USER = 'FOLLOW_USER',
+  UNFOLLOW_USER = 'UNFOLLOW_USER',
 }
 
 export type Actions = {
@@ -34,6 +42,14 @@ export type Actions = {
   [ActionTypes.UPDATE_PROFILE_DETAILS](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: ProfileDescription
+  ): Promise<void>
+  [ActionTypes.FOLLOW_USER](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    userId: string
+  ): Promise<void>
+  [ActionTypes.UNFOLLOW_USER](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    userId: string
   ): Promise<void>
 }
 
@@ -107,6 +123,24 @@ export const actions: ActionTree<State, State> & Actions = {
         website,
         birthDate,
       })
+    } catch (error) {
+      throw error
+    }
+  },
+  async [ActionTypes.FOLLOW_USER]({ commit }, userId): Promise<void> {
+    try {
+      await followUser(userId)
+
+      commit(MutationTypes.SET_IS_FOLLOWING_USER, true)
+    } catch (error) {
+      throw error
+    }
+  },
+  async [ActionTypes.UNFOLLOW_USER]({ commit }, userId): Promise<void> {
+    try {
+      await unfollowUser(userId)
+
+      commit(MutationTypes.SET_IS_FOLLOWING_USER, false)
     } catch (error) {
       throw error
     }

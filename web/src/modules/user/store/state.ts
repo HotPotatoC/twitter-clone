@@ -18,6 +18,7 @@ export const state: State = {
     birthDate: '',
     followersCount: 0,
     followingsCount: 0,
+    isFollowing: false,
     joinedAt: '',
   },
   profileTweets: [],

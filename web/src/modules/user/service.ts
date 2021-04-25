@@ -48,6 +48,22 @@ export async function updateProfile(
   }
 }
 
+export async function followUser(userId: string) {
+  try {
+    await axios.post(`/relationships/follow/${userId}`)
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function unfollowUser(userId: string) {
+  try {
+    await axios.delete(`/relationships/unfollow/${userId}`)
+  } catch (error) {
+    throw error
+  }
+}
+
 function parseProfileDetailsResponse(
   data: ProfileDetailsJSONSchema
 ): ProfileDetails {
@@ -62,6 +78,7 @@ function parseProfileDetailsResponse(
       data.birth_date !== '0001-01-01T00:00:00Z' ? data.birth_date : '',
     followersCount: data.followers_count,
     followingsCount: data.followings_count,
+    isFollowing: data.is_following,
     joinedAt: data.joined_at,
   }
 }

@@ -131,6 +131,19 @@ export default defineComponent({
       await store.dispatch(ActionTypes.UPDATE_PROFILE_DETAILS, payload)
     }
 
+    // follows the current user if the user is not following
+    // or unfollow the current user if not following
+    async function followUserOrUnfollowUser() {
+      if (profile.value.isFollowing) {
+        await store.dispatch(
+          ActionTypes.UNFOLLOW_USER,
+          profile.value.id.toString()
+        )
+        return
+      }
+      await store.dispatch(ActionTypes.FOLLOW_USER, profile.value.id.toString())
+    }
+
     return {
       selectedTab,
       tabClasses,
@@ -146,6 +159,7 @@ export default defineComponent({
       parsedBirthDate,
       parsedJoinedAt,
       updateProfile,
+      followUserOrUnfollowUser,
     }
   },
 })
@@ -185,10 +199,19 @@ export default defineComponent({
         Edit Profile
       </button>
       <button
-        v-show="!isCurrentUser"
+        v-show="!isCurrentUser && !profile.isFollowing"
+        @click="followUserOrUnfollowUser"
         class="float-right text-blue font-bold py-2 px-6 rounded-full border-2 border-blue hover:bg-blue hover:bg-opacity-25 focus:outline-none transition-colors duration-75"
       >
         Follow
+      </button>
+      <button
+        v-show="!isCurrentUser && profile.isFollowing"
+        @click="followUserOrUnfollowUser"
+        class="group float-right text-lightest font-bold py-2 px-6 rounded-full border-2 border-blue bg-blue hover:bg-danger hover:border-danger focus:outline-none transition-colors duration-75"
+      >
+        <span class="group-hover:hidden">Following</span>
+        <span class="hidden group-hover:block">Unfollow</span>
       </button>
       <button
         v-show="!isCurrentUser"
