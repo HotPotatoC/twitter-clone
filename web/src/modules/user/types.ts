@@ -1,5 +1,4 @@
 import { Ref } from 'vue'
-import { Birthdate } from '../../types'
 
 export type ProfileDetailsJSONSchema = {
   id: number
@@ -20,27 +19,32 @@ export type ProfileStatus = {
   message: string
 }
 
-export type ProfileDescription = {
+export type ProfileDetails = {
+  id: number
   name: string
+  handle: string
   bio: string
   location: string
   website: string
   birthDate: string
-}
-
-export type ProfileDetails = {
-  id: number
-  handle: string
   followersCount: number
   followingsCount: number
   isFollowing: boolean
   joinedAt: string
-} & ProfileDescription
+}
 
-export type EditProfilePayload = {
-  name?: string | Ref<string>
-  bio?: string | Ref<string>
-  location?: string | Ref<string>
-  website?: string | Ref<string>
-  birthDate?: Birthdate | Ref<Birthdate>
+export type UpdatableProfileFields = Pick<
+  ProfileDetails,
+  'name' | 'bio' | 'location' | 'website' | 'birthDate'
+>
+
+export type UpdatableProfileFieldsReactive = Omit<
+  UpdatableProfileFields,
+  'name' | 'bio' | 'location' | 'website' | 'birthDate'
+> & {
+  name: string | Ref<string>
+  bio: string | Ref<string>
+  location: string | Ref<string>
+  website: string | Ref<string>
+  birthDate: string | Ref<string>
 }

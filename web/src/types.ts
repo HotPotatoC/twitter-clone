@@ -1,10 +1,18 @@
+import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import { Store } from './store'
+
+export type GuardContext = {
+  to: RouteLocationNormalized
+  from: RouteLocationNormalized
+  next: NavigationGuardNext
+  store: Store
+}
+
 export type ResponseItems<T> = {
   items: T[]
   total_items: number
 }
 
-export type Year = number
-export type Day = number
 export type Month =
   | 'January'
   | 'February'
@@ -19,6 +27,4 @@ export type Month =
   | 'November'
   | 'December'
 
-export type MonthRecord = Record<number, Month>
-
-export type Birthdate = `${Year}-${keyof MonthRecord}-${Day}`
+export type Birthdate = `${number}-${number}-${number}`

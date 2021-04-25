@@ -8,7 +8,7 @@ import {
   CommitOptions,
   DispatchOptions,
 } from 'vuex'
-import { themeModule, ThemeModule } from './modules/theme/store'
+import { ThemeModule } from './modules/theme/store'
 import { authModule, AuthModule } from './modules/auth/store'
 import { tweetsModule, TweetsModule } from './modules/tweets/store'
 import { profileModule, ProfileModule } from './modules/user/store'
@@ -52,7 +52,7 @@ type StoreModules = {
   profile: ProfileModule
 }
 
-type Store = ThemeModule<Pick<StoreModules, 'theme'>> &
+export type Store = ThemeModule<Pick<StoreModules, 'theme'>> &
   AuthModule<Pick<StoreModules, 'auth'>> &
   TweetsModule<Pick<StoreModules, 'tweets'>> &
   ProfileModule<Pick<StoreModules, 'profile'>>

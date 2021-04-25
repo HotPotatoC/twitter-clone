@@ -10,7 +10,7 @@ import {
 } from '../service'
 import { fetchUserTweets } from '../../tweets/service'
 import { AugmentedActionContext } from '../../../store'
-import { ProfileDescription } from '../types'
+import { UpdatableProfileFields } from '../types'
 
 export enum ActionTypes {
   REGISTER_ACCOUNT = 'REGISTER_ACCOUNT',
@@ -41,7 +41,7 @@ export type Actions = {
   ): Promise<void>
   [ActionTypes.UPDATE_PROFILE_DETAILS](
     { commit }: AugmentedActionContext<Mutations, State>,
-    payload: ProfileDescription
+    payload: UpdatableProfileFields
   ): Promise<void>
   [ActionTypes.FOLLOW_USER](
     { commit }: AugmentedActionContext<Mutations, State>,

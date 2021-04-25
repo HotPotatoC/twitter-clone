@@ -11,7 +11,7 @@ import { ProfileDetails } from './types'
 import * as utils from '../../utils'
 import IconX from '../../icons/IconX.vue'
 import Dialog from '../../shared/Dialog.vue'
-import { EditProfilePayload } from './types'
+import { UpdatableProfileFieldsReactive } from './types'
 import { Month, Birthdate } from '../../types'
 
 export default defineComponent({
@@ -53,7 +53,7 @@ export default defineComponent({
       utils.getDaysInMonth(selectedMonth.value, selectedYear.value)
     )
 
-    const editProfileData = reactive<EditProfilePayload>({
+    const editProfileData = reactive<UpdatableProfileFieldsReactive>({
       name,
       bio,
       location,
