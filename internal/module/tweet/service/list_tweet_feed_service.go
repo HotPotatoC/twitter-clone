@@ -120,8 +120,7 @@ func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 		ELSE
 			FALSE
 		END already_liked
-	FROM
-		tweets
+	FROM tweets
 		INNER JOIN users ON users.id = tweets.id_user
 		INNER JOIN follows on follows.followed_id = users.id
 		LEFT JOIN (
@@ -130,8 +129,7 @@ func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 				replies.id_tweet,
 				users.name,
 				users.handle
-			FROM
-				replies
+			FROM replies
 				INNER JOIN tweets AS t ON t.id = replies.id_tweet
 				INNER JOIN users ON users.id = t.id_user) AS reply_details ON reply_details.id_reply = tweets.id
 		LEFT JOIN favorites ON favorites.id_tweet = tweets.id

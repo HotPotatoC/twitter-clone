@@ -111,8 +111,7 @@ func (s listTweetService) buildSQLQuery(withCursor bool) string {
 		reply_details.handle,
 		COUNT(favorites.id),
 		COUNT(replies.id_reply)
-	FROM
-		tweets
+	FROM tweets
 		LEFT JOIN users ON users.id = tweets.id_user
 		LEFT JOIN (
 			SELECT
@@ -120,8 +119,7 @@ func (s listTweetService) buildSQLQuery(withCursor bool) string {
 				replies.id_tweet,
 				users.name,
 				users.handle
-			FROM
-				replies
+			FROM replies
 				INNER JOIN tweets AS t ON t.id = replies.id_tweet
 				INNER JOIN users ON users.id = t.id_user) AS reply_details ON reply_details.id_reply = tweets.id
 		LEFT JOIN favorites ON favorites.id_tweet = tweets.id

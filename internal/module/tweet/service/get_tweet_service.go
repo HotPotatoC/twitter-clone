@@ -53,7 +53,8 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 	var alreadyLiked bool
 
 	err = s.db.QueryRow(`
-	SELECT tweets.id,
+	SELECT
+		tweets.id,
 		tweets.content,
 		tweets.created_at,
 		users.name,
@@ -69,8 +70,7 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 		ELSE
 			FALSE
 		END already_liked
-	FROM
-		tweets
+	FROM tweets
 		INNER JOIN users ON users.id = tweets.id_user
 		LEFT JOIN (
 			SELECT replies.id_reply,

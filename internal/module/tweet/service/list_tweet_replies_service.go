@@ -102,34 +102,33 @@ func (s listTweetRepliesService) buildSQLQuery(withCursor bool) string {
 
 	queryBuilder.WriteString(`
 	SELECT
-		t.id,
-		t.content,
-		t.id_user,
-		t.created_at,
-		u.name,
-		u.handle,
-		COUNT(f.id),
+		tweets.id,
+		tweets.content,
+		tweets.id_user,
+		tweets.created_at,
+		users.name,
+		users.handle,
+		COUNT(favorites.id),
 		COUNT(r.id_reply)
-	FROM
-		replies
-		INNER JOIN tweets AS t ON t.id = replies.id_reply
-		INNER JOIN users AS u ON t.id_user = u.id
-		LEFT JOIN favorites AS f ON f.id_tweet = replies.id_reply
-		LEFT JOIN replies as r ON r.id_tweet = t.id
-	WHERE
-		replies.id_tweet = $1 `)
+	FROM replies
+		INNER JOIN tweets ON tweets.id = replies.id_reply
+		INNER JOIN users ON users.id = tweets.id_user
+		LEFT JOIN favorites ON favorites.id_tweet = replies.id_reply
+		LEFT JOIN replies as r ON r.id_tweet = tweets.id
+	WHERE replies.id_tweet = $1
+	`)
 
 	if withCursor {
-		queryBuilder.WriteString("AND t.created_at < $2")
+		queryBuilder.WriteString("AND tweets.created_at < $2")
 	}
 
 	queryBuilder.WriteString(`
 	GROUP BY
-		t.id,
-		u.name,
-		u.handle
+		tweets.id,
+		users.name,
+		users.handle
 	ORDER BY
-		t.created_at DESC
+		tweets.created_at DESC
 	LIMIT 10`)
 
 	return queryBuilder.String()
