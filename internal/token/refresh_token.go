@@ -6,7 +6,6 @@ import (
 	"github.com/HotPotatoC/twitter-clone/pkg/config"
 	"github.com/HotPotatoC/twitter-clone/pkg/jwt"
 	jwtgo "github.com/dgrijalva/jwt-go"
-	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 type RefreshToken struct {
@@ -15,16 +14,11 @@ type RefreshToken struct {
 }
 
 func NewRefreshToken(claims jwtgo.MapClaims) (*RefreshToken, error) {
-	id, err := gonanoid.New()
-	if err != nil {
-		return nil, err
-	}
-	claims["id"] = id
-	claims["iat"] = time.Now().Unix()
-	claims["exp"] = config.GetDuration("REFRESH_TOKEN_DURATION",
-		time.Duration(time.Now().Add(time.Hour*24*7).Unix()))
+	exp := config.GetDuration("REFRESH_TOKEN_DURATION",
+		time.Duration(time.Now().Add(time.Minute*15).Unix()))
+	secret := config.GetString("REFRESH_TOKEN_SECRET", "")
 
-	token, err := jwt.Generate(claims, config.GetString("REFRESH_TOKEN_SECRET", ""))
+	token, err := generateJWT(exp, secret)
 	if err != nil {
 		return nil, err
 	}
