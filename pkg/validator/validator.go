@@ -23,9 +23,11 @@ func ValidateStruct(input interface{}) []*ValidationError {
 
 	enTranslations.RegisterDefaultTranslations(v, translator)
 
-	err := v.Struct(input).(validator.ValidationErrors)
+	if err := v.Struct(input); err != nil {
+		return buildTranslatedErrorMessages(err.(validator.ValidationErrors), translator)
+	}
 
-	return buildTranslatedErrorMessages(err, translator)
+	return nil
 }
 
 func buildTranslatedErrorMessages(err validator.ValidationErrors, translator ut.Translator) []*ValidationError {
