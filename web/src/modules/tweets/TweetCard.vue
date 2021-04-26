@@ -9,7 +9,7 @@ import IconComment from '../../icons/IconComment.vue'
 import IconRetweet from '../../icons/IconRetweet.vue'
 import IconHeart from '../../icons/IconHeart.vue'
 import IconShare from '../../icons/IconShare.vue'
-import { ActionTypes } from './store/actions'
+import { Action } from '../storeActionTypes'
 
 export default defineComponent({
   name: 'TweetCard',
@@ -33,7 +33,7 @@ export default defineComponent({
 
     async function likeTweet() {
       await store.dispatch(
-        ActionTypes.FAVORITE_TWEET,
+        Action.TweetsActionTypes.FAVORITE_TWEET,
         tweet.value.id.toString()
       )
 

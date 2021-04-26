@@ -11,7 +11,7 @@ import {
 } from 'vue'
 import { useStore } from '../../store'
 import { Tweet } from '../tweets/types'
-import { ActionTypes } from '../tweets/store/actions'
+import { Action } from '../storeActionTypes'
 import TweetCard from '../tweets/TweetCard.vue'
 import LoadingSpinner from '../../shared/LoadingSpinner.vue'
 import IconStar from '../../icons/IconStar.vue'
@@ -58,9 +58,12 @@ export default defineComponent({
     async function loadTweets() {
       if (initialLoadDone.value && store.getters['tweetsFeed'].length > 0) {
         const lastItem = store.getters['lastTweetFeedItem']
-        await store.dispatch(ActionTypes.LOAD_MORE_TWEETS, lastItem.createdAt)
+        await store.dispatch(
+          Action.TweetsActionTypes.LOAD_MORE_TWEETS,
+          lastItem.createdAt
+        )
       } else {
-        await store.dispatch(ActionTypes.GET_TWEETS_FEED)
+        await store.dispatch(Action.TweetsActionTypes.GET_TWEETS_FEED)
       }
 
       tweets.value = store.getters['tweetsFeed']
@@ -69,8 +72,11 @@ export default defineComponent({
     async function addNewTweet() {
       try {
         initialLoadDone.value = false
-        await store.dispatch(ActionTypes.NEW_TWEET, newTweet.content)
-        await store.dispatch(ActionTypes.GET_TWEETS_FEED)
+        await store.dispatch(
+          Action.TweetsActionTypes.NEW_TWEET,
+          newTweet.content
+        )
+        await store.dispatch(Action.TweetsActionTypes.GET_TWEETS_FEED)
         initialLoadDone.value = true
         newTweet.content = ''
       } catch (error) {

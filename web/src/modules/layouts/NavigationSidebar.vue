@@ -2,8 +2,7 @@
 import { computed, defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../../store'
-import { ActionTypes as AuthActionTypes } from '../auth/store/actions'
-import { ActionTypes as TweetActionTypes } from '../tweets/store/actions'
+import { Action } from '../storeActionTypes'
 import TweetCreateTweetDialog from '../tweets/TweetCreateTweetDialog.vue'
 import Dialog from '../../shared/Dialog.vue'
 import IconTwitter from '../../icons/IconTwitter.vue'
@@ -50,14 +49,14 @@ export default defineComponent({
 
     async function createTweet(content: string) {
       try {
-        await store.dispatch(TweetActionTypes.NEW_TWEET, content)
+        await store.dispatch(Action.TweetsActionTypes.NEW_TWEET, content)
       } catch (error) {
         console.log(error)
       }
     }
 
     async function logout() {
-      await store.dispatch(AuthActionTypes.LOGOUT_USER)
+      await store.dispatch(Action.AuthActionTypes.LOGOUT_USER)
 
       router.push('/login')
       return

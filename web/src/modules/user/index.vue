@@ -13,7 +13,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useStore } from '../../store'
 import { ProfileDetails } from './types'
-import { ActionTypes } from './store/actions'
+import { Action } from '../storeActionTypes'
 import { useScroll } from '../../hooks/useScroll'
 import TweetCard from '../tweets/TweetCard.vue'
 import { Tweet } from '../tweets/types'
@@ -86,7 +86,10 @@ export default defineComponent({
     })
 
     onBeforeMount(async () => {
-      await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, handle.value)
+      await store.dispatch(
+        Action.UserActionTypes.GET_PROFILE_DETAILS,
+        handle.value
+      )
       await loadTweets()
       initialLoadDone.value = true
     })
@@ -96,7 +99,10 @@ export default defineComponent({
         () => route.params.name,
         async (name) => {
           initialLoadDone.value = false
-          await store.dispatch(ActionTypes.GET_PROFILE_DETAILS, name as string)
+          await store.dispatch(
+            Action.UserActionTypes.GET_PROFILE_DETAILS,
+            name as string
+          )
           await loadTweets()
           initialLoadDone.value = true
         },
@@ -116,19 +122,25 @@ export default defineComponent({
     async function loadTweets() {
       if (initialLoadDone.value && store.getters['profileTweets'].length > 0) {
         const lastItem = store.getters['lastProfileTweet']
-        await store.dispatch(ActionTypes.LOAD_MORE_PROFILE_TWEETS, {
+        await store.dispatch(Action.UserActionTypes.LOAD_MORE_PROFILE_TWEETS, {
           handle: handle.value,
           cursor: lastItem.createdAt,
         })
       } else {
-        await store.dispatch(ActionTypes.GET_PROFILE_TWEETS, handle.value)
+        await store.dispatch(
+          Action.UserActionTypes.GET_PROFILE_TWEETS,
+          handle.value
+        )
       }
 
       tweets.value = store.getters['profileTweets']
     }
 
     async function updateProfile(payload: ProfileDetails) {
-      await store.dispatch(ActionTypes.UPDATE_PROFILE_DETAILS, payload)
+      await store.dispatch(
+        Action.UserActionTypes.UPDATE_PROFILE_DETAILS,
+        payload
+      )
     }
 
     // follows the current user if the user is not following
@@ -136,12 +148,15 @@ export default defineComponent({
     async function followUserOrUnfollowUser() {
       if (profile.value.isFollowing) {
         await store.dispatch(
-          ActionTypes.UNFOLLOW_USER,
+          Action.UserActionTypes.UNFOLLOW_USER,
           profile.value.id.toString()
         )
         return
       }
-      await store.dispatch(ActionTypes.FOLLOW_USER, profile.value.id.toString())
+      await store.dispatch(
+        Action.UserActionTypes.FOLLOW_USER,
+        profile.value.id.toString()
+      )
     }
 
     return {

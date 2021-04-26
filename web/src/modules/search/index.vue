@@ -3,7 +3,7 @@ import { defineComponent, onBeforeMount, onMounted, Ref, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '../../store'
 import { Tweet } from '../tweets/types'
-import { ActionTypes } from '../tweets/store/actions'
+import { Action } from '../storeActionTypes'
 import TweetCard from '../tweets/TweetCard.vue'
 import LoadingSpinner from '../../shared/LoadingSpinner.vue'
 import Return from '../../shared/Return.vue'
@@ -57,7 +57,7 @@ export default defineComponent({
       //   const lastItem = store.getters['LastTweetFeedItem']
       //   await store.dispatch(ActionTypes.LOAD_MORE_TWEETS, lastItem.createdAt)
       // } else {
-      await store.dispatch(ActionTypes.SEARCH_TWEETS, route.query.q as string)
+      await store.dispatch(Action.TweetsActionTypes.SEARCH_TWEETS, route.query.q as string)
       // }
 
       tweets.value = store.getters['tweetsSearchResults']

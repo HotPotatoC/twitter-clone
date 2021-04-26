@@ -3,8 +3,7 @@ import { defineComponent, resolveComponent, h, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from './store'
 import axios from './utils/axios'
-import { ActionTypes as AuthActionTypes } from './modules/auth/store/actions'
-import { ActionTypes as ThemeActionTypes } from './modules/theme/store/actions'
+import { Action } from './modules/storeActionTypes'
 import { Theme } from './modules/theme/types'
 
 export default defineComponent({
@@ -19,8 +18,8 @@ export default defineComponent({
         if (error.response.status === 401) {
           axios.interceptors.response.eject(responseInterceptor)
 
-          await store.dispatch(AuthActionTypes.REFRESH_AUTH_TOKEN)
-          await store.dispatch(AuthActionTypes.GET_USER_DATA)
+          await store.dispatch(Action.AuthActionTypes.REFRESH_AUTH_TOKEN)
+          await store.dispatch(Action.AuthActionTypes.GET_USER_DATA)
           if (!store.getters['isLoggedIn']) {
             router.push('/login')
             return Promise.reject(error)
@@ -33,18 +32,18 @@ export default defineComponent({
       document.querySelector('body')?.classList.add('bg-white', 'dark:bg-black')
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         window.localStorage.setItem('theme', 'dark')
-        store.dispatch(ThemeActionTypes.TOGGLE_THEME, 'dark')
+        store.dispatch(Action.ThemeActionTypes.TOGGLE_THEME, 'dark')
         document.querySelector('html')?.classList.add('dark')
       } else {
         window.localStorage.setItem('theme', 'dark')
-        store.dispatch(ThemeActionTypes.TOGGLE_THEME, 'light')
+        store.dispatch(Action.ThemeActionTypes.TOGGLE_THEME, 'light')
         document.querySelector('html')?.classList.remove('dark')
       }
 
       watch(
         () => store.getters['currentTheme'],
         (theme) => {
-          store.dispatch(ThemeActionTypes.TOGGLE_THEME, theme as Theme)
+          store.dispatch(Action.ThemeActionTypes.TOGGLE_THEME, theme as Theme)
 
           if (store.getters['currentTheme'] === 'dark') {
             document.querySelector('html')?.classList.add('dark')

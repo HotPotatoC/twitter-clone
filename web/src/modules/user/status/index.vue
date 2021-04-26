@@ -13,7 +13,7 @@ import { useRoute } from 'vue-router'
 import { useStore } from '../../../store'
 import { useScroll } from '../../../hooks/useScroll'
 import TweetCard from '../../tweets/TweetCard.vue'
-import { ActionTypes } from '../../tweets/store/actions'
+import { Action } from '../../storeActionTypes'
 import { TweetAndReplies } from '../../tweets/types'
 import TweetCreateReplyDialog from '../../tweets/TweetCreateReplyDialog.vue'
 import Return from '../../../shared/Return.vue'
@@ -87,7 +87,7 @@ export default defineComponent({
     async function getTweetStatus(tweetId: string) {
       try {
         await store
-          .dispatch(ActionTypes.GET_TWEET_STATUS, tweetId)
+          .dispatch(Action.TweetsActionTypes.GET_TWEET_STATUS, tweetId)
           .catch(() => {
             notFound.value = true
           })
@@ -103,18 +103,24 @@ export default defineComponent({
         store.getters['tweetStatus'].replies.length > 0
       ) {
         const cursor = store.getters['lastStatusReplyItem'].createdAt
-        await store.dispatch(ActionTypes.LOAD_MORE_REPLIES, { tweetId, cursor })
+        await store.dispatch(Action.TweetsActionTypes.LOAD_MORE_REPLIES, {
+          tweetId,
+          cursor,
+        })
       }
     }
 
     async function createReply(content: string) {
       try {
-        await store.dispatch(ActionTypes.NEW_REPLY, {
+        await store.dispatch(Action.TweetsActionTypes.NEW_REPLY, {
           tweetId: tweetId.value,
           content,
         })
         initialLoadDone.value = false
-        await store.dispatch(ActionTypes.GET_TWEET_STATUS, tweetId.value)
+        await store.dispatch(
+          Action.TweetsActionTypes.GET_TWEET_STATUS,
+          tweetId.value
+        )
         initialLoadDone.value = true
 
         tweet.value = store.getters['tweetStatus']
@@ -122,7 +128,10 @@ export default defineComponent({
     }
 
     async function likeTweet() {
-      await store.dispatch(ActionTypes.FAVORITE_TWEET, tweetId.value)
+      await store.dispatch(
+        Action.TweetsActionTypes.FAVORITE_TWEET,
+        tweetId.value
+      )
 
       tweet.value.alreadyLiked = !tweet.value.alreadyLiked
       if (tweet.value.alreadyLiked) {
