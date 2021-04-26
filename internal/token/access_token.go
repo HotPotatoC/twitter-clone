@@ -18,7 +18,7 @@ func NewAccessToken(claims jwtgo.MapClaims) (*AccessToken, error) {
 		time.Duration(time.Now().Add(time.Minute*15).Unix()))
 	secret := config.GetString("ACCESS_TOKEN_SECRET", "")
 
-	token, err := generateJWT(exp, secret)
+	token, err := generateJWT(claims, exp, secret)
 	if err != nil {
 		return nil, err
 	}

@@ -8,17 +8,15 @@ import (
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
-func generateJWT(exp time.Duration, secret string) (string, error) {
+func generateJWT(claims jwtgo.MapClaims, exp time.Duration, secret string) (string, error) {
 	id, err := gonanoid.New()
 	if err != nil {
 		return "", err
 	}
 
-	claims := jwtgo.MapClaims{
-		"id":  id,
-		"iat": time.Now().Unix(),
-		"exp": exp,
-	}
+	claims["id"] = id
+	claims["iat"] = time.Now().Unix()
+	claims["exp"] = exp
 
 	return jwt.Generate(claims, secret)
 }
