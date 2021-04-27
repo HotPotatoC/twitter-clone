@@ -28,15 +28,16 @@ func (a listFollowersAction) Execute(c *fiber.Ctx) error {
 
 	followers, err := a.service.Execute(userID)
 	if err != nil {
-		if errors.Is(err, entity.ErrUserDoesNotExist) {
+		switch {
+		case errors.Is(err, entity.ErrUserDoesNotExist):
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "User not found",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{

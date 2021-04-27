@@ -33,14 +33,16 @@ func (a registerAction) Execute(c *fiber.Ctx) error {
 
 	accessToken, refreshToken, err := a.service.Execute(input)
 	if err != nil {
-		if errors.Is(err, entity.ErrUserAlreadyExists) {
+		switch {
+		case errors.Is(err, entity.ErrUserAlreadyExists):
 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 				"message": "User with that email already exists",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	c.Cookie(&fiber.Cookie{

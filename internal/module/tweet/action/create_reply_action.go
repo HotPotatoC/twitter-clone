@@ -41,14 +41,16 @@ func (a createReplyAction) Execute(c *fiber.Ctx) error {
 
 	err = a.service.Execute(input, int64(userID), tweetID)
 	if err != nil {
-		if errors.Is(err, entity.ErrTweetDoesNotExist) {
+		switch {
+		case errors.Is(err, entity.ErrTweetDoesNotExist):
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Tweet not found",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{

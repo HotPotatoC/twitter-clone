@@ -2,7 +2,6 @@ package action
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/HotPotatoC/twitter-clone/internal/module"
@@ -31,15 +30,16 @@ func (a getTweetAction) Execute(c *fiber.Ctx) error {
 
 	tweet, err := a.service.Execute(int64(userID), tweetID)
 	if err != nil {
-		fmt.Println(err)
-		if errors.Is(err, entity.ErrTweetDoesNotExist) {
+		switch {
+		case errors.Is(err, entity.ErrTweetDoesNotExist):
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Tweet not found",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(tweet)

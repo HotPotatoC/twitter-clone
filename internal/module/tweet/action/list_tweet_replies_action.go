@@ -2,7 +2,6 @@ package action
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/HotPotatoC/twitter-clone/internal/module"
@@ -30,20 +29,20 @@ func (a listTweetRepliesAction) Execute(c *fiber.Ctx) error {
 	createdAtCursor := c.Query("cursor")
 	replies, err := a.service.Execute(tweetID, createdAtCursor)
 	if err != nil {
-		fmt.Println(err)
-		if errors.Is(err, service.ErrInvalidCursor) {
+		switch {
+		case errors.Is(err, service.ErrInvalidCursor):
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 				"message": "Invalid cursor",
 			})
-		}
-		if errors.Is(err, entity.ErrTweetDoesNotExist) {
+		case errors.Is(err, entity.ErrTweetDoesNotExist):
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Tweet not found",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{

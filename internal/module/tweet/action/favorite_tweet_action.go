@@ -30,19 +30,20 @@ func (a favoriteTweetAction) Execute(c *fiber.Ctx) error {
 
 	err = a.service.Execute(tweetID, int64(userID))
 	if err != nil {
-		if errors.Is(err, entity.ErrTweetDoesNotExist) {
+		switch {
+		case errors.Is(err, entity.ErrTweetDoesNotExist):
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Tweet not found",
 			})
-		}
-		if errors.Is(err, entity.ErrTweetAlreadyFavorited) {
+		case errors.Is(err, entity.ErrTweetAlreadyFavorited):
 			return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
 				"message": "Successfully unfavorited a tweet",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{

@@ -37,21 +37,20 @@ func (a followUserAction) Execute(c *fiber.Ctx) error {
 
 	username, err := a.service.Execute(int64(followerID), followedID)
 	if err != nil {
-		if errors.Is(err, userEntity.ErrUserDoesNotExist) {
+		switch {
+		case errors.Is(err, userEntity.ErrUserDoesNotExist):
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "User not found",
 			})
-		}
-
-		if errors.Is(err, entity.ErrUserAlreadyFollowed) {
+		case errors.Is(err, entity.ErrUserAlreadyFollowed):
 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 				"message": "You have already followed the user",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{

@@ -20,14 +20,16 @@ func (a listTweetAction) Execute(c *fiber.Ctx) error {
 	createdAtCursor := c.Query("cursor")
 	tweets, err := a.service.Execute(createdAtCursor)
 	if err != nil {
-		if errors.Is(err, service.ErrInvalidCursor) {
+		switch {
+		case errors.Is(err, service.ErrInvalidCursor):
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 				"message": "Invalid cursor",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{

@@ -32,14 +32,16 @@ func (a loginAction) Execute(c *fiber.Ctx) error {
 
 	accessToken, refreshToken, err := a.service.Execute(input)
 	if err != nil {
-		if errors.Is(err, entity.ErrUserDoesNotExist) || errors.Is(err, service.ErrInvalidPassword) {
+		switch {
+		case errors.Is(err, entity.ErrUserDoesNotExist) || errors.Is(err, service.ErrInvalidPassword):
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"message": "Invalid email/password",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	c.Cookie(&fiber.Cookie{

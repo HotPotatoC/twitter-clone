@@ -1,6 +1,7 @@
 package action
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/HotPotatoC/twitter-clone/internal/module"
@@ -29,13 +30,13 @@ func (a updateProfileImageAction) Execute(c *fiber.Ctx) error {
 	userID := c.Locals("userID").(float64)
 	photoURL, err := a.service.Execute(photo, int64(userID))
 	if err != nil {
-		switch err {
-		case service.ErrInvalidImageType:
+		switch {
+		case errors.Is(err, service.ErrInvalidImageType):
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 				"message": "Invalid image type",
 				"allowed": utils.ImageTypes,
 			})
-		case service.ErrUploadImageSizeTooLarge:
+		case errors.Is(err, service.ErrUploadImageSizeTooLarge):
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 				"message": fmt.Sprintf("Image size is too big [Max: %s]",
 					utils.ByteCount(int64(config.GetInt("MAX_UPLOAD_SIZE", 2.5*1024*1024)))),

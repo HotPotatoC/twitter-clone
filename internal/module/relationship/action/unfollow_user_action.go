@@ -37,21 +37,20 @@ func (a unfollowUserAction) Execute(c *fiber.Ctx) error {
 
 	username, err := a.service.Execute(int64(followerID), followedID)
 	if err != nil {
-		if errors.Is(err, userEntity.ErrUserDoesNotExist) {
+		switch {
+		case errors.Is(err, userEntity.ErrUserDoesNotExist):
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "User not found",
 			})
-		}
-
-		if errors.Is(err, entity.ErrUserIsNotFollowing) {
+		case errors.Is(err, entity.ErrUserIsNotFollowing):
 			return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 				"message": "You are not following that user",
 			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
 		}
-
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
