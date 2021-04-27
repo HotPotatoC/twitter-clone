@@ -13,6 +13,7 @@ type ListTweetRepliesOutput struct {
 	entity.Tweet
 	Name           string `json:"name"`
 	Handle         string `json:"handle"`
+	PhotoURL       string `json:"photo_url"`
 	FavoritesCount int    `json:"favorites_count"`
 	RepliesCount   int    `json:"replies_count"`
 }
@@ -69,10 +70,10 @@ func (s listTweetRepliesService) Execute(tweetID int64, createdAtCursor string) 
 	for rows.Next() {
 		var id, userID int64
 		var favoritesCount, repliesCount int
-		var content, name, handle string
+		var content, name, handle, photoURL string
 		var createdAt time.Time
 
-		err = rows.Scan(&id, &content, &userID, &createdAt, &name, &handle, &favoritesCount, &repliesCount)
+		err = rows.Scan(&id, &content, &userID, &createdAt, &name, &handle, &photoURL, &favoritesCount, &repliesCount)
 		if err != nil {
 			return []ListTweetRepliesOutput{}, errors.Wrap(err, "service.listTweetRepliesService.Execute")
 		}
@@ -85,6 +86,7 @@ func (s listTweetRepliesService) Execute(tweetID int64, createdAtCursor string) 
 			},
 			Name:           name,
 			Handle:         handle,
+			PhotoURL:       photoURL,
 			FavoritesCount: favoritesCount,
 			RepliesCount:   repliesCount,
 		})
@@ -108,6 +110,7 @@ func (s listTweetRepliesService) buildSQLQuery(withCursor bool) string {
 		tweets.created_at,
 		users.name,
 		users.handle,
+		users.photo_url,
 		COUNT(favorites.id),
 		COUNT(r.id_reply)
 	FROM replies
@@ -126,7 +129,8 @@ func (s listTweetRepliesService) buildSQLQuery(withCursor bool) string {
 	GROUP BY
 		tweets.id,
 		users.name,
-		users.handle
+		users.handle,
+		users.photo_url
 	ORDER BY
 		tweets.created_at DESC
 	LIMIT 10`)

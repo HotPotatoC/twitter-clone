@@ -10,6 +10,7 @@ function parseResponseTweetItem(data: TweetJSONSchema): Tweet {
     repliesCount: data.replies_count,
     createdAt: data.created_at,
     alreadyLiked: data.already_liked,
+    photoURL: data.photo_url,
     ...data,
   }
 }

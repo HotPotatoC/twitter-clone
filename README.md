@@ -11,6 +11,10 @@ CS = Client Side
 - [ ] Pagination on search results (SS)
 - [ ] List user likes / Profile likes tab (SS & CS)
 - [ ] Avatar image (SS & CS)
+  - [x] Update profile image (SS)
+  - [ ] Update profile image (CS)
+  - [ ] Crop image (CS)
+  - [ ] Lazy load (CS)
 - [ ] Retweets (SS & CS)
 - [x] Create reply (CS)
 - [x] Logout (CS)
@@ -20,8 +24,8 @@ CS = Client Side
 
 # Improvements
 
-- [ ] Notifications with redis pubsub & websockets (?)
 - [ ] Hashtags and mentions
-- [ ] Trending section
+- [ ] Notifications with redis pubsub & websockets (?)
 - [ ] Bookmarks
 - [ ] Lists
+- [ ] Trending section

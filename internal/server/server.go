@@ -8,6 +8,7 @@ import (
 	"github.com/HotPotatoC/twitter-clone/internal/module/relationship"
 	"github.com/HotPotatoC/twitter-clone/internal/module/tweet"
 	"github.com/HotPotatoC/twitter-clone/internal/module/user"
+	"github.com/HotPotatoC/twitter-clone/pkg/aws"
 	"github.com/HotPotatoC/twitter-clone/pkg/cache"
 	"github.com/HotPotatoC/twitter-clone/pkg/config"
 	"github.com/HotPotatoC/twitter-clone/pkg/database"
@@ -21,6 +22,7 @@ import (
 
 type Server struct {
 	config    *Config
+	s3        *aws.S3Bucket
 	db        database.Database
 	cache     cache.Cache
 	log       *zap.SugaredLogger
@@ -28,11 +30,12 @@ type Server struct {
 }
 
 // New creates a new instance of a fiber web server
-func New(webserver webserver.WebServer, db database.Database, cache cache.Cache, log *zap.SugaredLogger, config *Config) *Server {
+func New(webserver webserver.WebServer, s3 *aws.S3Bucket, db database.Database, cache cache.Cache, log *zap.SugaredLogger, config *Config) *Server {
 	config.init()
 	return &Server{
 		config:    config,
 		db:        db,
+		s3:        s3,
 		cache:     cache,
 		log:       log,
 		webserver: webserver,
@@ -85,6 +88,6 @@ func (s *Server) initRoutes() {
 	relationshipGroup := s.webserver.Engine().Group("/relationships")
 	auth.Routes(authGroup, s.db, s.cache)
 	tweet.Routes(tweetsGroup, s.db, s.cache)
-	user.Routes(usersGroup, s.db, s.cache)
+	user.Routes(usersGroup, s.db, s.s3, s.cache)
 	relationship.Routes(relationshipGroup, s.db, s.cache)
 }

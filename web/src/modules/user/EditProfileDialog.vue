@@ -105,6 +105,7 @@ export default defineComponent({
       show,
       close,
       dispatch,
+      profile,
       name,
       bio,
       location,
@@ -144,8 +145,10 @@ export default defineComponent({
     </template>
     <div class="w-full px-2 h-48 mb-16 bg-blue relative">
       <div
-        class="absolute mt-32 rounded-full w-32 h-32 bg-dark border-4 border-lightest dark:border-black"
-      ></div>
+        class="absolute overflow-hidden mt-32 rounded-full w-32 h-32 border-4 border-lightest dark:border-black"
+      >
+        <img :src="profile.photoURL" />
+      </div>
     </div>
     <input
       v-model="name"

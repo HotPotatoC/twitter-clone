@@ -202,8 +202,10 @@ export default defineComponent({
       class="px-6 h-48 border-b border-lighter dark:border-dark bg-blue relative"
     >
       <div
-        class="absolute mt-32 rounded-full w-32 h-32 bg-dark border-4 border-lightest dark:border-black"
-      ></div>
+        class="absolute overflow-hidden mt-32 rounded-full w-32 h-32 border-4 border-lightest dark:border-black"
+      >
+        <img :src="profile.photoURL" />
+      </div>
     </div>
     <div class="mt-5 px-6">
       <button
@@ -337,15 +339,7 @@ export default defineComponent({
       </div>
     </div>
     <div v-show="initialLoadDone" class="flex flex-col">
-      <div
-        v-for="tweet in tweets"
-        :key="tweet.id"
-        class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer transition-colors duration-75"
-      >
-        <div class="w-full">
-          <TweetCard :tweet="tweet" />
-        </div>
-      </div>
+      <TweetCard :tweet="tweet" v-for="tweet in tweets" :key="tweet.id" />
 
       <div
         v-show="tweets.length > 0 && loadNextBatch"

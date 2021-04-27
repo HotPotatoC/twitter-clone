@@ -11,14 +11,16 @@ import (
 
 type GetTweetOutput struct {
 	entity.Tweet
-	Name            string `json:"name"`
-	Handle          string `json:"handle"`
-	RepliedToTweet  int64  `json:"replied_to_tweet_id,omitempty"`
-	RepliedToName   string `json:"replied_to_name,omitempty"`
-	RepliedToHandle string `json:"replied_to_handle,omitempty"`
-	FavoritesCount  int    `json:"favorites_count"`
-	RepliesCount    int    `json:"replies_count"`
-	AlreadyLiked    bool   `json:"already_liked"`
+	Name                    string `json:"name"`
+	Handle                  string `json:"handle"`
+	AuthorPhotoURL          string `json:"author_photo_url"`
+	RepliedToTweet          int64  `json:"replied_to_tweet_id,omitempty"`
+	RepliedToName           string `json:"replied_to_name,omitempty"`
+	RepliedToHandle         string `json:"replied_to_handle,omitempty"`
+	RepliedToAuthorPhotoURL string `json:"replied_to_author_photo_url,omitempty"`
+	FavoritesCount          int    `json:"favorites_count"`
+	RepliesCount            int    `json:"replies_count"`
+	AlreadyLiked            bool   `json:"already_liked"`
 }
 
 type GetTweetService interface {
@@ -45,9 +47,9 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 	}
 
 	var id int64
-	var content, name, handle string
+	var content, name, handle, authorPhotoURL string
 	var repliedToTweetID sql.NullInt64
-	var repliedToName, repliedToHandle sql.NullString
+	var repliedToName, repliedToHandle, repliedToAuthorPhotoURL sql.NullString
 	var createdAt time.Time
 	var favoritesCount, repliesCount int
 	var alreadyLiked bool
@@ -59,9 +61,11 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 		tweets.created_at,
 		users.name,
 		users.handle,
+		users.photo_url,
 		reply_details.id_tweet,
 		reply_details.name,
 		reply_details.handle,
+		reply_details.photo_url,
 		COUNT(favorites.id),
 		COUNT(replies.id_reply),
 		CASE WHEN favorites.id_user = $1
@@ -76,7 +80,8 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 			SELECT replies.id_reply,
 				replies.id_tweet,
 				users.name,
-				users.handle
+				users.handle,
+				users.photo_url
 			FROM replies
 				INNER JOIN tweets as t ON t.id = replies.id_tweet
 				INNER JOIN users ON users.id = t.id_user
@@ -88,11 +93,13 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 		tweets.id,
 		users.name,
 		users.handle,
+		users.photo_url,
 		reply_details.id_tweet,
 		reply_details.name,
 		reply_details.handle,
+		reply_details.photo_url,
 		already_liked
-	`, userID, tweetID).Scan(&id, &content, &createdAt, &name, &handle, &repliedToTweetID, &repliedToName, &repliedToHandle, &favoritesCount, &repliesCount, &alreadyLiked)
+	`, userID, tweetID).Scan(&id, &content, &createdAt, &name, &handle, &authorPhotoURL, &repliedToTweetID, &repliedToName, &repliedToHandle, &repliedToAuthorPhotoURL, &favoritesCount, &repliesCount, &alreadyLiked)
 	if err != nil {
 		return GetTweetOutput{}, errors.Wrap(err, "service.getTweetService.Execute")
 	}
@@ -103,13 +110,15 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 			Content:   content,
 			CreatedAt: createdAt,
 		},
-		Name:            name,
-		Handle:          handle,
-		RepliedToTweet:  repliedToTweetID.Int64,
-		RepliedToName:   repliedToName.String,
-		RepliedToHandle: repliedToHandle.String,
-		FavoritesCount:  favoritesCount,
-		RepliesCount:    favoritesCount,
-		AlreadyLiked:    alreadyLiked,
+		Name:                    name,
+		Handle:                  handle,
+		AuthorPhotoURL:          authorPhotoURL,
+		RepliedToTweet:          repliedToTweetID.Int64,
+		RepliedToName:           repliedToName.String,
+		RepliedToHandle:         repliedToHandle.String,
+		RepliedToAuthorPhotoURL: repliedToAuthorPhotoURL.String,
+		FavoritesCount:          favoritesCount,
+		RepliesCount:            favoritesCount,
+		AlreadyLiked:            alreadyLiked,
 	}, nil
 }

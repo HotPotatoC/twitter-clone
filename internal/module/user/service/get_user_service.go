@@ -20,6 +20,7 @@ type GetUserOutput struct {
 	FollowersCount  int       `json:"followers_count"`
 	FollowingsCount int       `json:"followings_count"`
 	IsFollowing     bool      `json:"is_following"`
+	PhotoURL        string    `json:"photo_url"`
 	JoinedAt        time.Time `json:"joined_at"`
 }
 
@@ -47,7 +48,7 @@ func (s getUserService) Execute(userID int64, username string) (GetUserOutput, e
 	}
 
 	var id int64
-	var name, handle string
+	var name, handle, photoURL string
 	var bio, location, website sql.NullString
 	var birthDate sql.NullTime
 	var joinedAt time.Time
@@ -62,6 +63,7 @@ func (s getUserService) Execute(userID int64, username string) (GetUserOutput, e
 		users.location,
 		users.website,
 		users.birth_date,
+		users.photo_url,
 		users.created_at,
 		COUNT(f1.*) AS followings_count,
 		COUNT(f2.*) AS followers_count,
@@ -78,7 +80,7 @@ func (s getUserService) Execute(userID int64, username string) (GetUserOutput, e
 	GROUP BY
 		users.id,
 		is_following
-	`, userID, username).Scan(&id, &name, &handle, &bio, &location, &website, &birthDate, &joinedAt, &followingsCount, &followersCount, &isFollowing)
+	`, userID, username).Scan(&id, &name, &handle, &bio, &location, &website, &birthDate, &photoURL, &joinedAt, &followingsCount, &followersCount, &isFollowing)
 	if err != nil {
 		return GetUserOutput{}, errors.Wrap(err, "service.getUserService.Execute")
 	}
@@ -87,6 +89,7 @@ func (s getUserService) Execute(userID int64, username string) (GetUserOutput, e
 		ID:              id,
 		Name:            name,
 		Handle:          handle,
+		PhotoURL:        photoURL,
 		Bio:             bio.String,
 		Location:        location.String,
 		Website:         website.String,

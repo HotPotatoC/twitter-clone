@@ -57,7 +57,10 @@ export default defineComponent({
       //   const lastItem = store.getters['LastTweetFeedItem']
       //   await store.dispatch(ActionTypes.LOAD_MORE_TWEETS, lastItem.createdAt)
       // } else {
-      await store.dispatch(Action.TweetsActionTypes.SEARCH_TWEETS, route.query.q as string)
+      await store.dispatch(
+        Action.TweetsActionTypes.SEARCH_TWEETS,
+        route.query.q as string
+      )
       // }
 
       tweets.value = store.getters['tweetsSearchResults']
@@ -117,17 +120,7 @@ export default defineComponent({
       />
     </div>
     <div v-show="initialLoadDone" class="flex flex-col">
-      <div
-        v-for="tweet in tweets"
-        :key="tweet.id"
-        class="w-full p-4 border-b dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer"
-      >
-        <div class="w-full">
-          <router-link :to="`/${tweet.handle}/status/${tweet.id}`">
-            <TweetCard :tweet="tweet" />
-          </router-link>
-        </div>
-      </div>
+      <TweetCard :tweet="tweet" v-for="tweet in tweets" :key="tweet.id" />
 
       <!-- <div
         v-show="tweets.length > 0 && loadNextBatch"

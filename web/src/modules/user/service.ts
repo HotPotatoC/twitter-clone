@@ -76,6 +76,7 @@ function parseProfileDetailsResponse(
     website: data.website,
     birthDate:
       data.birth_date !== '0001-01-01T00:00:00Z' ? data.birth_date : '',
+    photoURL: data.photo_url,
     followersCount: data.followers_count,
     followingsCount: data.followings_count,
     isFollowing: data.is_following,

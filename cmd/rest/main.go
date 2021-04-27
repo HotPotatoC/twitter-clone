@@ -8,12 +8,14 @@ import (
 	"path/filepath"
 
 	"github.com/HotPotatoC/twitter-clone/internal/server"
+	"github.com/HotPotatoC/twitter-clone/pkg/aws"
 	"github.com/HotPotatoC/twitter-clone/pkg/cache"
 	"github.com/HotPotatoC/twitter-clone/pkg/config"
 	"github.com/HotPotatoC/twitter-clone/pkg/database"
 	"github.com/HotPotatoC/twitter-clone/pkg/logger"
 	"github.com/HotPotatoC/twitter-clone/pkg/version"
 	"github.com/HotPotatoC/twitter-clone/pkg/webserver"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2"
 )
@@ -48,6 +50,19 @@ func main() {
 
 	config.Load(cfgPath)
 
+	awsRegion := config.GetString("AWS_REGION", "")
+	accessKeyID := config.GetString("AWS_ACCESS_KEY_ID", "")
+	secretAccessKey := config.GetString("AWS_SECRET_ACCESS_KEY", "")
+	sessionToken := config.GetString("AWS_SESSION_TOKEN", "")
+	session := aws.NewAWSSession(awsRegion, credentials.NewStaticCredentials(
+		accessKeyID,
+		secretAccessKey,
+		sessionToken,
+	))
+
+	s3BucketName := config.GetString("AWS_S3_BUCKET_NAME", "")
+	s3 := aws.NewS3(ctx, s3BucketName, session)
+
 	dbUrl := fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
 		config.GetString("DB_USER", "postgres"),
 		config.GetString("DB_PASSWORD", ""),
@@ -75,7 +90,7 @@ func main() {
 		Prefork: prefork,
 	})
 
-	server := server.New(webserver, db, cache, logger, &server.Config{
+	server := server.New(webserver, s3, db, cache, logger, &server.Config{
 		Version: version.Version,
 		BuildID: version.BuildID,
 		AppName: config.GetString("APP_NAME", "twitter-clone"),

@@ -8,6 +8,7 @@ export type ProfileDetailsJSONSchema = {
   location: string
   website: string
   birth_date: string
+  photo_url: string
   followers_count: number
   followings_count: number
   is_following: boolean
@@ -27,6 +28,7 @@ export type ProfileDetails = {
   location: string
   website: string
   birthDate: string
+  photoURL: string
   followersCount: number
   followingsCount: number
   isFollowing: boolean
@@ -35,16 +37,17 @@ export type ProfileDetails = {
 
 export type UpdatableProfileFields = Pick<
   ProfileDetails,
-  'name' | 'bio' | 'location' | 'website' | 'birthDate'
+  'name' | 'bio' | 'location' | 'website' | 'birthDate' | 'photoURL'
 >
 
 export type UpdatableProfileFieldsReactive = Omit<
   UpdatableProfileFields,
-  'name' | 'bio' | 'location' | 'website' | 'birthDate'
+  'name' | 'bio' | 'location' | 'website' | 'birthDate' | 'photoURL'
 > & {
   name: string | Ref<string>
   bio: string | Ref<string>
   location: string | Ref<string>
   website: string | Ref<string>
   birthDate: string | Ref<string>
+  photoURL: string | Ref<string>
 }

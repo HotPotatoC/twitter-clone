@@ -135,19 +135,11 @@ export default defineComponent({
       </div>
     </div>
     <div v-show="initialLoadDone" class="flex flex-col">
-      <div
-        v-for="tweet in tweets"
-        :key="tweet.id"
-        class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer transition-colors duration-75"
-      >
-        <div class="w-full">
-          <TweetCard :tweet="tweet" />
-        </div>
-      </div>
+      <TweetCard :tweet="tweet" v-for="tweet in tweets" :key="tweet.id" />
 
       <div
         v-show="tweets.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer"
+        class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker cursor-pointer"
       >
         <div class="w-full text-center">
           <LoadingSpinner />
