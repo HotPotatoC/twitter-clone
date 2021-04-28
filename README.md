@@ -33,7 +33,7 @@ Only the main features are implemented atm
 - [TypeScript](https://www.typescriptlang.org/)
 - [Vue 3](https://v3.vuejs.org/)
 - [Vite 2.0](https://vitejs.dev/)
-- [Vuex 4](https://next.vuex.vuejs.org) (Typed store)
+- [Vuex 4](https://next.vuex.vuejs.org)
 - [Vue Router 4](https://next.router.vuejs.org)
 - [TailwindCSS](http://tailwindcs.com/)
 
