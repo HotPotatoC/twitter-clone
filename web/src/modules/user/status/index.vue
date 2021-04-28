@@ -261,15 +261,11 @@ export default defineComponent({
         tweet.replies.length > 0
       "
     >
-      <div
+      <TweetCard
+        :tweet="reply"
         v-for="reply in tweet.replies"
         :key="reply.id"
-        class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
-      >
-        <div class="w-full">
-          <TweetCard :tweet="reply" />
-        </div>
-      </div>
+      />
       <div
         v-show="
           tweet && tweet.replies && tweet.replies.length > 0 && loadNextBatch
