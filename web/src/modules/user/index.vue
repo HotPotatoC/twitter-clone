@@ -202,7 +202,7 @@ export default defineComponent({
       class="px-6 h-48 border-b border-lighter dark:border-dark bg-blue relative"
     >
       <div
-        class="absolute overflow-hidden mt-32 rounded-full w-32 h-32 border-4 border-lightest dark:border-black"
+        class="absolute overflow-hidden mt-32 rounded-full w-28 h-28 md:w-32 md:h-32 border-4 border-lightest dark:border-black"
       >
         <img :src="profile.photoURL" />
       </div>
