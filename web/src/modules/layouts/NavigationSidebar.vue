@@ -87,14 +87,23 @@ export default defineComponent({
   />
 
   <div
-    class="lg:w-1/5 border-r border-lighter dark:border-dark lg:px-8 py-2 flex flex-col justify-between"
+    class="lg:w-1/5 border-r border-lighter dark:border-dark lg:px-8 py-2 flex flex-col justify-between items-center"
   >
     <div>
-      <button
+      <!-- <button
         class="h-12 w-12 inline-flex items-center justify-center hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 text-blue rounded-full transition-colors duration-75"
       >
         <IconTwitter :size="32" />
-      </button>
+      </button> -->
+      <NavigationSidebarTab
+        id="home"
+        label=""
+        to="/home"
+      >
+        <template #icon>
+          <IconTwitter :size="32" />
+        </template>
+      </NavigationSidebarTab>
       <NavigationSidebarTab
         id="home"
         label="Home"
