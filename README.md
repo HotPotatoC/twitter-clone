@@ -50,7 +50,10 @@ Only the main features are implemented atm
 ```
 
 2. **Create .env file in `configs/` directory by copying `configs/.env.example` and setup the environment variables**
+
 3. **Create the PostgreSQL database and run migrations**
+
+> To run the migrations first install the **migrate** tool [here](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate)
 
 ```sh
 ❯ createdb twitterclone
@@ -58,7 +61,7 @@ Only the main features are implemented atm
 ❯ ./scripts/run_migrations.sh Your_PostgreSQL_URL
 ```
 
-4. **Run the backend server**
+1. **Run the backend server**
 
 ```sh
 ❯ go run cmd/rest/main.go --prefork
