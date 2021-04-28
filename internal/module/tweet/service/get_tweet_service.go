@@ -13,7 +13,7 @@ type GetTweetOutput struct {
 	entity.Tweet
 	Name                    string `json:"name"`
 	Handle                  string `json:"handle"`
-	AuthorPhotoURL          string `json:"author_photo_url"`
+	PhotoURL                string `json:"photo_url"`
 	RepliedToTweet          int64  `json:"replied_to_tweet_id,omitempty"`
 	RepliedToName           string `json:"replied_to_name,omitempty"`
 	RepliedToHandle         string `json:"replied_to_handle,omitempty"`
@@ -47,7 +47,7 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 	}
 
 	var id int64
-	var content, name, handle, authorPhotoURL string
+	var content, name, handle, photoURL string
 	var repliedToTweetID sql.NullInt64
 	var repliedToName, repliedToHandle, repliedToAuthorPhotoURL sql.NullString
 	var createdAt time.Time
@@ -99,7 +99,7 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 		reply_details.handle,
 		reply_details.photo_url,
 		already_liked
-	`, userID, tweetID).Scan(&id, &content, &createdAt, &name, &handle, &authorPhotoURL, &repliedToTweetID, &repliedToName, &repliedToHandle, &repliedToAuthorPhotoURL, &favoritesCount, &repliesCount, &alreadyLiked)
+	`, userID, tweetID).Scan(&id, &content, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &repliedToName, &repliedToHandle, &repliedToAuthorPhotoURL, &favoritesCount, &repliesCount, &alreadyLiked)
 	if err != nil {
 		return GetTweetOutput{}, errors.Wrap(err, "service.getTweetService.Execute")
 	}
@@ -112,7 +112,7 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 		},
 		Name:                    name,
 		Handle:                  handle,
-		AuthorPhotoURL:          authorPhotoURL,
+		PhotoURL:                photoURL,
 		RepliedToTweet:          repliedToTweetID.Int64,
 		RepliedToName:           repliedToName.String,
 		RepliedToHandle:         repliedToHandle.String,

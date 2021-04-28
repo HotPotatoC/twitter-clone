@@ -179,6 +179,7 @@ export default defineComponent({
     <div v-else class="px-5 py-3 border-b border-lighter dark:border-dark">
       <div v-if="initialLoadDone && tweet" class="w-full">
         <div class="flex items-center w-full">
+          <img :src="tweet.photoURL" class="mr-5 h-12 w-12 rounded-full" />
           <router-link :to="`/${tweet.handle}`">
             <p class="font-semibold dark:text-lightest hover:underline">
               {{ tweet.name }}
