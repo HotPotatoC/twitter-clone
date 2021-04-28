@@ -5,16 +5,14 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   server: {
-    https: true,
-    host: 'dev.localhost.com',
     proxy: {
       '/api': {
         target:
           process.env.APP_ENV === 'production'
             ? process.env.API_URL
-            : 'https://dev.localhost.com:5000',
+            : 'http://localhost:5000',
         changeOrigin: true,
-        secure: false,
+        secure: process.env.APP_ENV === 'production',
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
