@@ -82,12 +82,24 @@ func (s *Server) initMiddlewares() {
 }
 
 func (s *Server) initRoutes() {
-	authGroup := s.webserver.Engine().Group("/auth")
-	tweetsGroup := s.webserver.Engine().Group("/tweets")
-	usersGroup := s.webserver.Engine().Group("/users")
-	relationshipGroup := s.webserver.Engine().Group("/relationships")
-	auth.Routes(authGroup, s.db, s.cache)
-	tweet.Routes(tweetsGroup, s.db, s.cache)
-	user.Routes(usersGroup, s.db, s.s3, s.cache)
-	relationship.Routes(relationshipGroup, s.db, s.cache)
+	auth.Routes(
+		s.webserver.Engine().Group("/auth"),
+		s.db,
+		s.cache)
+
+	tweet.Routes(
+		s.webserver.Engine().Group("/tweets"),
+		s.db,
+		s.cache)
+
+	user.Routes(
+		s.webserver.Engine().Group("/users"),
+		s.db,
+		s.s3,
+		s.cache)
+
+	relationship.Routes(
+		s.webserver.Engine().Group("/relationships"),
+		s.db,
+		s.cache)
 }
