@@ -11,6 +11,7 @@ import IconHeart from '../../icons/IconHeart.vue'
 import IconShare from '../../icons/IconShare.vue'
 import { Action } from '../storeActionTypes'
 import { linkifyHTMLText } from '../../utils/linkify'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'TweetCard',
@@ -23,6 +24,7 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore()
+    const router = useRouter()
     const { tweet } = toRefs(props)
     const favoritesCount = ref(tweet.value.favoritesCount)
     const alreadyLiked = ref(tweet.value.alreadyLiked)
@@ -49,6 +51,7 @@ export default defineComponent({
     }
 
     return {
+      router,
       alreadyLiked,
       favoritesCount,
       parsedCreatedAt,
@@ -62,6 +65,7 @@ export default defineComponent({
 <template>
   <div
     class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker dark:hover:bg-opacity-30 flex cursor-pointer transition-colors duration-75"
+    @click="router.push(`/${tweet.authorHandle}/status/${tweet.id}`)"
   >
     <router-link :to="`/${tweet.authorHandle}`" class="flex-none mr-4">
       <img
@@ -70,33 +74,31 @@ export default defineComponent({
       />
     </router-link>
     <div class="w-full">
-      <router-link :to="`/${tweet.authorHandle}/status/${tweet.id}`">
-        <div class="flex flex-wrap items-center w-full">
-          <router-link
-            :to="`/${tweet.authorHandle}`"
-            class="flex flex-wrap items-center"
-          >
-            <p class="font-semibold dark:text-lightest hover:underline">
-              {{ tweet.authorName }}
-            </p>
-            <p class="text-sm text-dark dark:text-light ml-2">
-              @{{ tweet.authorHandle }} ·
-            </p>
-            <p class="text-sm text-dark dark:text-light ml-2">
-              {{ parsedCreatedAt }}
-            </p>
-          </router-link>
-          <div
-            class="text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
-          >
-            <IconEllipsisH />
-          </div>
-        </div>
+      <div class="flex flex-wrap items-center w-full">
+        <router-link
+          :to="`/${tweet.authorHandle}`"
+          class="flex flex-wrap items-center"
+        >
+          <p class="font-semibold dark:text-lightest hover:underline">
+            {{ tweet.authorName }}
+          </p>
+          <p class="text-sm text-dark dark:text-light ml-2">
+            @{{ tweet.authorHandle }} ·
+          </p>
+          <p class="text-sm text-dark dark:text-light ml-2">
+            {{ parsedCreatedAt }}
+          </p>
+        </router-link>
         <div
-          class="py-2 break-words dark:text-lightest"
-          v-html="parsedContent"
-        ></div>
-      </router-link>
+          class="text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
+        >
+          <IconEllipsisH />
+        </div>
+      </div>
+      <div
+        class="py-2 break-words dark:text-lightest"
+        v-html="parsedContent"
+      ></div>
       <div class="flex items-center justify-between w-full mt-2">
         <div
           class="flex items-center group text-dark dark:text-light hover:text-blue dark:hover:text-blue"
@@ -137,7 +139,7 @@ export default defineComponent({
         >
           <div
             class="mr-3 p-2 group-hover:bg-danger group-hover:bg-opacity-20 rounded-full"
-            @click="likeTweet"
+            @click.stop="likeTweet"
           >
             <IconHeart :class="alreadyLiked ? 'fill-current' : null" />
           </div>

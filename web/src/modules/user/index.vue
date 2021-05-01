@@ -16,6 +16,7 @@ import { ProfileDetails } from './types'
 import { Action } from '../storeActionTypes'
 import { useScroll } from '../../hooks/useScroll'
 import TweetCard from '../tweets/TweetCard.vue'
+import TweetConversationCard from '../tweets/TweetConversationCard.vue'
 import { Tweet } from '../tweets/types'
 import Return from '../../shared/Return.vue'
 import LoadingSpinner from '../../shared/LoadingSpinner.vue'
@@ -31,6 +32,7 @@ export default defineComponent({
   components: {
     Return,
     TweetCard,
+    TweetConversationCard,
     LoadingSpinner,
     IconEllipsisH,
     IconMapMarker,
@@ -339,7 +341,10 @@ export default defineComponent({
       </div>
     </div>
     <div v-show="initialLoadDone" class="flex flex-col">
-      <TweetCard :tweet="tweet" v-for="tweet in tweets" :key="tweet.id" />
+      <div v-for="tweet in tweets" :key="tweet.id">
+        <TweetCard v-if="!tweet.isReply" :tweet="tweet" />
+        <TweetConversationCard v-else :tweet="tweet" />
+      </div>
 
       <div
         v-show="tweets.length > 0 && loadNextBatch"

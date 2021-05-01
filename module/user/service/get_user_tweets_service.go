@@ -62,13 +62,14 @@ func (s getUserTweetsService) Execute(userID int64, username string, createdAtCu
 	for rows.Next() {
 		var id int64
 		var content, name, handle, photoURL string
+		var repliedToTweetAlreadyLiked sql.NullBool
 		var repliedToTweetID, replyFavoriteCount, replyReplyCount sql.NullInt64
 		var repliedToName, repliedToHandle, repliedToPhotoURL, replyContent sql.NullString
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
 		var alreadyLiked bool
 
-		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &replyFavoriteCount, &replyReplyCount, &favoritesCount, &repliesCount, &alreadyLiked)
+		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &repliedToTweetAlreadyLiked, &replyReplyCount, &replyFavoriteCount, &favoritesCount, &repliesCount, &alreadyLiked)
 		if err != nil {
 			return []GetUserTweetsOutput{}, errors.Wrap(err, "service.getUserTweetsService.Execute")
 		}
@@ -94,6 +95,7 @@ func (s getUserTweetsService) Execute(userID int64, username string, createdAtCu
 					AuthorPhotoURL: repliedToPhotoURL.String,
 					RepliesCount:   int(replyReplyCount.Int64),
 					FavoritesCount: int(replyFavoriteCount.Int64),
+					AlreadyLiked:   repliedToTweetAlreadyLiked.Bool,
 				},
 				IsReply:      true,
 				AlreadyLiked: alreadyLiked,
@@ -139,6 +141,7 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 		reply_details.name,
 		reply_details.handle,
 		reply_details.photo_url,
+		reply_details.already_liked,
 		-- Reply's replies count
 		(SELECT COUNT(replies.id_reply) FROM replies
 			WHERE replies.id_tweet = reply_details.id_tweet),
@@ -160,14 +163,31 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 			SELECT
 				replies.id_reply,
 				replies.id_tweet,
-				t.content,
+				tweets.content,
 				users.name,
 				users.handle,
-				users.photo_url
+				users.photo_url,
+				CASE WHEN favorites.id_user = $1
+					AND favorites.id_tweet = replies.id_tweet THEN
+					TRUE
+				ELSE
+					FALSE
+				END already_liked
 			FROM
 				replies
-				INNER JOIN tweets AS t ON t.id = replies.id_tweet
-				INNER JOIN users ON users.id = t.id_user) AS reply_details ON reply_details.id_reply = tweets.id
+				INNER JOIN tweets ON tweets.id = replies.id_tweet
+				INNER JOIN users ON users.id = tweets.id_user
+				LEFT JOIN favorites ON favorites.id_tweet = tweets.id
+			GROUP BY
+				replies.id_reply,
+				replies.id_tweet,
+				tweets.content,
+				users.name,
+				users.handle,
+				users.photo_url,
+				favorites.id_user,
+				favorites.id_tweet
+			) AS reply_details ON reply_details.id_reply = tweets.id
 		LEFT JOIN favorites ON favorites.id_tweet = tweets.id
 		LEFT JOIN replies ON replies.id_tweet = tweets.id
 	WHERE users.handle = $2
@@ -188,6 +208,9 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 		reply_details.name,
 		reply_details.handle,
 		reply_details.photo_url,
+		reply_details.already_liked,
+		favorites.id_user,
+		favorites.id_tweet,
 		already_liked
 	ORDER BY
 		tweets.created_at DESC
