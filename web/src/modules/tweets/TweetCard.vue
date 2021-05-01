@@ -10,6 +10,7 @@ import IconRetweet from '../../icons/IconRetweet.vue'
 import IconHeart from '../../icons/IconHeart.vue'
 import IconShare from '../../icons/IconShare.vue'
 import { Action } from '../storeActionTypes'
+import { linkifyHTMLText } from '../../utils/linkify'
 
 export default defineComponent({
   name: 'TweetCard',
@@ -31,6 +32,8 @@ export default defineComponent({
       return dayjs(tweet.value.createdAt).fromNow()
     })
 
+    const parsedContent = computed(() => linkifyHTMLText(tweet.value.content))
+
     async function likeTweet() {
       await store.dispatch(
         Action.TweetsActionTypes.FAVORITE_TWEET,
@@ -45,7 +48,13 @@ export default defineComponent({
       }
     }
 
-    return { alreadyLiked, favoritesCount, parsedCreatedAt, likeTweet }
+    return {
+      alreadyLiked,
+      favoritesCount,
+      parsedCreatedAt,
+      parsedContent,
+      likeTweet,
+    }
   },
 })
 </script>
@@ -83,9 +92,10 @@ export default defineComponent({
             <IconEllipsisH />
           </div>
         </div>
-        <p class="py-2 break-words dark:text-lightest">
-          {{ tweet.content }}
-        </p>
+        <div
+          class="py-2 break-words dark:text-lightest"
+          v-html="parsedContent"
+        ></div>
       </router-link>
       <div class="flex items-center justify-between w-full mt-2">
         <div

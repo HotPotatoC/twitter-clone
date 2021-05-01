@@ -24,6 +24,7 @@ import IconComment from '../../../icons/IconComment.vue'
 import IconRetweet from '../../../icons/IconRetweet.vue'
 import IconShare from '../../../icons/IconShare.vue'
 import IconHeart from '../../../icons/IconHeart.vue'
+import { linkifyHTMLText } from '../../../utils/linkify'
 
 export default defineComponent({
   components: {
@@ -57,6 +58,8 @@ export default defineComponent({
         'h:mm A · MMM D, YYYY'
       )
     )
+
+    const parsedContent = computed(() => linkifyHTMLText(tweet.value.content))
 
     onBeforeMount(async () => {
       await getTweetStatus(tweetId.value)
@@ -151,6 +154,7 @@ export default defineComponent({
       createReply,
       likeTweet,
       parsedCreatedAt,
+      parsedContent,
     }
   },
 })
@@ -179,12 +183,17 @@ export default defineComponent({
     <div v-else class="px-5 py-3 border-b border-lighter dark:border-dark">
       <div v-if="initialLoadDone && tweet" class="w-full">
         <div class="flex items-center w-full">
-          <img :src="tweet.authorPhotoURL" class="mr-5 h-12 w-12 rounded-full" />
+          <img
+            :src="tweet.authorPhotoURL"
+            class="mr-5 h-12 w-12 rounded-full"
+          />
           <router-link :to="`/${tweet.authorHandle}`">
             <p class="font-semibold dark:text-lightest hover:underline">
               {{ tweet.authorName }}
             </p>
-            <p class="text-sm text-dark dark:text-light">@{{ tweet.authorHandle }}</p>
+            <p class="text-sm text-dark dark:text-light">
+              @{{ tweet.authorHandle }}
+            </p>
           </router-link>
           <div
             class="cursor-pointer text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
@@ -192,9 +201,10 @@ export default defineComponent({
             <IconEllipsisH />
           </div>
         </div>
-        <p class="text-2xl py-2 break-words dark:text-lightest">
-          {{ tweet.content }}
-        </p>
+        <div
+          class="text-2xl py-2 break-words dark:text-lightest"
+          v-html="parsedContent"
+        ></div>
         <p class="text-dark dark:text-light">{{ parsedCreatedAt }}</p>
         <div
           class="flex items-center justify-start space-x-12 w-full border-t border-b my-4 py-4 border-lighter dark:border-dark"
