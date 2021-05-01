@@ -12,16 +12,12 @@ import (
 
 type SearchTweetOutput struct {
 	entity.Tweet
-	Name              string  `json:"name"`
-	Handle            string  `json:"handle"`
-	PhotoURL          string  `json:"photo_url"`
-	RepliedToTweet    int64   `json:"replied_to_tweet_id,omitempty"`
-	RepliedToName     string  `json:"replied_to_name,omitempty"`
-	RepliedToHandle   string  `json:"replied_to_handle,omitempty"`
-	RepliedToPhotoURL string  `json:"replied_to_photo_url,omitempty"`
-	FavoritesCount    int     `json:"favorites_count"`
-	RepliesCount      int     `json:"replies_count"`
-	Rank              float64 `json:"rank"`
+	Name     string        `json:"author_name"`
+	Handle   string        `json:"author_handle"`
+	PhotoURL string        `json:"author_photo_url"`
+	Reply    *entity.Reply `json:"replied_to,omitempty"`
+	IsReply  bool          `json:"is_reply"`
+	Rank     float64       `json:"rank"`
 }
 
 type SearchTweetService interface {
@@ -62,34 +58,54 @@ func (s searchTweetService) Execute(searchQuery string, cursor string) ([]Search
 	for rows.Next() {
 		var id int64
 		var content, name, handle, photoURL string
-		var repliedToTweetID sql.NullInt64
-		var repliedToName, repliedToHandle, repliedToPhotoURL sql.NullString
+		var repliedToTweetID, replyFavoriteCount, replyReplyCount sql.NullInt64
+		var repliedToName, repliedToHandle, repliedToPhotoURL, replyContent sql.NullString
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
 		var rank float64
 
-		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &favoritesCount, &repliesCount, &rank)
+		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &replyFavoriteCount, &replyReplyCount, &favoritesCount, &repliesCount, &rank)
 		if err != nil {
 			return []SearchTweetOutput{}, errors.Wrap(err, "service.searchTweetService.Execute")
 		}
 
-		tweets = append(tweets, SearchTweetOutput{
-			Tweet: entity.Tweet{
-				ID:        id,
-				Content:   content,
-				CreatedAt: createdAt,
-			},
-			Name:              name,
-			Handle:            handle,
-			PhotoURL:          photoURL,
-			RepliedToTweet:    repliedToTweetID.Int64,
-			RepliedToName:     repliedToName.String,
-			RepliedToHandle:   repliedToHandle.String,
-			RepliedToPhotoURL: repliedToPhotoURL.String,
-			FavoritesCount:    favoritesCount,
-			RepliesCount:      repliesCount,
-			Rank:              rank,
-		})
+		if repliedToTweetID.Valid {
+			// The tweet is a reply
+			tweets = append(tweets, SearchTweetOutput{
+				Tweet: entity.Tweet{
+					ID:             id,
+					Content:        content,
+					FavoritesCount: favoritesCount,
+					RepliesCount:   repliesCount,
+					CreatedAt:      createdAt,
+				},
+				Name:     name,
+				Handle:   handle,
+				PhotoURL: photoURL,
+				Reply: &entity.Reply{
+					ID:             repliedToTweetID.Int64,
+					AuthorName:     repliedToName.String,
+					AuthorHandle:   repliedToHandle.String,
+					AuthorPhotoURL: repliedToPhotoURL.String,
+				},
+				IsReply: true,
+				Rank:    rank,
+			})
+		} else {
+			tweets = append(tweets, SearchTweetOutput{
+				Tweet: entity.Tweet{
+					ID:             id,
+					Content:        content,
+					FavoritesCount: favoritesCount,
+					RepliesCount:   repliesCount,
+					CreatedAt:      createdAt,
+				},
+				Name:     name,
+				Handle:   handle,
+				PhotoURL: photoURL,
+				Rank:     rank,
+			})
+		}
 	}
 
 	if err := rows.Err(); err != nil {
@@ -111,9 +127,16 @@ func (s searchTweetService) buildSQLQuery(withCursor bool) string {
 		users.handle,
 		users.photo_url,
 		reply_details.id_tweet,
+		reply_details.content,
 		reply_details.name,
 		reply_details.handle,
 		reply_details.photo_url,
+		-- Reply's replies count
+		(SELECT COUNT(replies.id_reply) FROM replies
+			WHERE replies.id_tweet = reply_details.id_tweet),
+		-- Reply's favorites count
+		(SELECT COUNT(favorites.id) FROM favorites
+			WHERE favorites.id_tweet = reply_details.id_tweet),
 		COUNT(favorites.id),
 		COUNT(replies.id_reply),
 		ts_rank(tweets.content_tsv, plainto_tsquery($1))
@@ -123,6 +146,7 @@ func (s searchTweetService) buildSQLQuery(withCursor bool) string {
 			SELECT
 				replies.id_reply,
 				replies.id_tweet,
+				t.content,
 				users.name,
 				users.handle,
 				users.photo_url
@@ -145,6 +169,7 @@ func (s searchTweetService) buildSQLQuery(withCursor bool) string {
 		users.handle,
 		users.photo_url,
 		reply_details.id_tweet,
+		reply_details.content,
 		reply_details.name,
 		reply_details.handle,
 		reply_details.photo_url

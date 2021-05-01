@@ -11,9 +11,9 @@ import (
 
 type ListTweetRepliesOutput struct {
 	entity.Tweet
-	Name           string `json:"name"`
-	Handle         string `json:"handle"`
-	PhotoURL       string `json:"photo_url"`
+	Name           string `json:"author_name"`
+	Handle         string `json:"author_handle"`
+	PhotoURL       string `json:"author_photo_url"`
 	FavoritesCount int    `json:"favorites_count"`
 	RepliesCount   int    `json:"replies_count"`
 }

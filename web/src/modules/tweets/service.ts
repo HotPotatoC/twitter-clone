@@ -3,14 +3,28 @@ import axios from '../../utils/axios'
 import { ResponseItems } from '../../types'
 
 function parseResponseTweetItem(data: TweetJSONSchema): Tweet {
+  const repliedTo = data.replied_to
+    ? {
+        id: data.replied_to.id,
+        content: data.replied_to.content,
+        authorName: data.replied_to.author_name,
+        authorHandle: data.replied_to.author_handle,
+        authorPhotoURL: data.replied_to.author_photo_url,
+        favoritesCount: data.replied_to.favorites_count,
+        repliesCount: data.replied_to.replies_count,
+        alreadyLiked: data.replied_to.already_liked,
+      }
+    : undefined
   return {
-    repliedToTweet: data.replied_to_tweet,
-    repliedToName: data.replied_to_name,
+    authorHandle: data.author_handle,
+    authorName: data.author_name,
+    authorPhotoURL: data.author_photo_url,
+    repliedTo,
     favoritesCount: data.favorites_count,
     repliesCount: data.replies_count,
     createdAt: data.created_at,
     alreadyLiked: data.already_liked,
-    photoURL: data.photo_url,
+    isReply: data.is_reply,
     ...data,
   }
 }

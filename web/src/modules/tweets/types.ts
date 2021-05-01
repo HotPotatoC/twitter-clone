@@ -1,32 +1,27 @@
 export type TweetJSONSchema = {
   id: number
   content: string
-  name: string
-  handle: string
-  photo_url: string
-  replied_to_tweet: number
-  replied_to_name: string
-  replied_to_handle: string
-  replied_to_photo_url: string
+  author_name: string
+  author_handle: string
+  author_photo_url: string
+  replied_to?: Omit<TweetJSONSchema, 'replied_to' | 'is_reply' | 'created_at'>
+  is_reply: boolean
   favorites_count: number
   replies_count: number
   created_at: string
   already_liked: boolean
-  replies?: TweetJSONSchema[]
 }
 
 export type Tweet = {
   id: number
   content: string
-  name: string
-  handle: string
-  photoURL: string
-  repliedToTweet?: number
-  repliedToName?: string
-  repliedToHandle?: string
-  repliedToPhotoURL?: string
+  authorName: string
+  authorHandle: string
+  authorPhotoURL: string
+  repliedTo?: Omit<Tweet, 'repliedTo' | 'isReply' | 'createdAt'>
   favoritesCount: number
   repliesCount: number
+  isReply: boolean
   alreadyLiked?: boolean
   createdAt: string
 }

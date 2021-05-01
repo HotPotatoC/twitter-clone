@@ -52,23 +52,26 @@ export default defineComponent({
 
 <template>
   <div
-    class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker flex cursor-pointer transition-colors duration-75"
+    class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker dark:hover:bg-opacity-30 flex cursor-pointer transition-colors duration-75"
   >
-    <router-link :to="`/${tweet.handle}`" class="flex-none mr-4">
-      <img :src="tweet.photoURL" class="h-12 w-12 rounded-full flex-none" />
+    <router-link :to="`/${tweet.authorHandle}`" class="flex-none mr-4">
+      <img
+        :src="tweet.authorPhotoURL"
+        class="h-12 w-12 rounded-full flex-none"
+      />
     </router-link>
     <div class="w-full">
-      <router-link :to="`/${tweet.handle}/status/${tweet.id}`">
+      <router-link :to="`/${tweet.authorHandle}/status/${tweet.id}`">
         <div class="flex flex-wrap items-center w-full">
           <router-link
-            :to="`/${tweet.handle}`"
+            :to="`/${tweet.authorHandle}`"
             class="flex flex-wrap items-center"
           >
             <p class="font-semibold dark:text-lightest hover:underline">
-              {{ tweet.name }}
+              {{ tweet.authorName }}
             </p>
             <p class="text-sm text-dark dark:text-light ml-2">
-              @{{ tweet.handle }} ·
+              @{{ tweet.authorHandle }} ·
             </p>
             <p class="text-sm text-dark dark:text-light ml-2">
               {{ parsedCreatedAt }}
@@ -85,45 +88,58 @@ export default defineComponent({
         </p>
       </router-link>
       <div class="flex items-center justify-between w-full mt-2">
-        <div class="flex items-center">
+        <div
+          class="flex items-center group text-dark dark:text-light hover:text-blue dark:hover:text-blue"
+        >
           <div
-            class="mr-3 p-2 text-dark dark:text-light hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
+            class="mr-3 p-2 group-hover:bg-darkblue group-hover:bg-opacity-20 rounded-full"
           >
             <IconComment />
           </div>
-          <p class="text-sm text-dark dark:text-light">
+          <p class="text-sm">
             {{ tweet.repliesCount }}
           </p>
         </div>
-        <div class="flex items-center">
+        <div
+          class="flex items-center group text-dark dark:text-light hover:text-success dark:hover:text-success"
+        >
           <div
-            class="mr-3 p-2 text-dark dark:text-light hover:bg-success hover:text-success hover:bg-opacity-20 rounded-full"
+            class="mr-3 p-2 group-hover:bg-success group-hover:bg-opacity-20 rounded-full"
           >
             <IconRetweet />
           </div>
-          <p class="text-sm text-dark dark:text-light">
+          <p class="text-sm">
             {{ tweet.repliesCount }}
           </p>
         </div>
-        <div class="flex items-center">
+        <div
+          class="flex items-center group"
+          :class="
+            alreadyLiked
+              ? ['text-danger']
+              : [
+                  'text-dark',
+                  'dark:text-light',
+                  'hover:text-danger',
+                  'dark:hover:text-danger',
+                ]
+          "
+        >
           <div
-            class="mr-3 p-2 hover:bg-danger hover:bg-opacity-20 rounded-full"
-            :class="
-              alreadyLiked
-                ? ['text-danger']
-                : ['text-dark', 'dark:text-light', 'hover:text-danger']
-            "
+            class="mr-3 p-2 group-hover:bg-danger group-hover:bg-opacity-20 rounded-full"
             @click="likeTweet"
           >
             <IconHeart :class="alreadyLiked ? 'fill-current' : null" />
           </div>
-          <p class="text-sm text-dark dark:text-light">
+          <p class="text-sm">
             {{ favoritesCount }}
           </p>
         </div>
-        <div class="flex items-center">
+        <div
+          class="flex items-center text-dark dark:text-light hover:text-darkblue dark:hover:text-darkblue"
+        >
           <div
-            class="mr-3 p-2 text-dark dark:text-light hover:bg-darkblue hover:text-darkblue hover:bg-opacity-20 rounded-full"
+            class="mr-3 p-2 hover:bg-darkblue hover:bg-opacity-20 rounded-full"
           >
             <IconShare />
           </div>

@@ -179,12 +179,12 @@ export default defineComponent({
     <div v-else class="px-5 py-3 border-b border-lighter dark:border-dark">
       <div v-if="initialLoadDone && tweet" class="w-full">
         <div class="flex items-center w-full">
-          <img :src="tweet.photoURL" class="mr-5 h-12 w-12 rounded-full" />
-          <router-link :to="`/${tweet.handle}`">
+          <img :src="tweet.authorPhotoURL" class="mr-5 h-12 w-12 rounded-full" />
+          <router-link :to="`/${tweet.authorHandle}`">
             <p class="font-semibold dark:text-lightest hover:underline">
-              {{ tweet.name }}
+              {{ tweet.authorName }}
             </p>
-            <p class="text-sm text-dark dark:text-light">@{{ tweet.handle }}</p>
+            <p class="text-sm text-dark dark:text-light">@{{ tweet.authorHandle }}</p>
           </router-link>
           <div
             class="cursor-pointer text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
