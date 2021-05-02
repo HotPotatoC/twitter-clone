@@ -31,12 +31,12 @@ func (a updateProfileImageAction) Execute(c *fiber.Ctx) error {
 	photoURL, err := a.service.Execute(photo, int64(userID))
 	if err != nil {
 		switch {
-		case errors.Is(err, service.ErrInvalidImageType):
+		case errors.Is(err, module.ErrInvalidImageType):
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 				"message": "Invalid image type",
 				"allowed": utils.ImageTypes,
 			})
-		case errors.Is(err, service.ErrUploadImageSizeTooLarge):
+		case errors.Is(err, module.ErrUploadImageSizeTooLarge):
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 				"message": fmt.Sprintf("Image size is too big [Max: %s]",
 					utils.ByteCount(int64(config.GetInt("MAX_UPLOAD_SIZE", 2.5*1024*1024)))),

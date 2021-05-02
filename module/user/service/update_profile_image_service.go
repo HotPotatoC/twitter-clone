@@ -10,6 +10,7 @@ import (
 	"github.com/HotPotatoC/twitter-clone/internal/config"
 	"github.com/HotPotatoC/twitter-clone/internal/database"
 	"github.com/HotPotatoC/twitter-clone/internal/utils"
+	"github.com/HotPotatoC/twitter-clone/module"
 	"github.com/pkg/errors"
 )
 
@@ -36,7 +37,7 @@ func (s updateProfileImageService) Execute(photo *multipart.FileHeader, userID i
 	maxUploadSize := int64(config.GetInt("MAX_UPLOAD_SIZE", 2.5*1024*1024))
 
 	if photo.Size > maxUploadSize {
-		return "", ErrUploadImageSizeTooLarge
+		return "", module.ErrUploadImageSizeTooLarge
 	}
 
 	buf := make([]byte, 512)
@@ -46,7 +47,7 @@ func (s updateProfileImageService) Execute(photo *multipart.FileHeader, userID i
 	}
 
 	if !utils.IsValidImageContentType(http.DetectContentType(buf)) {
-		return "", ErrInvalidImageType
+		return "", module.ErrInvalidImageType
 	}
 
 	fileKey := fmt.Sprintf("%d-%d-%s", userID, time.Now().Unix(), photo.Filename)

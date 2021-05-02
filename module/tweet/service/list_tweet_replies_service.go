@@ -11,11 +11,9 @@ import (
 
 type ListTweetRepliesOutput struct {
 	entity.Tweet
-	Name           string `json:"author_name"`
-	Handle         string `json:"author_handle"`
-	PhotoURL       string `json:"author_photo_url"`
-	FavoritesCount int    `json:"favorites_count"`
-	RepliesCount   int    `json:"replies_count"`
+	Name     string `json:"author_name"`
+	Handle   string `json:"author_handle"`
+	PhotoURL string `json:"author_photo_url"`
 }
 
 type ListTweetRepliesService interface {
@@ -71,24 +69,26 @@ func (s listTweetRepliesService) Execute(tweetID int64, createdAtCursor string) 
 		var id, userID int64
 		var favoritesCount, repliesCount int
 		var content, name, handle, photoURL string
+		var photoURLs []string
 		var createdAt time.Time
 
-		err = rows.Scan(&id, &content, &userID, &createdAt, &name, &handle, &photoURL, &favoritesCount, &repliesCount)
+		err = rows.Scan(&id, &content, &photoURLs, &userID, &createdAt, &name, &handle, &photoURL, &favoritesCount, &repliesCount)
 		if err != nil {
 			return []ListTweetRepliesOutput{}, errors.Wrap(err, "service.listTweetRepliesService.Execute")
 		}
 
 		tweets = append(tweets, ListTweetRepliesOutput{
 			Tweet: entity.Tweet{
-				ID:        id,
-				Content:   content,
-				CreatedAt: createdAt,
+				ID:             id,
+				Content:        content,
+				PhotoURLs:      photoURLs,
+				CreatedAt:      createdAt,
+				FavoritesCount: favoritesCount,
+				RepliesCount:   repliesCount,
 			},
-			Name:           name,
-			Handle:         handle,
-			PhotoURL:       photoURL,
-			FavoritesCount: favoritesCount,
-			RepliesCount:   repliesCount,
+			Name:     name,
+			Handle:   handle,
+			PhotoURL: photoURL,
 		})
 	}
 
@@ -106,6 +106,7 @@ func (s listTweetRepliesService) buildSQLQuery(withCursor bool) string {
 	SELECT
 		tweets.id,
 		tweets.content,
+		tweets.photo_urls,
 		tweets.id_user,
 		tweets.created_at,
 		users.name,

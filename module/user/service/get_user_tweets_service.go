@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/HotPotatoC/twitter-clone/internal/database"
+	"github.com/HotPotatoC/twitter-clone/module"
 	"github.com/HotPotatoC/twitter-clone/module/tweet/entity"
 	"github.com/pkg/errors"
 )
@@ -44,7 +45,7 @@ func (s getUserTweetsService) Execute(userID int64, username string, createdAtCu
 	if withCursor {
 		cursor, err := time.Parse(time.RFC3339, createdAtCursor)
 		if err != nil {
-			return []GetUserTweetsOutput{}, ErrInvalidCursor
+			return []GetUserTweetsOutput{}, module.ErrInvalidCursor
 		}
 
 		rows, err = s.db.Query(query, userID, username, cursor)
@@ -62,14 +63,16 @@ func (s getUserTweetsService) Execute(userID int64, username string, createdAtCu
 	for rows.Next() {
 		var id int64
 		var content, name, handle, photoURL string
+		var photoURLs []string
 		var repliedToTweetAlreadyLiked sql.NullBool
 		var repliedToTweetID, replyFavoriteCount, replyReplyCount sql.NullInt64
 		var repliedToName, repliedToHandle, repliedToPhotoURL, replyContent sql.NullString
+		var replyPhotoURLs []string
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
 		var alreadyLiked bool
 
-		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &repliedToTweetAlreadyLiked, &replyReplyCount, &replyFavoriteCount, &favoritesCount, &repliesCount, &alreadyLiked)
+		err = rows.Scan(&id, &content, &photoURLs, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &replyPhotoURLs, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &repliedToTweetAlreadyLiked, &replyReplyCount, &replyFavoriteCount, &favoritesCount, &repliesCount, &alreadyLiked)
 		if err != nil {
 			return []GetUserTweetsOutput{}, errors.Wrap(err, "service.getUserTweetsService.Execute")
 		}
@@ -80,6 +83,7 @@ func (s getUserTweetsService) Execute(userID int64, username string, createdAtCu
 				Tweet: entity.Tweet{
 					ID:             id,
 					Content:        content,
+					PhotoURLs:      photoURLs,
 					CreatedAt:      createdAt,
 					FavoritesCount: favoritesCount,
 					RepliesCount:   repliesCount,
@@ -90,6 +94,7 @@ func (s getUserTweetsService) Execute(userID int64, username string, createdAtCu
 				Reply: &entity.Reply{
 					ID:             repliedToTweetID.Int64,
 					Content:        replyContent.String,
+					PhotoURLs:      replyPhotoURLs,
 					AuthorName:     repliedToName.String,
 					AuthorHandle:   repliedToHandle.String,
 					AuthorPhotoURL: repliedToPhotoURL.String,
@@ -105,6 +110,7 @@ func (s getUserTweetsService) Execute(userID int64, username string, createdAtCu
 				Tweet: entity.Tweet{
 					ID:             id,
 					Content:        content,
+					PhotoURLs:      photoURLs,
 					CreatedAt:      createdAt,
 					FavoritesCount: favoritesCount,
 					RepliesCount:   repliesCount,
@@ -132,12 +138,14 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 	SELECT
 		tweets.id,
 		tweets.content,
+		tweets.photo_urls,
 		tweets.created_at,
 		users.name,
 		users.handle,
 		users.photo_url,
 		reply_details.id_tweet,
 		reply_details.content,
+		reply_details.photo_urls,
 		reply_details.name,
 		reply_details.handle,
 		reply_details.photo_url,
@@ -164,6 +172,7 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 				replies.id_reply,
 				replies.id_tweet,
 				tweets.content,
+				tweets.photo_urls,
 				users.name,
 				users.handle,
 				users.photo_url,
@@ -182,6 +191,7 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 				replies.id_reply,
 				replies.id_tweet,
 				tweets.content,
+				tweets.photo_urls,
 				users.name,
 				users.handle,
 				users.photo_url,
@@ -205,6 +215,7 @@ func (s getUserTweetsService) buildSQLQuery(withCursor bool) string {
 		users.photo_url,
 		reply_details.id_tweet,
 		reply_details.content,
+		reply_details.photo_urls,
 		reply_details.name,
 		reply_details.handle,
 		reply_details.photo_url,

@@ -1,0 +1,5 @@
+BEGIN;
+ALTER TABLE IF EXISTS "tweets"
+    DROP COLUMN photo_urls;
+COMMIT;
+

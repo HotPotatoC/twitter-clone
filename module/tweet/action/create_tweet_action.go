@@ -27,13 +27,27 @@ func (a createTweetAction) Execute(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(errors)
 	}
 
+	mf, err := c.MultipartForm()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
 	userID := c.Locals("userID").(float64)
 
-	err := a.service.Execute(input, int64(userID))
+	err = a.service.Execute(input, mf.File["photos"], int64(userID))
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
-		})
+		switch err {
+		case module.ErrTooManyAttachments:
+			return c.Status(fiber.StatusRequestEntityTooLarge).JSON(fiber.Map{
+				"message": "Only a maximum of 4 images are allowed",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "There was a problem on our side",
+			})
+		}
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{

@@ -62,14 +62,16 @@ func (s listTweetFeedService) Execute(userID int64, createdAtCursor string) ([]L
 	for rows.Next() {
 		var id int64
 		var content, name, handle, photoURL string
+		var photoURLs []string
 		var repliedToTweetAlreadyLiked sql.NullBool
 		var repliedToTweetID, replyFavoriteCount, replyReplyCount sql.NullInt64
 		var repliedToName, repliedToHandle, repliedToPhotoURL, replyContent sql.NullString
+		var replyPhotoURLs []string
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
 		var alreadyLiked bool
 
-		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &repliedToTweetAlreadyLiked, &replyReplyCount, &replyFavoriteCount, &favoritesCount, &repliesCount, &alreadyLiked)
+		err = rows.Scan(&id, &content, &photoURLs, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &replyPhotoURLs, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &repliedToTweetAlreadyLiked, &replyReplyCount, &replyFavoriteCount, &favoritesCount, &repliesCount, &alreadyLiked)
 		if err != nil {
 			return []ListTweetFeedOutput{}, errors.Wrap(err, "service.listTweetFeedService.Execute")
 		}
@@ -80,6 +82,7 @@ func (s listTweetFeedService) Execute(userID int64, createdAtCursor string) ([]L
 				Tweet: entity.Tweet{
 					ID:             id,
 					Content:        content,
+					PhotoURLs:      photoURLs,
 					FavoritesCount: favoritesCount,
 					RepliesCount:   repliesCount,
 					CreatedAt:      createdAt,
@@ -90,6 +93,7 @@ func (s listTweetFeedService) Execute(userID int64, createdAtCursor string) ([]L
 				Reply: &entity.Reply{
 					ID:             repliedToTweetID.Int64,
 					Content:        replyContent.String,
+					PhotoURLs:      replyPhotoURLs,
 					AuthorName:     repliedToName.String,
 					AuthorHandle:   repliedToHandle.String,
 					AuthorPhotoURL: repliedToPhotoURL.String,
@@ -105,6 +109,7 @@ func (s listTweetFeedService) Execute(userID int64, createdAtCursor string) ([]L
 				Tweet: entity.Tweet{
 					ID:             id,
 					Content:        content,
+					PhotoURLs:      photoURLs,
 					FavoritesCount: favoritesCount,
 					RepliesCount:   repliesCount,
 					CreatedAt:      createdAt,
@@ -132,12 +137,14 @@ func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 	SELECT
 		tweets.id,
 		tweets.content,
+		tweets.photo_urls,
 		tweets.created_at,
 		users.name,
 		users.handle,
 		users.photo_url,
 		reply_details.id_tweet,
 		reply_details.content,
+		reply_details.photo_urls,
 		reply_details.name,
 		reply_details.handle,
 		reply_details.photo_url,
@@ -164,6 +171,7 @@ func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 				replies.id_reply,
 				replies.id_tweet,
 				tweets.content,
+				tweets.photo_urls,
 				users.name,
 				users.handle,
 				users.photo_url,
@@ -181,6 +189,7 @@ func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 				replies.id_reply,
 				replies.id_tweet,
 				tweets.content,
+				tweets.photo_urls,
 				users.name,
 				users.handle,
 				users.photo_url,
@@ -204,6 +213,7 @@ func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 		users.photo_url,
 		reply_details.id_tweet,
 		reply_details.content,
+		reply_details.photo_urls,
 		reply_details.name,
 		reply_details.handle,
 		reply_details.photo_url,

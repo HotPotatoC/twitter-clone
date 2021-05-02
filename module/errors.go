@@ -1,4 +1,4 @@
-package service
+package module
 
 import "errors"
 
@@ -7,4 +7,5 @@ var (
 
 	ErrUploadImageSizeTooLarge = errors.New("upload image size too large")
 	ErrInvalidImageType        = errors.New("invalid image type")
+	ErrTooManyAttachments      = errors.New("too many attachments")
 )

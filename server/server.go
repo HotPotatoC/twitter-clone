@@ -90,6 +90,7 @@ func (s *Server) initRoutes() {
 	tweet.Routes(
 		s.webserver.Engine().Group("/tweets"),
 		s.db,
+		s.s3,
 		s.cache)
 
 	user.Routes(
