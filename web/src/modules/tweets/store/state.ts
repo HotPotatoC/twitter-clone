@@ -11,6 +11,7 @@ export const state: State = {
   tweetStatus: {
     id: 0,
     content: '',
+    photoURLs: null,
     authorName: '',
     authorHandle: '',
     authorPhotoURL: '',
@@ -18,6 +19,7 @@ export const state: State = {
     repliesCount: 0,
     createdAt: '',
     alreadyLiked: false,
+    isReply: false,
     replies: [],
   },
   tweetSearchResult: [],

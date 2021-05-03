@@ -24,3 +24,5 @@
 *.pem
 
 node_modules
+
+postgres.session.sql

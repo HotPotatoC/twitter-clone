@@ -263,6 +263,50 @@ export default defineComponent({
           class="py-2 break-words dark:text-lightest"
           v-html="parsedReplyContent"
         ></div>
+        <div
+          v-if="tweet.photoURLs !== null && tweet.photoURLs.length > 0"
+          class="relative overflow-hidden w-full h-96 rounded-lg"
+        >
+          <div class="box-border relative">
+            <div class="grid grid-cols-2 gap-1 h-full">
+              <div
+                class="w-full"
+                :class="tweet.photoURLs.length > 2 ? 'h-48' : 'h-96'"
+              >
+                <img
+                  :src="tweet.photoURLs[0]"
+                  class="object-cover w-full h-full"
+                />
+                <img
+                  v-if="tweet.photoURLs.length > 2"
+                  :src="tweet.photoURLs[1]"
+                  class="object-cover w-full h-full"
+                />
+              </div>
+              <div
+                class="w-full"
+                :class="tweet.photoURLs.length > 2 ? 'h-48' : 'h-96'"
+              >
+                <img
+                  v-if="tweet.photoURLs.length > 2"
+                  :src="tweet.photoURLs[2]"
+                  class="object-cover w-full"
+                  :class="tweet.photoURLs.length === 4 ? 'h-full' : 'h-96'"
+                />
+                <img
+                  v-else
+                  :src="tweet.photoURLs[1]"
+                  class="object-cover w-full h-full"
+                />
+                <img
+                  v-if="tweet.photoURLs.length === 4"
+                  :src="tweet.photoURLs[3]"
+                  class="object-cover w-full h-full"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="flex items-center justify-between w-full mt-2">
           <div
             class="flex items-center group text-dark dark:text-light hover:text-blue dark:hover:text-blue"

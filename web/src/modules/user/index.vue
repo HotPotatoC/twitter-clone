@@ -26,6 +26,7 @@ import IconLink from '../../icons/IconLink.vue'
 import IconGift from '../../icons/IconGift.vue'
 import IconCalendar from '../../icons/IconCalendar.vue'
 import EditProfileDialog from './EditProfileDialog.vue'
+import TweetImageOverlay from '../tweets/TweetImageOverlay.vue'
 
 export default defineComponent({
   name: 'Profile',
@@ -40,6 +41,7 @@ export default defineComponent({
     IconGift,
     IconCalendar,
     EditProfileDialog,
+    TweetImageOverlay,
   },
   setup() {
     const store = useStore()

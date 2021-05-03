@@ -7,6 +7,7 @@ function parseResponseTweetItem(data: TweetJSONSchema): Tweet {
     ? {
         id: data.replied_to.id,
         content: data.replied_to.content,
+        photoURLs: data.replied_to.photo_urls,
         authorName: data.replied_to.author_name,
         authorHandle: data.replied_to.author_handle,
         authorPhotoURL: data.replied_to.author_photo_url,
@@ -16,6 +17,7 @@ function parseResponseTweetItem(data: TweetJSONSchema): Tweet {
       }
     : undefined
   return {
+    photoURLs: data.photo_urls,
     authorHandle: data.author_handle,
     authorName: data.author_name,
     authorPhotoURL: data.author_photo_url,

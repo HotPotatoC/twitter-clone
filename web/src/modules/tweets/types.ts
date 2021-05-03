@@ -1,6 +1,7 @@
 export type TweetJSONSchema = {
   id: number
   content: string
+  photo_urls: string[] | null
   author_name: string
   author_handle: string
   author_photo_url: string
@@ -15,6 +16,7 @@ export type TweetJSONSchema = {
 export type Tweet = {
   id: number
   content: string
+  photoURLs: string[] | null
   authorName: string
   authorHandle: string
   authorPhotoURL: string
