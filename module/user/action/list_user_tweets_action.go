@@ -9,15 +9,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type getUserTweetsAction struct {
-	service service.GetUserTweetsService
+type listUserTweetsAction struct {
+	service service.ListUserTweetsService
 }
 
-func NewGetUserTweetsAction(service service.GetUserTweetsService) module.Action {
-	return getUserTweetsAction{service: service}
+func NewListUserTweetsAction(service service.ListUserTweetsService) module.Action {
+	return listUserTweetsAction{service: service}
 }
 
-func (a getUserTweetsAction) Execute(c *fiber.Ctx) error {
+func (a listUserTweetsAction) Execute(c *fiber.Ctx) error {
 	createdAtCursor := c.Query("cursor")
 	username := c.Params("username")
 

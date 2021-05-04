@@ -14,7 +14,7 @@ func Routes(r fiber.Router, db database.Database, s3 *aws.S3Bucket, cache cache.
 	authMiddleware := middleware.NewAuthMiddleware()
 	r.Post("/register", buildRegisterHandler(db))
 	r.Get("/:username", authMiddleware.Execute(), buildGetUserHandler(db))
-	r.Get("/:username/tweets", authMiddleware.Execute(), buildGetUserTweetsHandler(db))
+	r.Get("/:username/tweets", authMiddleware.Execute(), buildListUserTweetsHandler(db))
 	r.Patch("/profile", authMiddleware.Execute(), buildUpdateUserHandler(db))
 	r.Patch("/profile_image", authMiddleware.Execute(), buildUpdateProfileImageHandler(db, s3))
 }
@@ -37,10 +37,10 @@ func buildGetUserHandler(db database.Database) fiber.Handler {
 	}
 }
 
-func buildGetUserTweetsHandler(db database.Database) fiber.Handler {
+func buildListUserTweetsHandler(db database.Database) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		service := service.NewGetUserTweetsService(db)
-		action := action.NewGetUserTweetsAction(service)
+		service := service.NewListUserTweetsService(db)
+		action := action.NewListUserTweetsAction(service)
 
 		return action.Execute(c)
 	}
