@@ -11,9 +11,10 @@ import (
 
 type ListTweetRepliesOutput struct {
 	entity.Tweet
-	Name     string `json:"author_name"`
-	Handle   string `json:"author_handle"`
-	PhotoURL string `json:"author_photo_url"`
+	AuthorName     string `json:"author_name"`
+	AuthorHandle   string `json:"author_handle"`
+	AuthorPhotoURL string `json:"author_photo_url"`
+	AlreadyLiked   bool   `json:"already_liked"`
 }
 
 type ListTweetRepliesService interface {
@@ -66,13 +67,25 @@ func (s listTweetRepliesService) Execute(tweetID int64, createdAtCursor string) 
 	defer rows.Close()
 
 	for rows.Next() {
-		var id, userID int64
+		var id, authorID int64
 		var favoritesCount, repliesCount int
-		var content, name, handle, photoURL string
+		var content, authorName, authorHandle, authorPhotoURL string
 		var photoURLs []string
 		var createdAt time.Time
+		var alreadyLiked bool
 
-		err = rows.Scan(&id, &content, &photoURLs, &userID, &createdAt, &name, &handle, &photoURL, &favoritesCount, &repliesCount)
+		err = rows.Scan(
+			&id,
+			&content,
+			&photoURLs,
+			&authorID,
+			&createdAt,
+			&authorName,
+			&authorHandle,
+			&authorPhotoURL,
+			&favoritesCount,
+			&repliesCount,
+			&alreadyLiked)
 		if err != nil {
 			return []ListTweetRepliesOutput{}, errors.Wrap(err, "service.listTweetRepliesService.Execute")
 		}
@@ -86,9 +99,10 @@ func (s listTweetRepliesService) Execute(tweetID int64, createdAtCursor string) 
 				FavoritesCount: favoritesCount,
 				RepliesCount:   repliesCount,
 			},
-			Name:     name,
-			Handle:   handle,
-			PhotoURL: photoURL,
+			AuthorName:     authorName,
+			AuthorHandle:   authorHandle,
+			AuthorPhotoURL: authorPhotoURL,
+			AlreadyLiked:   alreadyLiked,
 		})
 	}
 
@@ -113,7 +127,11 @@ func (s listTweetRepliesService) buildSQLQuery(withCursor bool) string {
 		users.handle,
 		users.photo_url,
 		COUNT(favorites.id),
-		COUNT(r.id_reply)
+		COUNT(r.id_reply),
+        EXISTS (
+            SELECT 1 FROM favorites
+            WHERE favorites.id_tweet = tweets.id AND favorites.id_user = $1
+		) AS already_liked
 	FROM replies
 		INNER JOIN tweets ON tweets.id = replies.id_reply
 		INNER JOIN users ON users.id = tweets.id_user

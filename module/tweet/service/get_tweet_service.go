@@ -11,12 +11,12 @@ import (
 
 type GetTweetOutput struct {
 	entity.Tweet
-	Name         string        `json:"author_name"`
-	Handle       string        `json:"author_handle"`
-	PhotoURL     string        `json:"author_photo_url"`
-	Reply        *entity.Reply `json:"replied_to,omitempty"`
-	IsReply      bool          `json:"is_reply"`
-	AlreadyLiked bool          `json:"already_liked"`
+	AuthorName     string        `json:"author_name"`
+	AuthorHandle   string        `json:"author_handle"`
+	AuthorPhotoURL string        `json:"author_photo_url"`
+	Reply          *entity.Reply `json:"replied_to,omitempty"`
+	IsReply        bool          `json:"is_reply"`
+	AlreadyLiked   bool          `json:"already_liked"`
 }
 
 type GetTweetService interface {
@@ -42,117 +42,138 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 		return GetTweetOutput{}, entity.ErrTweetDoesNotExist
 	}
 
-	var id int64
-	var content, name, handle, photoURL string
-	var repliedToTweetAlreadyLiked sql.NullBool
-	var repliedToTweetID, replyFavoriteCount, replyReplyCount sql.NullInt64
-	var repliedToName, repliedToHandle, repliedToPhotoURL, replyContent sql.NullString
+	var id, authorID int64
+	var content, authorName, authorHandle, authorPhotoURL string
+	var photoURLs []string
+	var repliedTweetAlreadyLiked sql.NullBool
+	var repliedTweetID, repliedTweetFavoriteCount, repliedTweetReplyCount sql.NullInt64
+	var repliedTweetAuthorName, repliedTweetAuthorHandle, repliedTweetAuthorPhotoURL, replyContent sql.NullString
+	var replyPhotoURLs []string
 	var createdAt time.Time
 	var favoritesCount, repliesCount int
 	var alreadyLiked bool
 
 	err = s.db.QueryRow(`
+	WITH __tweets AS (
+		SELECT
+			tweets.id,
+			tweets.content,
+			tweets.photo_urls,
+			tweets.created_at,
+			users.id AS author_id,
+			users.name AS author_name,
+			users.handle AS author_handle,
+			users.photo_url AS author_photo_url,
+			COALESCE(COUNT(DISTINCT replies.id_reply), 0) AS reply_count,
+			COALESCE(COUNT(DISTINCT favorites.id), 0) AS favorite_count,
+			EXISTS (
+				SELECT 1 FROM favorites
+				WHERE favorites.id_tweet = tweets.id AND favorites.id_user = $1
+			) AS already_liked
+			FROM
+				tweets
+				INNER JOIN users ON tweets.id_user = users.id
+				LEFT JOIN favorites ON tweets.id = favorites.id_tweet
+				LEFT JOIN replies ON tweets.id = replies.id_tweet
+			GROUP BY
+				tweets.id,
+				tweets.content,
+				tweets.photo_urls,
+				tweets.created_at,
+				author_id,
+				author_name,
+				author_handle,
+				author_photo_url
+	)
 	SELECT
-		tweets.id,
-		tweets.content,
-		tweets.created_at,
-		users.name,
-		users.handle,
-		users.photo_url,
-		reply_details.id_tweet,
-		reply_details.content,
-		reply_details.name,
-		reply_details.handle,
-		reply_details.photo_url,
-		reply_details.already_liked,
-		-- Reply's replies count
-		(SELECT COUNT(replies.id_reply) FROM replies
-			WHERE replies.id_tweet = tweets.id),
-		-- Reply's favorites count
-		(SELECT COUNT(favorites.id) FROM favorites
-			WHERE favorites.id_tweet = reply_details.id_tweet),
-		COUNT(favorites.id),
-		COUNT(replies.id_reply),
-		CASE WHEN favorites.id_user = $1
-			AND favorites.id_tweet = tweets.id THEN
-			TRUE
-		ELSE
-			FALSE
-		END already_liked
-	FROM tweets
-		INNER JOIN users ON users.id = tweets.id_user
+		__tweets.id,
+		__tweets.content,
+		__tweets.photo_urls,
+		__tweets.created_at,
+		__tweets.author_id,
+		__tweets.author_name,
+		__tweets.author_handle,
+		__tweets.author_photo_url,
+		__tweets.already_liked,
+		__tweets.favorite_count,
+		__tweets.reply_count,
+		__replied_tweet.id_tweet,
+		__replied_tweet.content,
+		__replied_tweet.photo_urls,
+		__replied_tweet.author_name,
+		__replied_tweet.author_handle,
+		__replied_tweet.author_photo_url,
+		__replied_tweet.already_liked,
+		__replied_tweet.reply_count,
+		__replied_tweet.favorite_count
+	FROM __tweets
+		INNER JOIN follows ON follows.followed_id = __tweets.author_id
 		LEFT JOIN (
 			SELECT
 				replies.id_reply,
 				replies.id_tweet,
-				tweets.content,
-				users.name,
-				users.handle,
-				users.photo_url,
-				CASE WHEN favorites.id_user = $1
-					AND favorites.id_tweet = replies.id_tweet THEN
-					TRUE
-				ELSE
-					FALSE
-				END already_liked
-			FROM replies
-				INNER JOIN tweets ON tweets.id = replies.id_tweet
-				INNER JOIN users ON users.id = tweets.id_user
-				LEFT JOIN favorites ON favorites.id_tweet = tweets.id
-			GROUP BY
-				replies.id_reply,
-				replies.id_tweet,
-				tweets.content,
-				users.name,
-				users.handle,
-				users.photo_url,
-				favorites.id_user,
-				favorites.id_tweet
-		) as reply_details ON reply_details.id_reply = tweets.id
-		LEFT JOIN favorites ON favorites.id_tweet = tweets.id
-		LEFT JOIN replies ON replies.id_tweet = tweets.id
-	WHERE tweets.id = $2
-	GROUP BY
-		tweets.id,
-		users.name,
-		users.handle,
-		users.photo_url,
-		reply_details.id_tweet,
-		reply_details.content,
-		reply_details.name,
-		reply_details.handle,
-		reply_details.photo_url,
-		reply_details.already_liked,
-		favorites.id_user,
-		favorites.id_tweet,
-		already_liked
-	`, userID, tweetID).Scan(&id, &content, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &repliedToTweetAlreadyLiked, &replyFavoriteCount, &replyReplyCount, &favoritesCount, &repliesCount, &alreadyLiked)
+				__tweets.content,
+				__tweets.photo_urls,
+				__tweets.author_name,
+				__tweets.author_handle,
+				__tweets.author_photo_url,
+				__tweets.already_liked,
+				__tweets.reply_count,
+				__tweets.favorite_count
+			FROM
+				replies
+				INNER JOIN __tweets ON replies.id_tweet = __tweets.id
+		) AS __replied_tweet ON __tweets.id = __replied_tweet.id_reply
+	WHERE __tweets.id = $2
+	`, userID, tweetID).Scan(
+		&id,
+		&content,
+		&photoURLs,
+		&createdAt,
+		&authorID,
+		&authorName,
+		&authorHandle,
+		&authorPhotoURL,
+		&alreadyLiked,
+		&favoritesCount,
+		&repliesCount,
+		&repliedTweetID,
+		&replyContent,
+		&replyPhotoURLs,
+		&repliedTweetAuthorName,
+		&repliedTweetAuthorHandle,
+		&repliedTweetAuthorPhotoURL,
+		&repliedTweetAlreadyLiked,
+		&repliedTweetReplyCount,
+		&repliedTweetFavoriteCount)
 	if err != nil {
 		return GetTweetOutput{}, errors.Wrap(err, "service.getTweetService.Execute")
 	}
 
-	if repliedToTweetID.Valid {
+	if repliedTweetID.Valid {
 		// The tweet is a reply
 		return GetTweetOutput{
 			Tweet: entity.Tweet{
 				ID:             id,
 				Content:        content,
+				PhotoURLs:      photoURLs,
 				FavoritesCount: favoritesCount,
-				RepliesCount:   favoritesCount,
+				RepliesCount:   repliesCount,
 				CreatedAt:      createdAt,
 			},
-			Name:     name,
-			Handle:   handle,
-			PhotoURL: photoURL,
+			AuthorName:     authorName,
+			AuthorHandle:   authorHandle,
+			AuthorPhotoURL: authorPhotoURL,
 			Reply: &entity.Reply{
-				ID:             repliedToTweetID.Int64,
+				ID:             repliedTweetID.Int64,
 				Content:        replyContent.String,
-				AuthorName:     repliedToName.String,
-				AuthorHandle:   repliedToHandle.String,
-				AuthorPhotoURL: repliedToPhotoURL.String,
-				FavoritesCount: int(replyFavoriteCount.Int64),
-				RepliesCount:   int(replyReplyCount.Int64),
-				AlreadyLiked:   repliedToTweetAlreadyLiked.Bool,
+				PhotoURLs:      replyPhotoURLs,
+				AuthorName:     repliedTweetAuthorName.String,
+				AuthorHandle:   repliedTweetAuthorHandle.String,
+				AuthorPhotoURL: repliedTweetAuthorPhotoURL.String,
+				FavoritesCount: int(repliedTweetFavoriteCount.Int64),
+				RepliesCount:   int(repliedTweetReplyCount.Int64),
+				AlreadyLiked:   repliedTweetAlreadyLiked.Bool,
 			},
 			IsReply:      true,
 			AlreadyLiked: alreadyLiked,
@@ -163,14 +184,15 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 		Tweet: entity.Tweet{
 			ID:             id,
 			Content:        content,
+			PhotoURLs:      photoURLs,
 			FavoritesCount: favoritesCount,
-			RepliesCount:   favoritesCount,
+			RepliesCount:   repliesCount,
 			CreatedAt:      createdAt,
 		},
-		Name:         name,
-		Handle:       handle,
-		PhotoURL:     photoURL,
-		IsReply:      false,
-		AlreadyLiked: alreadyLiked,
+		AuthorName:     authorName,
+		AuthorHandle:   authorHandle,
+		AuthorPhotoURL: authorPhotoURL,
+		IsReply:        false,
+		AlreadyLiked:   alreadyLiked,
 	}, nil
 }

@@ -60,23 +60,43 @@ func (s listTweetFeedService) Execute(userID int64, createdAtCursor string) ([]L
 	defer rows.Close()
 
 	for rows.Next() {
-		var id int64
-		var content, name, handle, photoURL string
+		var id, authorID int64
+		var content, authorName, authorHandle, authorPhotoURL string
 		var photoURLs []string
-		var repliedToTweetAlreadyLiked sql.NullBool
-		var repliedToTweetID, replyFavoriteCount, replyReplyCount sql.NullInt64
-		var repliedToName, repliedToHandle, repliedToPhotoURL, replyContent sql.NullString
+		var repliedTweetAlreadyLiked sql.NullBool
+		var repliedTweetID, repliedTweetFavoriteCount, repliedTweetReplyCount sql.NullInt64
+		var repliedTweetAuthorName, repliedTweetAuthorHandle, repliedTweetAuthorPhotoURL, replyContent sql.NullString
 		var replyPhotoURLs []string
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
 		var alreadyLiked bool
 
-		err = rows.Scan(&id, &content, &photoURLs, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &replyPhotoURLs, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &repliedToTweetAlreadyLiked, &replyReplyCount, &replyFavoriteCount, &favoritesCount, &repliesCount, &alreadyLiked)
+		err = rows.Scan(
+			&id,
+			&content,
+			&photoURLs,
+			&createdAt,
+			&authorID,
+			&authorName,
+			&authorHandle,
+			&authorPhotoURL,
+			&alreadyLiked,
+			&favoritesCount,
+			&repliesCount,
+			&repliedTweetID,
+			&replyContent,
+			&replyPhotoURLs,
+			&repliedTweetAuthorName,
+			&repliedTweetAuthorHandle,
+			&repliedTweetAuthorPhotoURL,
+			&repliedTweetAlreadyLiked,
+			&repliedTweetReplyCount,
+			&repliedTweetFavoriteCount)
 		if err != nil {
 			return []ListTweetFeedOutput{}, errors.Wrap(err, "service.listTweetFeedService.Execute")
 		}
 
-		if repliedToTweetID.Valid {
+		if repliedTweetID.Valid {
 			// The tweet is a reply
 			tweets = append(tweets, ListTweetFeedOutput{
 				Tweet: entity.Tweet{
@@ -87,19 +107,19 @@ func (s listTweetFeedService) Execute(userID int64, createdAtCursor string) ([]L
 					RepliesCount:   repliesCount,
 					CreatedAt:      createdAt,
 				},
-				AuthorName:     name,
-				AuthorHandle:   handle,
-				AuthorPhotoURL: photoURL,
+				AuthorName:     authorName,
+				AuthorHandle:   authorHandle,
+				AuthorPhotoURL: authorPhotoURL,
 				Reply: &entity.Reply{
-					ID:             repliedToTweetID.Int64,
+					ID:             repliedTweetID.Int64,
 					Content:        replyContent.String,
 					PhotoURLs:      replyPhotoURLs,
-					AuthorName:     repliedToName.String,
-					AuthorHandle:   repliedToHandle.String,
-					AuthorPhotoURL: repliedToPhotoURL.String,
-					FavoritesCount: int(replyFavoriteCount.Int64),
-					RepliesCount:   int(replyReplyCount.Int64),
-					AlreadyLiked:   repliedToTweetAlreadyLiked.Bool,
+					AuthorName:     repliedTweetAuthorName.String,
+					AuthorHandle:   repliedTweetAuthorHandle.String,
+					AuthorPhotoURL: repliedTweetAuthorPhotoURL.String,
+					FavoritesCount: int(repliedTweetFavoriteCount.Int64),
+					RepliesCount:   int(repliedTweetReplyCount.Int64),
+					AlreadyLiked:   repliedTweetAlreadyLiked.Bool,
 				},
 				IsReply:      true,
 				AlreadyLiked: alreadyLiked,
@@ -114,9 +134,9 @@ func (s listTweetFeedService) Execute(userID int64, createdAtCursor string) ([]L
 					RepliesCount:   repliesCount,
 					CreatedAt:      createdAt,
 				},
-				AuthorName:     name,
-				AuthorHandle:   handle,
-				AuthorPhotoURL: photoURL,
+				AuthorName:     authorName,
+				AuthorHandle:   authorHandle,
+				AuthorPhotoURL: authorPhotoURL,
 				IsReply:        false,
 				AlreadyLiked:   alreadyLiked,
 			})
@@ -134,95 +154,87 @@ func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 	var queryBuilder strings.Builder
 
 	queryBuilder.WriteString(`
+	WITH __tweets AS (
+		SELECT
+			tweets.id,
+			tweets.content,
+			tweets.photo_urls,
+			tweets.created_at,
+			users.id AS author_id,
+			users.name AS author_name,
+			users.handle AS author_handle,
+			users.photo_url AS author_photo_url,
+			COALESCE(COUNT(DISTINCT replies.id_reply), 0) AS reply_count,
+			COALESCE(COUNT(DISTINCT favorites.id), 0) AS favorite_count,
+			EXISTS (
+				SELECT 1 FROM favorites
+				WHERE favorites.id_tweet = tweets.id AND favorites.id_user = $1
+			) AS already_liked
+			FROM
+				tweets
+				INNER JOIN users ON tweets.id_user = users.id
+				LEFT JOIN favorites ON tweets.id = favorites.id_tweet
+				LEFT JOIN replies ON tweets.id = replies.id_tweet
+			GROUP BY
+				tweets.id,
+				tweets.content,
+				tweets.photo_urls,
+				tweets.created_at,
+				author_id,
+				author_name,
+				author_handle,
+				author_photo_url
+	)
 	SELECT
-		tweets.id,
-		tweets.content,
-		tweets.photo_urls,
-		tweets.created_at,
-		users.name,
-		users.handle,
-		users.photo_url,
-		reply_details.id_tweet,
-		reply_details.content,
-		reply_details.photo_urls,
-		reply_details.name,
-		reply_details.handle,
-		reply_details.photo_url,
-		reply_details.already_liked,
-		-- Reply's replies count
-		(SELECT COUNT(replies.id_reply) FROM replies
-			WHERE replies.id_tweet = reply_details.id_tweet),
-		-- Reply's favorites count
-		(SELECT COUNT(favorites.id) FROM favorites
-			WHERE favorites.id_tweet = reply_details.id_tweet),
-		COUNT(favorites.id),
-		COUNT(replies.id_reply),
-		CASE WHEN favorites.id_user = $1
-			AND favorites.id_tweet = tweets.id THEN
-			TRUE
-		ELSE
-			FALSE
-		END already_liked
-	FROM tweets
-		INNER JOIN users ON users.id = tweets.id_user
-		INNER JOIN follows on follows.followed_id = users.id
+		__tweets.id,
+		__tweets.content,
+		__tweets.photo_urls,
+		__tweets.created_at,
+		__tweets.author_id,
+		__tweets.author_name,
+		__tweets.author_handle,
+		__tweets.author_photo_url,
+		__tweets.already_liked,
+		__tweets.favorite_count,
+		__tweets.reply_count,
+		__replied_tweet.id_tweet,
+		__replied_tweet.content,
+		__replied_tweet.photo_urls,
+		__replied_tweet.author_name,
+		__replied_tweet.author_handle,
+		__replied_tweet.author_photo_url,
+		__replied_tweet.already_liked,
+		__replied_tweet.reply_count,
+		__replied_tweet.favorite_count
+	FROM __tweets
+		INNER JOIN follows ON follows.followed_id = __tweets.author_id
 		LEFT JOIN (
 			SELECT
 				replies.id_reply,
 				replies.id_tweet,
-				tweets.content,
-				tweets.photo_urls,
-				users.name,
-				users.handle,
-				users.photo_url,
-				CASE WHEN favorites.id_user = $1
-					AND favorites.id_tweet = replies.id_tweet THEN
-					TRUE
-				ELSE
-					FALSE
-				END already_liked
-			FROM replies
-				INNER JOIN tweets ON tweets.id = replies.id_tweet
-				INNER JOIN users ON users.id = tweets.id_user
-				LEFT JOIN favorites ON favorites.id_tweet = tweets.id
-			GROUP BY
-				replies.id_reply,
-				replies.id_tweet,
-				tweets.content,
-				tweets.photo_urls,
-				users.name,
-				users.handle,
-				users.photo_url,
-				favorites.id_user,
-				favorites.id_tweet
-			) AS reply_details ON reply_details.id_reply = tweets.id
-		LEFT JOIN favorites ON favorites.id_tweet = tweets.id
-		LEFT JOIN replies ON replies.id_tweet = tweets.id
-	WHERE follows.follower_id = $1
+				__tweets.content,
+				__tweets.photo_urls,
+				__tweets.author_name,
+				__tweets.author_handle,
+				__tweets.author_photo_url,
+				__tweets.already_liked,
+				__tweets.reply_count,
+				__tweets.favorite_count
+			FROM
+				replies
+				INNER JOIN __tweets ON replies.id_tweet = __tweets.id
+		) AS __replied_tweet ON __tweets.id = __replied_tweet.id_reply
+	WHERE
+		follows.follower_id = $1
 	`)
 
 	if withCursor {
-		queryBuilder.WriteString("AND tweets.created_at < $2")
+		queryBuilder.WriteString("AND __tweets.created_at < $2")
 	}
 
 	queryBuilder.WriteString(`
-	GROUP BY
-		tweets.id,
-		users.name,
-		users.handle,
-		users.photo_url,
-		reply_details.id_tweet,
-		reply_details.content,
-		reply_details.photo_urls,
-		reply_details.name,
-		reply_details.handle,
-		reply_details.photo_url,
-		reply_details.already_liked,
-		favorites.id_user,
-		favorites.id_tweet,
-		already_liked
 	ORDER BY
-		tweets.created_at DESC
+		__tweets.created_at DESC
 	LIMIT 10`)
 
 	return queryBuilder.String()
