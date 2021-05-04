@@ -12,16 +12,17 @@ import (
 
 type SearchTweetOutput struct {
 	entity.Tweet
-	Name     string        `json:"author_name"`
-	Handle   string        `json:"author_handle"`
-	PhotoURL string        `json:"author_photo_url"`
-	Reply    *entity.Reply `json:"replied_to,omitempty"`
-	IsReply  bool          `json:"is_reply"`
-	Rank     float64       `json:"rank"`
+	AuthorName     string        `json:"author_name"`
+	AuthorHandle   string        `json:"author_handle"`
+	AuthorPhotoURL string        `json:"author_photo_url"`
+	Reply          *entity.Reply `json:"replied_to,omitempty"`
+	IsReply        bool          `json:"is_reply"`
+	Rank           float64       `json:"rank"`
+	AlreadyLiked   bool          `json:"already_liked"`
 }
 
 type SearchTweetService interface {
-	Execute(searchQuery string, cursor string) ([]SearchTweetOutput, error)
+	Execute(searchQuery string, userID int64, cursor string) ([]SearchTweetOutput, error)
 }
 
 type searchTweetService struct {
@@ -32,7 +33,7 @@ func NewSearchTweetService(db database.Database) SearchTweetService {
 	return searchTweetService{db: db}
 }
 
-func (s searchTweetService) Execute(searchQuery string, cursor string) ([]SearchTweetOutput, error) {
+func (s searchTweetService) Execute(searchQuery string, userID int64, cursor string) ([]SearchTweetOutput, error) {
 	var tweets []SearchTweetOutput
 
 	var rows database.Rows
@@ -42,12 +43,12 @@ func (s searchTweetService) Execute(searchQuery string, cursor string) ([]Search
 	query := s.buildSQLQuery(withCursor)
 
 	if withCursor {
-		rows, err = s.db.Query(query, searchQuery, cursor)
+		rows, err = s.db.Query(query, searchQuery, userID, cursor)
 		if err != nil {
 			return []SearchTweetOutput{}, errors.Wrap(err, "service.searchTweetService.Execute")
 		}
 	} else {
-		rows, err = s.db.Query(query, searchQuery)
+		rows, err = s.db.Query(query, searchQuery, userID)
 		if err != nil {
 			return []SearchTweetOutput{}, errors.Wrap(err, "service.searchTweetService.Execute")
 		}
@@ -56,54 +57,89 @@ func (s searchTweetService) Execute(searchQuery string, cursor string) ([]Search
 	defer rows.Close()
 
 	for rows.Next() {
-		var id int64
-		var content, name, handle, photoURL string
-		var repliedToTweetID, replyFavoriteCount, replyReplyCount sql.NullInt64
-		var repliedToName, repliedToHandle, repliedToPhotoURL, replyContent sql.NullString
+		var id, authorID int64
+		var content, authorName, authorHandle, authorPhotoURL string
+		var rank float64
+		var photoURLs []string
+		var repliedTweetAlreadyLiked sql.NullBool
+		var repliedTweetID, repliedTweetFavoriteCount, repliedTweetReplyCount sql.NullInt64
+		var repliedTweetAuthorName, repliedTweetAuthorHandle, repliedTweetAuthorPhotoURL, replyContent sql.NullString
+		var replyPhotoURLs []string
 		var createdAt time.Time
 		var favoritesCount, repliesCount int
-		var rank float64
+		var alreadyLiked bool
 
-		err = rows.Scan(&id, &content, &createdAt, &name, &handle, &photoURL, &repliedToTweetID, &replyContent, &repliedToName, &repliedToHandle, &repliedToPhotoURL, &replyFavoriteCount, &replyReplyCount, &favoritesCount, &repliesCount, &rank)
+		err = rows.Scan(
+			&id,
+			&content,
+			&photoURLs,
+			&createdAt,
+			&authorID,
+			&authorName,
+			&authorHandle,
+			&authorPhotoURL,
+			&alreadyLiked,
+			&favoritesCount,
+			&repliesCount,
+			&rank,
+			&repliedTweetID,
+			&replyContent,
+			&replyPhotoURLs,
+			&repliedTweetAuthorName,
+			&repliedTweetAuthorHandle,
+			&repliedTweetAuthorPhotoURL,
+			&repliedTweetAlreadyLiked,
+			&repliedTweetReplyCount,
+			&repliedTweetFavoriteCount)
 		if err != nil {
 			return []SearchTweetOutput{}, errors.Wrap(err, "service.searchTweetService.Execute")
 		}
 
-		if repliedToTweetID.Valid {
+		if repliedTweetID.Valid {
 			// The tweet is a reply
 			tweets = append(tweets, SearchTweetOutput{
 				Tweet: entity.Tweet{
 					ID:             id,
 					Content:        content,
+					PhotoURLs:      photoURLs,
 					FavoritesCount: favoritesCount,
 					RepliesCount:   repliesCount,
 					CreatedAt:      createdAt,
 				},
-				Name:     name,
-				Handle:   handle,
-				PhotoURL: photoURL,
+				AuthorName:     authorName,
+				AuthorHandle:   authorHandle,
+				AuthorPhotoURL: authorPhotoURL,
 				Reply: &entity.Reply{
-					ID:             repliedToTweetID.Int64,
-					AuthorName:     repliedToName.String,
-					AuthorHandle:   repliedToHandle.String,
-					AuthorPhotoURL: repliedToPhotoURL.String,
+					ID:             repliedTweetID.Int64,
+					Content:        replyContent.String,
+					PhotoURLs:      replyPhotoURLs,
+					AuthorName:     repliedTweetAuthorName.String,
+					AuthorHandle:   repliedTweetAuthorHandle.String,
+					AuthorPhotoURL: repliedTweetAuthorPhotoURL.String,
+					FavoritesCount: int(repliedTweetFavoriteCount.Int64),
+					RepliesCount:   int(repliedTweetReplyCount.Int64),
+					AlreadyLiked:   repliedTweetAlreadyLiked.Bool,
 				},
-				IsReply: true,
-				Rank:    rank,
+				IsReply:      true,
+				AlreadyLiked: alreadyLiked,
+				Rank:         rank,
 			})
 		} else {
 			tweets = append(tweets, SearchTweetOutput{
 				Tweet: entity.Tweet{
 					ID:             id,
 					Content:        content,
+					PhotoURLs:      photoURLs,
 					FavoritesCount: favoritesCount,
 					RepliesCount:   repliesCount,
 					CreatedAt:      createdAt,
 				},
-				Name:     name,
-				Handle:   handle,
-				PhotoURL: photoURL,
-				Rank:     rank,
+				AuthorName:     authorName,
+				AuthorHandle:   authorHandle,
+				AuthorPhotoURL: authorPhotoURL,
+				IsReply:        false,
+				AlreadyLiked:   alreadyLiked,
+				Rank:           rank,
 			})
 		}
 	}
@@ -118,63 +154,94 @@ func (s searchTweetService) Execute(searchQuery string, cursor string) ([]Search
 func (s searchTweetService) buildSQLQuery(withCursor bool) string {
 	var queryBuilder strings.Builder
 
-	queryBuilder.WriteString(`
+	queryBuilder.WriteString(`WITH __tweets AS (
+		SELECT
+			tweets.id,
+			tweets.content,
+			tweets.photo_urls,
+			tweets.created_at,
+			tweets.content_tsv,
+			ts_rank(tweets.content_tsv, plainto_tsquery($1)) AS rank,
+			users.id AS author_id,
+			users.name AS author_name,
+			users.handle AS author_handle,
+			users.photo_url AS author_photo_url,
+			COALESCE(COUNT(DISTINCT replies.id_reply), 0) AS reply_count,
+			COALESCE(COUNT(DISTINCT favorites.id), 0) AS favorite_count,
+			EXISTS (
+				SELECT
+					1
+				FROM
+					favorites
+				WHERE
+					favorites.id_tweet = tweets.id
+					AND favorites.id_user = $2) AS already_liked
+			FROM
+				tweets
+				INNER JOIN users ON tweets.id_user = users.id
+				LEFT JOIN favorites ON tweets.id = favorites.id_tweet
+				LEFT JOIN replies ON tweets.id = replies.id_tweet
+			GROUP BY
+				tweets.id,
+				tweets.content,
+				tweets.photo_urls,
+				tweets.created_at,
+				author_id,
+				author_name,
+				author_handle,
+				author_photo_url
+	)
 	SELECT
-		tweets.id,
-		tweets.content,
-		tweets.created_at,
-		users.name,
-		users.handle,
-		users.photo_url,
-		reply_details.id_tweet,
-		reply_details.content,
-		reply_details.name,
-		reply_details.handle,
-		reply_details.photo_url,
-		-- Reply's replies count
-		(SELECT COUNT(replies.id_reply) FROM replies
-			WHERE replies.id_tweet = reply_details.id_tweet),
-		-- Reply's favorites count
-		(SELECT COUNT(favorites.id) FROM favorites
-			WHERE favorites.id_tweet = reply_details.id_tweet),
-		COUNT(favorites.id),
-		COUNT(replies.id_reply),
-		ts_rank(tweets.content_tsv, plainto_tsquery($1))
-	FROM tweets
-		LEFT JOIN users ON users.id = tweets.id_user
+		__tweets.id,
+		__tweets.content,
+		__tweets.photo_urls,
+		__tweets.created_at,
+		__tweets.author_id,
+		__tweets.author_name,
+		__tweets.author_handle,
+		__tweets.author_photo_url,
+		__tweets.already_liked,
+		__tweets.favorite_count,
+		__tweets.reply_count,
+		__tweets.rank,
+		__replied_tweet.id_tweet,
+		__replied_tweet.content,
+		__replied_tweet.photo_urls,
+		__replied_tweet.author_name,
+		__replied_tweet.author_handle,
+		__replied_tweet.author_photo_url,
+		__replied_tweet.already_liked,
+		__replied_tweet.reply_count,
+		__replied_tweet.favorite_count
+	FROM
+		__tweets
 		LEFT JOIN (
 			SELECT
 				replies.id_reply,
 				replies.id_tweet,
-				t.content,
-				users.name,
-				users.handle,
-				users.photo_url
-			FROM replies
-				INNER JOIN tweets AS t ON t.id = replies.id_tweet
-				INNER JOIN users ON users.id = t.id_user) AS reply_details ON reply_details.id_reply = tweets.id
-		LEFT JOIN favorites ON favorites.id_tweet = tweets.id
-		LEFT JOIN replies ON replies.id_tweet = tweets.id
-	WHERE tweets.content_tsv @@ plainto_tsquery($1)
+				__tweets.content,
+				__tweets.photo_urls,
+				__tweets.author_name,
+				__tweets.author_handle,
+				__tweets.author_photo_url,
+				__tweets.already_liked,
+				__tweets.reply_count,
+				__tweets.favorite_count
+			FROM
+				replies
+				INNER JOIN __tweets ON replies.id_tweet = __tweets.id
+		) AS __replied_tweet ON __tweets.id = __replied_tweet.id_reply
+	WHERE
+		__tweets.content_tsv @@ plainto_tsquery($1)
 	`)
 
 	if withCursor {
-		queryBuilder.WriteString("AND ts_rank(tweets.content_tsv, plainto_tsquery($1)) < $2")
+		queryBuilder.WriteString("AND __tweets.rank < $3")
 	}
 
 	queryBuilder.WriteString(`
-	GROUP BY
-		tweets.id,
-		users.name,
-		users.handle,
-		users.photo_url,
-		reply_details.id_tweet,
-		reply_details.content,
-		reply_details.name,
-		reply_details.handle,
-		reply_details.photo_url
 	ORDER BY
-		ts_rank(tweets.content_tsv, plainto_tsquery($1)) DESC
+		__tweets.rank DESC
 	LIMIT 10`)
 
 	return queryBuilder.String()

@@ -24,8 +24,9 @@ func (a searchTweetAction) Execute(c *fiber.Ctx) error {
 		})
 	}
 
+	userID := c.Locals("userID").(float64)
 	cursor := c.Query("cursor")
-	tweets, err := a.service.Execute(searchQuery, cursor)
+	tweets, err := a.service.Execute(searchQuery, int64(userID), cursor)
 	if err != nil {
 		fmt.Println(err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
