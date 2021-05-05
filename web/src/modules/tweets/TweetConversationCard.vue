@@ -99,6 +99,14 @@ export default defineComponent({
       }
     }
 
+    function showOverlay(imageURL: string) {
+      store.dispatch(Action.TweetsActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY, {
+        tweetId: tweet.value.id,
+        show: true,
+        source: imageURL,
+      })
+    }
+
     return {
       router,
       replyAlreadyLiked,
@@ -112,6 +120,7 @@ export default defineComponent({
       repliedTweetAlreadyLikedClasses,
       likeTweet,
       TweetTypeCode,
+      showOverlay,
     }
   },
 })
@@ -162,6 +171,57 @@ export default defineComponent({
           class="py-2 break-words dark:text-lightest"
           v-html="parsedRepliedTweetContent"
         ></div>
+        <div
+          v-if="tweet.repliedTo.photoURLs !== null && tweet.repliedTo.photoURLs.length > 0"
+          class="relative overflow-hidden w-full h-96 rounded-lg"
+        >
+          <div class="box-border relative">
+            <div class="grid grid-cols-2 gap-1 h-full">
+              <div
+                class="w-full"
+                :class="tweet.repliedTo.photoURLs.length > 2 ? 'h-48' : 'h-96'"
+              >
+                <img
+                  v-lazy="tweet.repliedTo.photoURLs[0]"
+                  @click.stop="showOverlay(tweet.repliedTo.photoURLs[0])"
+                  class="object-cover w-full h-full"
+                />
+                <img
+                  v-if="tweet.repliedTo.photoURLs.length > 2"
+                  v-lazy="tweet.repliedTo.photoURLs[1]"
+                  @click.stop="showOverlay(tweet.repliedTo.photoURLs[1])"
+                  class="object-cover w-full h-full"
+                />
+              </div>
+              <div
+                class="w-full"
+                :class="tweet.repliedTo.photoURLs.length > 2 ? 'h-48' : 'h-96'"
+              >
+                <img
+                  v-if="tweet.repliedTo.photoURLs.length > 2"
+                  v-lazy="tweet.repliedTo.photoURLs[2]"
+                  @click.stop="showOverlay(tweet.repliedTo.photoURLs[2])"
+                  class="object-cover w-full"
+                  :class="
+                    tweet.repliedTo.photoURLs.length === 4 ? 'h-full' : 'h-96'
+                  "
+                />
+                <img
+                  v-else
+                  v-lazy="tweet.repliedTo.photoURLs[1]"
+                  @click.stop="showOverlay(tweet.repliedTo.photoURLs[1])"
+                  class="object-cover w-full h-full"
+                />
+                <img
+                  v-if="tweet.repliedTo.photoURLs.length === 4"
+                  v-lazy="tweet.repliedTo.photoURLs[3]"
+                  @click.stop="showOverlay(tweet.repliedTo.photoURLs[3])"
+                  class="object-cover w-full h-full"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="flex items-center justify-between w-full mt-2">
           <div
             class="flex items-center group text-dark dark:text-light hover:text-blue dark:hover:text-blue"
@@ -275,11 +335,13 @@ export default defineComponent({
               >
                 <img
                   v-lazy="tweet.photoURLs[0]"
+                  @click.stop="showOverlay(tweet.photoURLs[0])"
                   class="object-cover w-full h-full"
                 />
                 <img
                   v-if="tweet.photoURLs.length > 2"
                   v-lazy="tweet.photoURLs[1]"
+                  @click.stop="showOverlay(tweet.photoURLs[1])"
                   class="object-cover w-full h-full"
                 />
               </div>
@@ -290,17 +352,20 @@ export default defineComponent({
                 <img
                   v-if="tweet.photoURLs.length > 2"
                   v-lazy="tweet.photoURLs[2]"
+                  @click.stop="showOverlay(tweet.photoURLs[2])"
                   class="object-cover w-full"
                   :class="tweet.photoURLs.length === 4 ? 'h-full' : 'h-96'"
                 />
                 <img
                   v-else
                   v-lazy="tweet.photoURLs[1]"
+                  @click.stop="showOverlay(tweet.photoURLs[1])"
                   class="object-cover w-full h-full"
                 />
                 <img
                   v-if="tweet.photoURLs.length === 4"
                   v-lazy="tweet.photoURLs[3]"
+                  @click.stop="showOverlay(tweet.photoURLs[3])"
                   class="object-cover w-full h-full"
                 />
               </div>

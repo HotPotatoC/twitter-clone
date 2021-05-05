@@ -9,6 +9,7 @@ export enum MutationTypes {
   PUSH_REPLIES_TO_TWEET_STATUS = 'PUSH_REPLIES_TO_TWEET_STATUS',
   SET_TWEET_SEARCH_RESULTS = 'SET_TWEET_SEARCH_RESULTS',
   PUSH_TWEET_SEARCH_RESULTS = 'PUSH_TWEET_SEARCH_RESULTS',
+  TOGGLE_TWEET_IMAGE_OVERLAY = 'TOGGLE_TWEET_IMAGE_OVERLAY',
 }
 
 export type Mutations<S = State> = {
@@ -18,6 +19,10 @@ export type Mutations<S = State> = {
   [MutationTypes.PUSH_REPLIES_TO_TWEET_STATUS](state: S, payload: Tweet[]): void
   [MutationTypes.SET_TWEET_SEARCH_RESULTS](state: S, payload: Tweet[]): void
   [MutationTypes.PUSH_TWEET_SEARCH_RESULTS](state: S, payload: Tweet[]): void
+  [MutationTypes.TOGGLE_TWEET_IMAGE_OVERLAY](
+    state: S,
+    payload: { tweetId: number; show: boolean; source: string }
+  ): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -38,5 +43,8 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.PUSH_TWEET_SEARCH_RESULTS](state, payload) {
     state.tweetSearchResult.push(...payload)
+  },
+  [MutationTypes.TOGGLE_TWEET_IMAGE_OVERLAY](state, payload) {
+    state.tweetImageOverlay = payload
   },
 }

@@ -22,6 +22,7 @@ export enum ActionTypes {
   NEW_TWEET = 'NEW_TWEET',
   NEW_REPLY = 'NEW_REPLY',
   FAVORITE_TWEET = 'FAVORITE_TWEET',
+  TOGGLE_TWEET_IMAGE_OVERLAY = 'TOGGLE_TWEET_IMAGE_OVERLAY',
 }
 
 export type Actions = {
@@ -56,6 +57,10 @@ export type Actions = {
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: string
   ): Promise<any>
+  [ActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    payload: { tweetId: number; show: boolean; source: string }
+  ): any
 }
 
 export interface TweetJSONSchema {
@@ -154,5 +159,15 @@ export const actions: ActionTree<State, State> & Actions = {
     } catch (error) {
       throw error
     }
+  },
+  [ActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY](
+    { commit },
+    { tweetId, show, source }
+  ) {
+    commit(MutationTypes.TOGGLE_TWEET_IMAGE_OVERLAY, {
+      tweetId,
+      show,
+      source,
+    })
   },
 }

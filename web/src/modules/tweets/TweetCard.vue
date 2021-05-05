@@ -12,7 +12,6 @@ import IconShare from '../../icons/IconShare.vue'
 import { Action } from '../storeActionTypes'
 import { linkifyHTMLText } from '../../utils/linkify'
 import { useRouter } from 'vue-router'
-import TweetImageOverlay from './TweetImageOverlay.vue'
 
 export default defineComponent({
   name: 'TweetCard',
@@ -22,7 +21,6 @@ export default defineComponent({
     IconRetweet,
     IconHeart,
     IconShare,
-    TweetImageOverlay,
   },
   props: {
     tweet: {
@@ -36,8 +34,6 @@ export default defineComponent({
     const { tweet } = toRefs(props)
     const favoritesCount = ref(tweet.value.favoritesCount)
     const alreadyLiked = ref(tweet.value.alreadyLiked)
-    const showTweetImageOverlay = ref(false)
-    const selectedImageURL = ref('')
 
     const parsedCreatedAt = computed(() => {
       dayjs.extend(relativeTime)
@@ -61,8 +57,11 @@ export default defineComponent({
     }
 
     function showOverlay(imageURL: string) {
-      showTweetImageOverlay.value = true
-      selectedImageURL.value = imageURL
+      store.dispatch(Action.TweetsActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY, {
+        tweetId: tweet.value.id,
+        show: true,
+        source: imageURL,
+      })
     }
 
     return {
@@ -72,8 +71,6 @@ export default defineComponent({
       parsedCreatedAt,
       parsedContent,
       likeTweet,
-      showTweetImageOverlay,
-      selectedImageURL,
       showOverlay,
     }
   },
@@ -81,11 +78,6 @@ export default defineComponent({
 </script>
 
 <template>
-  <TweetImageOverlay
-    :image="selectedImageURL"
-    :show="showTweetImageOverlay"
-    @close="showTweetImageOverlay = false"
-  />
   <div
     class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker dark:hover:bg-opacity-30 flex cursor-pointer transition-colors duration-75"
     @click="router.push(`/${tweet.authorHandle}/status/${tweet.id}`)"
