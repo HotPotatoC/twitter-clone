@@ -122,9 +122,19 @@ export async function searchTweets(query: string): Promise<Tweet[]> {
   }
 }
 
-export async function createTweet(content: string): Promise<void> {
+export async function createTweet(
+  content: string,
+  attachments?: File[]
+): Promise<void> {
   try {
-    await axios.post('/tweets', { content })
+    const formData = new FormData()
+
+    formData.append('content', content)
+    if (attachments && attachments?.length > 0) {
+      attachments.forEach((attachment) => formData.append('photos', attachment))
+    }
+
+    await axios.post('/tweets', formData)
   } catch (error) {
     throw error
   }

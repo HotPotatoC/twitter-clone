@@ -1,29 +1,29 @@
 <script lang="ts">
 import {
-  computed,
   defineComponent,
   onBeforeMount,
   onMounted,
-  reactive,
-  Ref,
   ref,
   watchEffect,
 } from 'vue'
 import { useStore } from '../../store'
+import { useScroll } from '../../hooks/useScroll'
 import { Tweet } from '../tweets/types'
 import { Action } from '../storeActionTypes'
 import TweetCard from '../tweets/TweetCard.vue'
 import TweetConversationCard from '../tweets/TweetConversationCard.vue'
 import LoadingSpinner from '../../shared/LoadingSpinner.vue'
 import IconStar from '../../icons/IconStar.vue'
-import { useScroll } from '../../hooks/useScroll'
-
-interface NewTweet {
-  content: string | Ref<string>
-}
+import CreateTweetForm from './CreateTweetForm.vue'
 
 export default defineComponent({
-  components: { TweetCard, TweetConversationCard, LoadingSpinner, IconStar },
+  components: {
+    TweetCard,
+    TweetConversationCard,
+    LoadingSpinner,
+    IconStar,
+    CreateTweetForm,
+  },
   name: 'Home',
   setup() {
     const store = useStore()
@@ -32,13 +32,6 @@ export default defineComponent({
     const tweets = ref<Tweet[]>([])
 
     const [scrollRef, isBottom] = useScroll()
-
-    const tweetContent = ref('')
-    const newTweet = reactive<NewTweet>({
-      content: tweetContent,
-    })
-
-    const newTweetContentIsEmpty = computed(() => tweetContent.value === '')
 
     onBeforeMount(async () => {
       await loadTweets()
@@ -70,16 +63,15 @@ export default defineComponent({
       tweets.value = store.getters['tweetsFeed']
     }
 
-    async function addNewTweet() {
+    async function addNewTweet({ content, attachments }) {
       try {
         initialLoadDone.value = false
-        await store.dispatch(
-          Action.TweetsActionTypes.NEW_TWEET,
-          newTweet.content
-        )
+        await store.dispatch(Action.TweetsActionTypes.NEW_TWEET, {
+          content,
+          attachments,
+        })
         await store.dispatch(Action.TweetsActionTypes.GET_TWEETS_FEED)
         initialLoadDone.value = true
-        newTweet.content = ''
       } catch (error) {
         console.log(error)
       }
@@ -89,8 +81,6 @@ export default defineComponent({
       initialLoadDone,
       loadNextBatch,
       tweets,
-      newTweet,
-      newTweetContentIsEmpty,
       scrollRef,
       addNewTweet,
     }
@@ -110,25 +100,7 @@ export default defineComponent({
       <IconStar :size="20" class="text-blue fill-current" />
     </div>
     <div class="px-5 py-3 border-b-8 border-lighter dark:border-dark flex">
-      <form @submit.prevent="addNewTweet" class="w-full px-4 relative">
-        <textarea
-          v-model="newTweet.content"
-          placeholder="What's happening?"
-          class="mt-3 pb-3 w-full focus:outline-none dark:bg-black dark:text-light"
-        />
-        <button
-          type="submit"
-          class="h-10 px-4 font-semibold focus:outline-none rounded-full absolute bottom-0 right-0 transition-colors duration-75"
-          :class="
-            newTweetContentIsEmpty
-              ? ['bg-dark', 'text-light', 'cursor-default']
-              : ['bg-blue', 'hover:bg-darkblue', 'text-lightest']
-          "
-          :disabled="newTweetContentIsEmpty"
-        >
-          Tweet
-        </button>
-      </form>
+      <CreateTweetForm @submit="addNewTweet" />
     </div>
     <div v-show="!initialLoadDone" class="flex flex-col">
       <div class="w-full text-center">

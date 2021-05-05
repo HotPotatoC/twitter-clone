@@ -6,6 +6,7 @@ export function linkifyHTMLText(text: string): string {
     attributes: {
       rel: 'noreferrer noopener',
     },
-    className: 'text-blue hover:underline'
+    className: 'text-blue hover:underline',
+    nl2br: true,
   })
 }

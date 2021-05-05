@@ -48,7 +48,7 @@ export type Actions = {
   ): Promise<any>
   [ActionTypes.NEW_TWEET](
     { commit }: AugmentedActionContext<Mutations, State>,
-    payload: string
+    payload: { content: string; attachments?: File[] }
   ): Promise<any>
   [ActionTypes.NEW_REPLY](
     { commit }: AugmentedActionContext<Mutations, State>,
@@ -137,9 +137,12 @@ export const actions: ActionTree<State, State> & Actions = {
       throw error
     }
   },
-  async [ActionTypes.NEW_TWEET]({ commit }, content): Promise<any> {
+  async [ActionTypes.NEW_TWEET](
+    { commit },
+    { content, attachments }
+  ): Promise<any> {
     try {
-      await createTweet(content)
+      await createTweet(content, attachments)
     } catch (error) {
       throw error
     }
