@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/HotPotatoC/twitter-clone/internal/database"
+	"github.com/HotPotatoC/twitter-clone/module"
 	"github.com/HotPotatoC/twitter-clone/module/tweet/entity"
 	"github.com/pkg/errors"
 )
@@ -47,7 +48,7 @@ func (s listTweetService) Execute(createdAtCursor string) ([]ListTweetOutput, er
 	if withCursor {
 		cursor, err := time.Parse(time.RFC3339, createdAtCursor)
 		if err != nil {
-			return []ListTweetOutput{}, ErrInvalidCursor
+			return []ListTweetOutput{}, module.ErrInvalidCursor
 		}
 
 		rows, err = s.db.Query(query, cursor)

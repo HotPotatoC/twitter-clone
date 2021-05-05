@@ -22,7 +22,7 @@ func (a listTweetFeedAction) Execute(c *fiber.Ctx) error {
 	tweets, err := a.service.Execute(int64(userID), createdAtCursor)
 	if err != nil {
 		switch {
-		case errors.Is(err, service.ErrInvalidCursor):
+		case errors.Is(err, module.ErrInvalidCursor):
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 				"message": "Invalid cursor",
 			})
