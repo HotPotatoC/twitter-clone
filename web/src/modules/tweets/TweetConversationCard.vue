@@ -179,7 +179,10 @@ export default defineComponent({
           class="relative overflow-hidden w-full h-96 rounded-lg"
         >
           <div class="box-border relative">
-            <div class="grid grid-cols-2 gap-1 h-full">
+            <div
+              v-if="tweet.repliedTo.photoURLs.length > 1"
+              class="grid grid-cols-2 gap-1 h-full"
+            >
               <div
                 class="w-full"
                 :class="tweet.repliedTo.photoURLs.length > 2 ? 'h-48' : 'h-96'"
@@ -222,6 +225,13 @@ export default defineComponent({
                   class="object-cover w-full h-full"
                 />
               </div>
+            </div>
+            <div v-else class="w-full">
+              <img
+                v-lazy="tweet.repliedTo.photoURLs[0]"
+                @click.stop="showOverlay(tweet.repliedTo.photoURLs[0])"
+                class="object-cover w-full h-96"
+              />
             </div>
           </div>
         </div>
