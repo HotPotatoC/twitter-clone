@@ -6,20 +6,17 @@
 
 # Features ✨
 
-Only the main features are implemented atm
-
 - Modular Architecture
 - Database migration tool using [migrate](https://github.com/golang-migrate/migrate)
 - Database seeding script using NodeJS
-- Authentication using JWT Refresh token flow and Redis for JWT blacklisting
+- Authentication using JWT Refresh token flow and Redis for token blacklisting
 - Strongly typed Vuex store
 - List Tweets feed
-- Create Tweets
+- Create Tweets with images
 - Reply to Tweets or reply to another reply!
 - Like Tweets
 - Follow users
-- Unfollow users
-- Images & Media uploading using AWS S3 Buckets
+- Images & Media uploads stored in AWS S3 Buckets
 - Edit Profile Details
 - Edit Profile Image
 - See who a user is following and see their followers
@@ -30,6 +27,9 @@ Only the main features are implemented atm
 - [Fiber HTTP framework](https://github.com/gofiber/fiber)
 - [PostgreSQL](postgresql.org)
 - [Redis](redis.io)
+- [migrate](https://github.com/golang-migrate/migrate)
+- [NodeJS](https://nodejs.org/en/)
+- [Amazon Web Service S3](https://aws.amazon.com/s3/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Vue 3](https://v3.vuejs.org/)
 - [Vite 2.0](https://vitejs.dev/)
@@ -61,7 +61,7 @@ Only the main features are implemented atm
 ❯ ./scripts/run_migrations.sh Your_PostgreSQL_URL
 ```
 
-1. **Run the backend server**
+4. **Run the backend server**
 
 ```sh
 ❯ go run cmd/rest/main.go --prefork
@@ -71,17 +71,11 @@ Only the main features are implemented atm
 
 ```sh
 ❯ cd web
-```
 
-Using yarn
-
-```sh
+# Using yarn to install the dependencies
 ❯ yarn
-```
 
-Using npm
-
-```sh
+# Using npm to install the dependencies
 ❯ npm install
 ```
 
@@ -89,9 +83,23 @@ Using npm
 
 ```sh
 ❯ yarn dev
+
+# Or from the root of the project
+❯ yarn web-dev
 ```
 
 And there you go!
+
+# Resources & references used
+
+- https://twitter.com
+- https://about.twitter.com/en/who-we-are/brand-toolkit
+- https://github.com/shuber/postgres-twitter
+- [Build a twitter clone using vue.js and tailwind css! (by: this.stephie)](https://www.youtube.com/watch?v=bQU-jPyQJ4A)
+- [Is SELECT * Expensive? (by: Hussein Nasser)](https://www.youtube.com/watch?v=QQVNVOneZNg)
+- [SELECT COUNT (*) can impact your Backend Application Performance, here is why (by: Hussein Nasser)](https://www.youtube.com/watch?v=8xKS7QQKgzk)
+- [Full Text Search PostgreSQL (by: Ben Awad)](https://www.youtube.com/watch?v=szfUbzsKvtE)
+- https://www.postgresql.org/message-id/20050810133157.GA46247@winnie.fuhr.org
 
 # Todo
 
@@ -107,11 +115,12 @@ CS = Client Side
   - [x] Update profile image (SS)
   - [ ] Update profile image (CS)
   - [ ] Crop image (CS)
-  - [ ] Lazy load (CS)
+- [x] Lazy load images (CS)
 - [ ] Attach an image to a Tweet (SS & CS)
   - [x] Attach multiple images in a tweet (SS)
-  - [ ] Attach multiple images in a tweet (CS)
-  - [ ] Carousel overlay image display and side panel (CS)
+  - [x] Attach multiple images in a tweet (CS)
+  - [x] Overlay image display and side panel (CS)
+  - [ ] Overlay image side panel replies (CS)
 - [x] 'Replying to ...' design Tweet card (CS)
 - [ ] List profile followers and followings (CS)
 - [x] Support for link parsing on Tweet's content (CS)
@@ -122,15 +131,17 @@ CS = Client Side
 - [ ] Pagination on search results (SS)
 - [ ] Toggle dark mode and light mode (CS)
 
-# Improvements
+# Improvements (?)
 
 - [ ] Tweet threads
 - [ ] Hashtags and mentions
-- [ ] Notifications with Redis pubsub & websockets (?)
+- [ ] Notifications with Redis pubsub & websockets
 - [ ] Bookmarks
 - [ ] Lists
 - [ ] Trending section
 
 # Disclaimer
 
-`twitter-clone` is created for educational purposes only. I do not work for Twitter nor Twitter the copyright holder have any associations with this experiment.
+`twitter-clone` is created for educational purposes only.
+
+I do not work for Twitter nor Twitter the company itself has any associations / involvements in this project.
