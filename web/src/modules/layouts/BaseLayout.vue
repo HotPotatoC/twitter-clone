@@ -16,7 +16,7 @@ export default defineComponent({
 
     function closeTweetImageOverlay() {
       store.dispatch(Action.TweetsActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY, {
-        tweetId: 0,
+        tweet: null,
         show: false,
         source: '',
       })
@@ -31,6 +31,7 @@ export default defineComponent({
   <TweetImageOverlay
     :image="tweetImageOverlay.source"
     :show="tweetImageOverlay.show"
+    :tweet="tweetImageOverlay.tweet"
     @close="closeTweetImageOverlay"
   />
   <div class="flex container mx-auto px-4 xl:px-40 h-screen w-full font-sans">

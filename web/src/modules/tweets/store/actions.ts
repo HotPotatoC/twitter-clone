@@ -12,6 +12,7 @@ import {
   fetchTweet,
   searchTweets,
 } from '../service'
+import { Tweet } from '../types'
 
 export enum ActionTypes {
   GET_TWEETS_FEED = 'GET_TWEETS_FEED',
@@ -59,7 +60,7 @@ export type Actions = {
   ): Promise<any>
   [ActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY](
     { commit }: AugmentedActionContext<Mutations, State>,
-    payload: { tweetId: number; show: boolean; source: string }
+    payload: { tweet: Tweet; show: boolean; source: string }
   ): any
 }
 
@@ -162,10 +163,10 @@ export const actions: ActionTree<State, State> & Actions = {
   },
   [ActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY](
     { commit },
-    { tweetId, show, source }
+    { tweet, show, source }
   ) {
     commit(MutationTypes.TOGGLE_TWEET_IMAGE_OVERLAY, {
-      tweetId,
+      tweet,
       show,
       source,
     })

@@ -58,7 +58,7 @@ export default defineComponent({
 
     function showOverlay(imageURL: string) {
       store.dispatch(Action.TweetsActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY, {
-        tweetId: tweet.value.id,
+        tweet: tweet.value,
         show: true,
         source: imageURL,
       })

@@ -101,7 +101,7 @@ export default defineComponent({
 
     function showOverlay(imageURL: string) {
       store.dispatch(Action.TweetsActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY, {
-        tweetId: tweet.value.id,
+        tweet: tweet.value,
         show: true,
         source: imageURL,
       })
@@ -172,7 +172,10 @@ export default defineComponent({
           v-html="parsedRepliedTweetContent"
         ></div>
         <div
-          v-if="tweet.repliedTo.photoURLs !== null && tweet.repliedTo.photoURLs.length > 0"
+          v-if="
+            tweet.repliedTo.photoURLs !== null &&
+            tweet.repliedTo.photoURLs.length > 0
+          "
           class="relative overflow-hidden w-full h-96 rounded-lg"
         >
           <div class="box-border relative">

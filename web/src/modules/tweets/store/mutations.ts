@@ -21,7 +21,7 @@ export type Mutations<S = State> = {
   [MutationTypes.PUSH_TWEET_SEARCH_RESULTS](state: S, payload: Tweet[]): void
   [MutationTypes.TOGGLE_TWEET_IMAGE_OVERLAY](
     state: S,
-    payload: { tweetId: number; show: boolean; source: string }
+    payload: { tweet: Tweet; show: boolean; source: string }
   ): void
 }
 

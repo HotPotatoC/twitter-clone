@@ -10,7 +10,7 @@ export type Getters = {
   tweetsSearchResults(state: State): Tweet[]
   tweetImageOverlay(
     state: State
-  ): { tweetId: number; show: boolean; source: string }
+  ): { tweet?: Tweet; show: boolean; source: string }
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -29,9 +29,7 @@ export const getters: GetterTree<State, State> & Getters = {
   tweetsSearchResults(state: State): Tweet[] {
     return state.tweetSearchResult
   },
-  tweetImageOverlay(
-    state: State
-  ): { tweetId: number; show: boolean; source: string } {
+  tweetImageOverlay(state: State) {
     return state.tweetImageOverlay
   },
 }

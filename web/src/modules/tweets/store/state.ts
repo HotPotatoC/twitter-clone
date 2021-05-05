@@ -5,7 +5,8 @@ export type State = {
   tweetStatus: TweetAndReplies
   tweetSearchResult: Tweet[]
   tweetImageOverlay: {
-    tweetId: number
+    tweet?: Tweet
+    replies?: Tweet[]
     show: boolean
     source: string
   }
@@ -29,7 +30,6 @@ export const state: State = {
   },
   tweetSearchResult: [],
   tweetImageOverlay: {
-    tweetId: 0,
     show: false,
     source: '',
   },
