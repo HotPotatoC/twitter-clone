@@ -89,7 +89,7 @@ export default defineComponent({
               </button>
               <div class="flex items-center h-full">
                 <div class="w-full flex justify-center">
-                  <img :src="image" class="max-w-5xl" />
+                  <img v-lazy="image" class="max-w-5xl" />
                 </div>
                 <div
                   class="w-1/4 h-screen overflow-y-scroll bg-black border-l border-lighter dark:border-darker"

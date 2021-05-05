@@ -147,7 +147,7 @@ export default defineComponent({
       <div
         class="absolute overflow-hidden mt-32 rounded-full w-32 h-32 border-4 border-lightest dark:border-black"
       >
-        <img :src="profile.photoURL" />
+        <img v-lazy="profile.photoURL" />
       </div>
     </div>
     <input

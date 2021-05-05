@@ -184,7 +184,7 @@ export default defineComponent({
       <div v-if="initialLoadDone && tweet" class="w-full">
         <div class="flex items-center w-full">
           <img
-            :src="tweet.authorPhotoURL"
+            v-lazy="tweet.authorPhotoURL"
             class="mr-5 h-12 w-12 rounded-full"
           />
           <router-link :to="`/${tweet.authorHandle}`">

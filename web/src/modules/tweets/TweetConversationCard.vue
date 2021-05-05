@@ -130,7 +130,7 @@ export default defineComponent({
       <div class="flex-none mr-4">
         <router-link :to="`/${tweet.repliedTo.authorHandle}`">
           <img
-            :src="tweet.repliedTo.authorPhotoURL"
+            v-lazy="tweet.repliedTo.authorPhotoURL"
             class="h-12 w-12 rounded-full flex-none"
           />
         </router-link>
@@ -225,7 +225,7 @@ export default defineComponent({
     <div class="flex">
       <router-link :to="`/${tweet.authorHandle}`" class="flex-none mr-4">
         <img
-          :src="tweet.authorPhotoURL"
+          v-lazy="tweet.authorPhotoURL"
           class="h-12 w-12 rounded-full flex-none"
         />
       </router-link>
@@ -274,12 +274,12 @@ export default defineComponent({
                 :class="tweet.photoURLs.length > 2 ? 'h-48' : 'h-96'"
               >
                 <img
-                  :src="tweet.photoURLs[0]"
+                  v-lazy="tweet.photoURLs[0]"
                   class="object-cover w-full h-full"
                 />
                 <img
                   v-if="tweet.photoURLs.length > 2"
-                  :src="tweet.photoURLs[1]"
+                  v-lazy="tweet.photoURLs[1]"
                   class="object-cover w-full h-full"
                 />
               </div>
@@ -289,18 +289,18 @@ export default defineComponent({
               >
                 <img
                   v-if="tweet.photoURLs.length > 2"
-                  :src="tweet.photoURLs[2]"
+                  v-lazy="tweet.photoURLs[2]"
                   class="object-cover w-full"
                   :class="tweet.photoURLs.length === 4 ? 'h-full' : 'h-96'"
                 />
                 <img
                   v-else
-                  :src="tweet.photoURLs[1]"
+                  v-lazy="tweet.photoURLs[1]"
                   class="object-cover w-full h-full"
                 />
                 <img
                   v-if="tweet.photoURLs.length === 4"
-                  :src="tweet.photoURLs[3]"
+                  v-lazy="tweet.photoURLs[3]"
                   class="object-cover w-full h-full"
                 />
               </div>

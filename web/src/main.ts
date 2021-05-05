@@ -1,6 +1,5 @@
-import {
-  createApp,
-} from 'vue'
+import { createApp } from 'vue'
+import { Lazyload } from '@vant/lazyload'
 
 import { router } from './routes'
 import { store } from './store'
@@ -12,4 +11,5 @@ const app = createApp(App)
 
 app.use(store)
 app.use(router)
+app.use(Lazyload)
 app.mount('#app')

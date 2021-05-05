@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.0.0",
+    "@vant/lazyload": "^1.2.0",
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",
     "linkifyjs": "^3.0.0-beta.3",
