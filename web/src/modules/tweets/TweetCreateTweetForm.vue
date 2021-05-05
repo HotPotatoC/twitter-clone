@@ -4,7 +4,7 @@ import IconImage from '../../icons/IconImage.vue'
 import IconX from '../../icons/IconX.vue'
 
 export default defineComponent({
-  name: 'CreateTweetForm',
+  name: 'TweetCreateTweetForm',
   components: {
     IconImage,
     IconX,

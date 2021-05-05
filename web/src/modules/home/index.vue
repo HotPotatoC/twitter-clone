@@ -14,7 +14,7 @@ import TweetCard from '../tweets/TweetCard.vue'
 import TweetConversationCard from '../tweets/TweetConversationCard.vue'
 import LoadingSpinner from '../../shared/LoadingSpinner.vue'
 import IconStar from '../../icons/IconStar.vue'
-import CreateTweetForm from './CreateTweetForm.vue'
+import TweetCreateTweetForm from '../tweets/TweetCreateTweetForm.vue'
 
 export default defineComponent({
   components: {
@@ -22,7 +22,7 @@ export default defineComponent({
     TweetConversationCard,
     LoadingSpinner,
     IconStar,
-    CreateTweetForm,
+    TweetCreateTweetForm,
   },
   name: 'Home',
   setup() {
@@ -100,7 +100,7 @@ export default defineComponent({
       <IconStar :size="20" class="text-blue fill-current" />
     </div>
     <div class="px-5 py-3 border-b-8 border-lighter dark:border-dark flex">
-      <CreateTweetForm @submit="addNewTweet" />
+      <TweetCreateTweetForm @submit="addNewTweet" />
     </div>
     <div v-show="!initialLoadDone" class="flex flex-col">
       <div class="w-full text-center">

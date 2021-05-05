@@ -47,9 +47,13 @@ export default defineComponent({
 
     const user = computed(() => store.getters['userData'])
 
-    async function createTweet(content: string) {
+    async function createTweet({ content, attachments }) {
       try {
-        await store.dispatch(Action.TweetsActionTypes.NEW_TWEET, content)
+        await store.dispatch(Action.TweetsActionTypes.NEW_TWEET, {
+          content,
+          attachments,
+        })
+        showCreateFormDialog.value = false
       } catch (error) {
         console.log(error)
       }
@@ -83,23 +87,14 @@ export default defineComponent({
   <TweetCreateTweetDialog
     :show="showCreateFormDialog"
     @close="showCreateFormDialog = false"
-    @dispatch="createTweet"
+    @submit="createTweet"
   />
 
   <div
     class="lg:w-1/5 border-r border-lighter dark:border-dark lg:px-8 py-2 flex flex-col justify-between items-center"
   >
     <div>
-      <!-- <button
-        class="h-12 w-12 inline-flex items-center justify-center hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 text-blue rounded-full transition-colors duration-75"
-      >
-        <IconTwitter :size="32" />
-      </button> -->
-      <NavigationSidebarTab
-        id="home"
-        label=""
-        to="/home"
-      >
+      <NavigationSidebarTab id="home" label="" to="/home">
         <template #icon>
           <IconTwitter :size="32" />
         </template>
