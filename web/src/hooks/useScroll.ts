@@ -1,6 +1,9 @@
 import { ref, Ref, onMounted, onUnmounted, watchEffect } from 'vue'
 
-type ScrollHook = [Ref<HTMLElement | undefined>, Ref<boolean>]
+type ScrollHook = [
+  element: Ref<HTMLElement | undefined>,
+  isBottom: Ref<boolean>
+]
 
 export function useScroll(): ScrollHook {
   const elementRef = ref<HTMLElement>()
