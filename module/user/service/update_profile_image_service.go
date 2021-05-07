@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"net/http"
-	"time"
+	"strings"
 
 	"github.com/HotPotatoC/twitter-clone/internal/aws"
 	"github.com/HotPotatoC/twitter-clone/internal/config"
@@ -50,7 +50,7 @@ func (s updateProfileImageService) Execute(photo *multipart.FileHeader, userID i
 		return "", module.ErrInvalidImageType
 	}
 
-	fileKey := fmt.Sprintf("%d-%d-%s", userID, time.Now().Unix(), photo.Filename)
+	fileKey := fmt.Sprintf("%d-%s", userID, strings.Trim(photo.Filename, " "))
 
 	out, err := s.s3.UploadObject(fileKey, photoFile)
 	if err != nil {

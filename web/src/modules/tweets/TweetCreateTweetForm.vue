@@ -23,6 +23,7 @@ export default defineComponent({
       const file: File = target.files[0]
 
       if (file.size > 32 * 1024 * 1024) {
+        tweetAttachmentInput.value.value = null
         return
       }
 

@@ -35,19 +35,22 @@ export type ProfileDetails = {
   joinedAt: string
 }
 
-export type UpdatableProfileFields = Pick<
-  ProfileDetails,
-  'name' | 'bio' | 'location' | 'website' | 'birthDate' | 'photoURL'
+export type UpdatableProfileFields = Partial<
+  Pick<
+    ProfileDetails,
+    'name' | 'bio' | 'location' | 'website' | 'birthDate' | 'photoURL'
+  >
 >
 
-export type UpdatableProfileFieldsReactive = Omit<
-  UpdatableProfileFields,
-  'name' | 'bio' | 'location' | 'website' | 'birthDate' | 'photoURL'
-> & {
-  name: string | Ref<string>
-  bio: string | Ref<string>
-  location: string | Ref<string>
-  website: string | Ref<string>
-  birthDate: string | Ref<string>
-  photoURL: string | Ref<string>
-}
+export type UpdatableProfileFieldsReactive = Partial<
+  Omit<
+    UpdatableProfileFields,
+    'name' | 'bio' | 'location' | 'website' | 'birthDate' | 'photoURL'
+  > & {
+    name: string | Ref<string>
+    bio: string | Ref<string>
+    location: string | Ref<string>
+    website: string | Ref<string>
+    birthDate: string | Ref<string>
+  }
+>

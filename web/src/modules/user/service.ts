@@ -1,18 +1,15 @@
+import { AxiosResponse } from 'axios'
 import axios from '../../utils/axios'
-import { ProfileDetailsJSONSchema, ProfileDetails } from './types'
+import {
+  ProfileDetailsJSONSchema,
+  ProfileDetails,
+  UpdatableProfileFields,
+} from './types'
 
 type RegisterPayload = {
   name: string
   email: string
   password: string
-}
-
-type UpdateProfilePayload = {
-  name: string
-  bio: string
-  location: string
-  website: string
-  birthDate: string
 }
 
 export async function registerAccount({
@@ -27,7 +24,7 @@ export async function registerAccount({
   }
 }
 
-function parseUpdateProfilePayload(payload: UpdateProfilePayload) {
+function parseUpdateProfilePayload(payload: UpdatableProfileFields) {
   return {
     display_name: payload.name,
     bio: payload.bio,
@@ -38,11 +35,36 @@ function parseUpdateProfilePayload(payload: UpdateProfilePayload) {
 }
 
 export async function updateProfile(
-  payload: UpdateProfilePayload
+  payload: UpdatableProfileFields
 ): Promise<void> {
   const jsonPayload = parseUpdateProfilePayload(payload)
   try {
     await axios.patch('/users/profile', jsonPayload)
+  } catch (error) {
+    throw error
+  }
+}
+
+type UpdateProfileImageResponse = {
+  message: string
+  profile_url: string
+}
+
+export async function updateProfileImage(
+  image: File | Blob,
+  fileName: string
+): Promise<AxiosResponse<UpdateProfileImageResponse>> {
+  try {
+    const formData = new FormData()
+
+    formData.append('photo', image, fileName)
+
+    const response = await axios.patch<UpdateProfileImageResponse>(
+      '/users/profile_image',
+      formData
+    )
+
+    return response
   } catch (error) {
     throw error
   }

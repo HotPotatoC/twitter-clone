@@ -13,6 +13,7 @@
     "dayjs": "^1.10.4",
     "linkifyjs": "^3.0.0-beta.3",
     "vue": "^3.0.5",
+    "vue-advanced-cropper": "^2.2.1",
     "vue-router": "4",
     "vuex": "^4.0.0"
   },

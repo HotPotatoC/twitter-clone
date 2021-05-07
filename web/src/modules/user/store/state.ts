@@ -20,6 +20,7 @@ export const state: State = {
     followingsCount: 0,
     isFollowing: false,
     joinedAt: '',
+    photoURL: '',
   },
   profileTweets: [],
 }

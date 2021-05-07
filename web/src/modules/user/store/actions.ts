@@ -7,6 +7,7 @@ import {
   registerAccount,
   unfollowUser,
   updateProfile,
+  updateProfileImage,
 } from '../service'
 import { fetchUserTweets } from '../../tweets/service'
 import { AugmentedActionContext } from '../../../store'
@@ -18,6 +19,7 @@ export enum ActionTypes {
   GET_PROFILE_TWEETS = 'GET_PROFILE_TWEETS',
   LOAD_MORE_PROFILE_TWEETS = 'LOAD_MORE_PROFILE_TWEETS',
   UPDATE_PROFILE_DETAILS = 'UPDATE_PROFILE_DETAILS',
+  UPDATE_PROFILE_IMAGE = 'UPDATE_PROFILE_IMAGE',
   FOLLOW_USER = 'FOLLOW_USER',
   UNFOLLOW_USER = 'UNFOLLOW_USER',
 }
@@ -42,6 +44,10 @@ export type Actions = {
   [ActionTypes.UPDATE_PROFILE_DETAILS](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: UpdatableProfileFields
+  ): Promise<void>
+  [ActionTypes.UPDATE_PROFILE_IMAGE](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    payload: { image: File | Blob; fileName: string }
   ): Promise<void>
   [ActionTypes.FOLLOW_USER](
     { commit }: AugmentedActionContext<Mutations, State>,
@@ -122,6 +128,20 @@ export const actions: ActionTree<State, State> & Actions = {
         location,
         website,
         birthDate,
+      })
+    } catch (error) {
+      throw error
+    }
+  },
+  async [ActionTypes.UPDATE_PROFILE_IMAGE](
+    { commit },
+    { image, fileName }
+  ): Promise<void> {
+    try {
+      const { data } = await updateProfileImage(image, fileName)
+
+      commit(MutationTypes.UPDATE_PROFILE, {
+        photoURL: data.profile_url,
       })
     } catch (error) {
       throw error

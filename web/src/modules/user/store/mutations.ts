@@ -17,7 +17,10 @@ export type Mutations<S = State> = {
   [MutationTypes.SET_PROFILE_DETAILS](state: S, payload: ProfileDetails): void
   [MutationTypes.SET_PROFILE_TWEETS](state: S, payload: Tweet[]): void
   [MutationTypes.PUSH_PROFILE_TWEETS](state: S, payload: Tweet[]): void
-  [MutationTypes.UPDATE_PROFILE](state: S, payload: UpdatableProfileFields): void
+  [MutationTypes.UPDATE_PROFILE](
+    state: S,
+    payload: Partial<UpdatableProfileFields>
+  ): void
   [MutationTypes.SET_IS_FOLLOWING_USER](state: S, payload: boolean): void
 }
 
