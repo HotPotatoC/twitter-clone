@@ -2,7 +2,6 @@ package action
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/HotPotatoC/twitter-clone/module"
 	"github.com/HotPotatoC/twitter-clone/module/tweet/entity"
@@ -31,7 +30,7 @@ func (a createReplyAction) Execute(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(errors)
 	}
 
-	tweetID, err := strconv.ParseInt(c.Params("tweetID"), 10, 64)
+	tweetID, err := c.ParamsInt("tweetID")
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "There was a problem on our side",
@@ -39,7 +38,7 @@ func (a createReplyAction) Execute(c *fiber.Ctx) error {
 	}
 	userID := c.Locals("userID").(float64)
 
-	err = a.service.Execute(input, int64(userID), tweetID)
+	err = a.service.Execute(input, int64(userID), int64(tweetID))
 	if err != nil {
 		switch {
 		case errors.Is(err, entity.ErrTweetDoesNotExist):

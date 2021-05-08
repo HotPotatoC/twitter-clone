@@ -3,7 +3,6 @@ package action
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/HotPotatoC/twitter-clone/module"
 	"github.com/HotPotatoC/twitter-clone/module/tweet/entity"
@@ -20,15 +19,15 @@ func NewListTweetRepliesAction(service service.ListTweetRepliesService) module.A
 }
 
 func (a listTweetRepliesAction) Execute(c *fiber.Ctx) error {
-	tweetID, err := strconv.ParseInt(c.Params("tweetID"), 10, 64)
+	tweetID, err := c.ParamsInt("tweetID")
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": fiber.ErrBadRequest.Message,
 		})
 	}
 
 	createdAtCursor := c.Query("cursor")
-	replies, err := a.service.Execute(tweetID, createdAtCursor)
+	replies, err := a.service.Execute(int64(tweetID), createdAtCursor)
 	if err != nil {
 		fmt.Println(err)
 		switch {

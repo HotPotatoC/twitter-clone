@@ -2,7 +2,6 @@ package action
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/HotPotatoC/twitter-clone/module"
 	"github.com/HotPotatoC/twitter-clone/module/relationship/service"
@@ -19,14 +18,14 @@ func NewListFollowingsAction(service service.ListFollowingsService) module.Actio
 }
 
 func (a listFollowingsAction) Execute(c *fiber.Ctx) error {
-	userID, err := strconv.ParseInt(c.Params("userID"), 10, 64)
+	userID, err := c.ParamsInt("userID")
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": fiber.ErrBadRequest.Message,
 		})
 	}
 
-	followings, err := a.service.Execute(userID)
+	followings, err := a.service.Execute(int64(userID))
 	if err != nil {
 		switch {
 		case errors.Is(err, entity.ErrUserDoesNotExist):

@@ -2,7 +2,6 @@ package action
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/HotPotatoC/twitter-clone/module"
 	"github.com/HotPotatoC/twitter-clone/module/tweet/entity"
@@ -19,16 +18,16 @@ func NewFavoriteTweetAction(service service.FavoriteTweetService) module.Action 
 }
 
 func (a favoriteTweetAction) Execute(c *fiber.Ctx) error {
-	tweetID, err := strconv.ParseInt(c.Params("tweetID"), 10, 64)
+	tweetID, err := c.ParamsInt("tweetID")
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "There was a problem on our side",
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": fiber.ErrBadRequest.Message,
 		})
 	}
 
 	userID := c.Locals("userID").(float64)
 
-	err = a.service.Execute(tweetID, int64(userID))
+	err = a.service.Execute(int64(tweetID), int64(userID))
 	if err != nil {
 		switch {
 		case errors.Is(err, entity.ErrTweetDoesNotExist):

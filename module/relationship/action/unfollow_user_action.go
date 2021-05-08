@@ -3,7 +3,6 @@ package action
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/HotPotatoC/twitter-clone/module"
 	"github.com/HotPotatoC/twitter-clone/module/relationship/entity"
@@ -22,20 +21,20 @@ func NewUnfollowUserAction(service service.FollowUserService) module.Action {
 
 func (a unfollowUserAction) Execute(c *fiber.Ctx) error {
 	followerID := c.Locals("userID").(float64)
-	followedID, err := strconv.ParseInt(c.Params("userID"), 10, 64)
+	followedID, err := c.ParamsInt("userID")
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Bad request",
+			"message": fiber.ErrBadRequest.Message,
 		})
 	}
 
-	if int64(followerID) == followedID {
+	if int(followerID) == followedID {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"message": "You cannot unfollow yourself",
 		})
 	}
 
-	username, err := a.service.Execute(int64(followerID), followedID)
+	username, err := a.service.Execute(int64(followerID), int64(followedID))
 	if err != nil {
 		switch {
 		case errors.Is(err, userEntity.ErrUserDoesNotExist):
