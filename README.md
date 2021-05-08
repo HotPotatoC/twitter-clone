@@ -100,6 +100,8 @@ And there you go!
 - [SELECT COUNT (*) can impact your Backend Application Performance, here is why (by: Hussein Nasser)](https://www.youtube.com/watch?v=8xKS7QQKgzk)
 - [Full Text Search PostgreSQL (by: Ben Awad)](https://www.youtube.com/watch?v=szfUbzsKvtE)
 - https://www.postgresql.org/message-id/20050810133157.GA46247@winnie.fuhr.org
+- https://dev.to/shubhadip/vue-3-vuex-4-modules-typescript-2i2o
+- https://dev.to/3vilarthas/vuex-typescript-m4j
 
 # Todo
 
