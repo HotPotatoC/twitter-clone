@@ -14,6 +14,7 @@ import (
 	"github.com/HotPotatoC/twitter-clone/module/tweet"
 	"github.com/HotPotatoC/twitter-clone/module/user"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -69,6 +70,10 @@ func (s *Server) initMiddlewares() {
 		AllowOrigins:     config.GetString("APP_DOMAIN", "*"),
 		AllowCredentials: true,
 		AllowHeaders:     "Content-Type",
+	}))
+
+	s.webserver.Engine().Use(compress.New(compress.Config{
+		Level: compress.LevelBestSpeed,
 	}))
 
 	s.webserver.Engine().Use(limiter.New(limiter.Config{
