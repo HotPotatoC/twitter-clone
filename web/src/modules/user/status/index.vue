@@ -70,11 +70,12 @@ export default defineComponent({
       watch(
         () => route.params.tweetId,
         async (tweetId) => {
-          initialLoadDone.value = false
-          await getTweetStatus(tweetId as string)
-          initialLoadDone.value = true
-        },
-        { flush: 'post' }
+          if (tweetId) {
+            initialLoadDone.value = false
+            await getTweetStatus(tweetId as string)
+            initialLoadDone.value = true
+          }
+        }
       )
 
       watchEffect(async () => {

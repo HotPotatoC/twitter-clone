@@ -102,15 +102,16 @@ export default defineComponent({
       watch(
         () => route.params.name,
         async (name) => {
-          initialLoadDone.value = false
-          await store.dispatch(
-            Action.UserActionTypes.GET_PROFILE_DETAILS,
-            name as string
-          )
-          await loadTweets()
-          initialLoadDone.value = true
-        },
-        { flush: 'post' }
+          if (name) {
+            initialLoadDone.value = false
+            await store.dispatch(
+              Action.UserActionTypes.GET_PROFILE_DETAILS,
+              name as string
+            )
+            await loadTweets()
+            initialLoadDone.value = true
+          }
+        }
       )
 
       watchEffect(async () => {
