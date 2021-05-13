@@ -90,11 +90,26 @@ export default defineComponent({
 
 <template>
   <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
+    class="
+      w-full
+      h-full
+      overflow-y-scroll
+      border-r border-lighter
+      dark:border-darker
+      md:border-r-0
+    "
     ref="scrollRef"
   >
     <div
-      class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-between"
+      class="
+        px-5
+        py-3
+        border-b border-lighter
+        dark:border-dark
+        flex
+        items-center
+        justify-between
+      "
     >
       <h1 class="text-xl font-bold dark:text-lightest">Home</h1>
       <IconStar :size="20" class="text-blue fill-current" />
@@ -115,7 +130,15 @@ export default defineComponent({
 
       <div
         v-show="tweets.length > 0 && loadNextBatch"
-        class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker cursor-pointer"
+        class="
+          w-full
+          p-4
+          border-b border-lighter
+          dark:border-dark
+          hover:bg-lighter
+          dark:hover:bg-darker
+          cursor-pointer
+        "
       >
         <div class="w-full text-center">
           <LoadingSpinner />

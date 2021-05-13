@@ -50,7 +50,15 @@ export default defineComponent({
       <div class="mt-4 text-right">
         <button
           type="submit"
-          class="h-10 px-4 font-semibold focus:outline-none rounded-full transition-colors duration-75"
+          class="
+            h-10
+            px-4
+            font-semibold
+            focus:outline-none
+            rounded-full
+            transition-colors
+            duration-75
+          "
           :class="
             contentIsEmpty
               ? ['bg-dark', 'text-light', 'cursor-default']

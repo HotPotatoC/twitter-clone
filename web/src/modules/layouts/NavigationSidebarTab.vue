@@ -32,7 +32,21 @@ export default defineComponent({
   <router-link :to="to">
     <button
       @click="emit('selectTab', id)"
-      class="flex items-center mr-auto mb-3 py-2 md:px-4 rounded-full hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-20 hover:text-blue focus:outline-none transition-colors duration-75"
+      class="
+        flex
+        items-center
+        mr-auto
+        mb-3
+        py-2
+        md:px-4
+        rounded-full
+        hover:bg-lightblue
+        dark:hover:bg-darkblue dark:hover:bg-opacity-20
+        hover:text-blue
+        focus:outline-none
+        transition-colors
+        duration-75
+      "
       :class="
         selected ? ['text-blue', 'dark:text-blue'] : ['dark:text-lighter']
       "

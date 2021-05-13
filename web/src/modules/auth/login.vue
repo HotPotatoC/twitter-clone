@@ -41,7 +41,17 @@ export default defineComponent({
 
 <template>
   <div
-    class="flex justify-center container mx-auto h-screen w-1/4 px-4 lg:px-0 py-8"
+    class="
+      flex
+      justify-center
+      container
+      mx-auto
+      h-screen
+      w-1/4
+      px-4
+      lg:px-0
+      py-8
+    "
   >
     <div>
       <IconTwitter :size="60" class="h-12 w-12 text-blue" />
@@ -53,17 +63,58 @@ export default defineComponent({
           v-model="input.email"
           type="text"
           placeholder="Email"
-          class="w-full px-2 py-4 my-6 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
+          class="
+            w-full
+            px-2
+            py-4
+            my-6
+            border-2 border-lighter
+            text-xl
+            rounded
+            dark:border-dark
+            focus:outline-none
+            dark:bg-black
+            dark:text-light
+            focus:border-blue
+            dark:focus:border-blue
+            transition-colors
+            duration-75
+          "
         />
         <input
           v-model="input.password"
           type="password"
           placeholder="Password"
-          class="w-full px-2 py-4 mb-6 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
+          class="
+            w-full
+            px-2
+            py-4
+            mb-6
+            border-2 border-lighter
+            text-xl
+            rounded
+            dark:border-dark
+            focus:outline-none
+            dark:bg-black
+            dark:text-light
+            focus:border-blue
+            dark:focus:border-blue
+            transition-colors
+            duration-75
+          "
         />
         <button
           type="submit"
-          class="bg-blue text-lightest text-lg rounded-full font-semibold focus:outline-none w-full h-auto p-4"
+          class="
+            bg-blue
+            text-lightest text-lg
+            rounded-full
+            font-semibold
+            focus:outline-none
+            w-full
+            h-auto
+            p-4
+          "
           :class="
             inputEmpty
               ? 'opacity-50 cursor-default'

@@ -91,7 +91,16 @@ export default defineComponent({
   />
 
   <div
-    class="lg:w-1/5 border-r border-lighter dark:border-dark lg:px-8 py-2 flex flex-col justify-between items-center"
+    class="
+      lg:w-1/5
+      border-r border-lighter
+      dark:border-dark
+      lg:px-8
+      py-2
+      flex flex-col
+      justify-between
+      items-center
+    "
   >
     <div>
       <NavigationSidebarTab id="home" label="" to="/home">
@@ -188,7 +197,21 @@ export default defineComponent({
         </template>
       </NavigationSidebarTab>
       <button
-        class="text-lightest bg-blue rounded-full font-semibold focus:outline-none w-12 h-12 lg:w-full lg:h-auto p-3 hover:bg-darkblue transition-colors duration-75"
+        class="
+          text-lightest
+          bg-blue
+          rounded-full
+          font-semibold
+          focus:outline-none
+          w-12
+          h-12
+          lg:w-full
+          lg:h-auto
+          p-3
+          hover:bg-darkblue
+          transition-colors
+          duration-75
+        "
         @click="showCreateFormDialog = true"
       >
         <p class="hidden lg:block">Tweet</p>
@@ -201,7 +224,18 @@ export default defineComponent({
     <div class="lg:w-full relative">
       <button
         @click="showDropdown = !showDropdown"
-        class="flex items-center w-full hover:bg-lightblue dark:hover:bg-darkblue dark:hover:bg-opacity-10 rounded-full p-2 focus:outline-none transition-colors duration-75"
+        class="
+          flex
+          items-center
+          w-full
+          hover:bg-lightblue
+          dark:hover:bg-darkblue dark:hover:bg-opacity-10
+          rounded-full
+          p-2
+          focus:outline-none
+          transition-colors
+          duration-75
+        "
       >
         <div class="lg:ml-4">
           <span class="text-sm font-bold leading-tight dark:text-lightest">
@@ -216,11 +250,32 @@ export default defineComponent({
 
       <div
         v-if="showDropdown"
-        class="absolute overflow-hidden bottom-0 left-0 w-64 mb-16 rounded-2xl shadow-md border border-lighter dark:border-dark"
+        class="
+          absolute
+          overflow-hidden
+          bottom-0
+          left-0
+          w-64
+          mb-16
+          rounded-2xl
+          shadow-md
+          border border-lighter
+          dark:border-dark
+        "
       >
         <button
           @click="showDropdown = false"
-          class="flex items-center w-full hover:bg-lightest dark:hover:bg-darkest p-3 bg-white dark:bg-black focus:outline-none"
+          class="
+            flex
+            items-center
+            w-full
+            hover:bg-lightest
+            dark:hover:bg-darkest
+            p-3
+            bg-white
+            dark:bg-black
+            focus:outline-none
+          "
         >
           <div>
             <span class="text-sm font-bold leading-tight dark:text-lightest">
@@ -234,7 +289,20 @@ export default defineComponent({
         </button>
         <button
           @click="logout"
-          class="w-full text-left bg-white hover:bg-lightest dark:bg-black dark:hover:bg-darkest border-t border-lighter dark:border-dark p-3 text-sm dark:text-lightest focus:outline-none"
+          class="
+            w-full
+            text-left
+            bg-white
+            hover:bg-lightest
+            dark:bg-black
+            dark:hover:bg-darkest
+            border-t border-lighter
+            dark:border-dark
+            p-3
+            text-sm
+            dark:text-lightest
+            focus:outline-none
+          "
         >
           Log Out @{{ user.handle }}
         </button>

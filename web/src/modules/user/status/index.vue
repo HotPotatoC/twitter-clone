@@ -178,11 +178,27 @@ export default defineComponent({
   />
 
   <main
-    class="w-full h-full overflow-y-scroll border-r border-lighter dark:border-darker md:border-r-0"
+    class="
+      w-full
+      h-full
+      overflow-y-scroll
+      border-r border-lighter
+      dark:border-darker
+      md:border-r-0
+    "
     ref="scrollRef"
   >
     <div
-      class="px-5 py-3 border-b border-lighter dark:border-dark flex items-center justify-start space-x-6"
+      class="
+        px-5
+        py-3
+        border-b border-lighter
+        dark:border-dark
+        flex
+        items-center
+        justify-start
+        space-x-6
+      "
     >
       <Return />
       <h1 class="text-2xl font-bold dark:text-lightest">Tweet</h1>
@@ -206,7 +222,16 @@ export default defineComponent({
             </p>
           </router-link>
           <div
-            class="cursor-pointer text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
+            class="
+              cursor-pointer
+              text-gray
+              ml-auto
+              p-2
+              hover:bg-darkblue
+              hover:text-blue
+              hover:bg-opacity-20
+              rounded-full
+            "
           >
             <IconEllipsisH />
           </div>
@@ -217,7 +242,15 @@ export default defineComponent({
         ></div>
         <div
           v-if="tweet.photoURLs !== null && tweet.photoURLs.length > 0"
-          class="relative overflow-hidden w-full h-96 rounded-lg cursor-pointer mb-4"
+          class="
+            relative
+            overflow-hidden
+            w-full
+            h-96
+            rounded-lg
+            cursor-pointer
+            mb-4
+          "
         >
           <div class="box-border relative">
             <div
@@ -276,7 +309,18 @@ export default defineComponent({
         </div>
         <p class="text-dark dark:text-light">{{ parsedCreatedAt }}</p>
         <div
-          class="flex items-center justify-start space-x-12 w-full border-t border-b my-4 py-4 border-lighter dark:border-dark"
+          class="
+            flex
+            items-center
+            justify-start
+            space-x-12
+            w-full
+            border-t border-b
+            my-4
+            py-4
+            border-lighter
+            dark:border-dark
+          "
         >
           <div class="flex space-x-2 text-sm">
             <p class="text-light dark:text-lightest font-bold">
@@ -292,21 +336,57 @@ export default defineComponent({
           </div>
         </div>
         <div
-          class="flex items-center justify-around w-full text-xl text-dark dark:text-light"
+          class="
+            flex
+            items-center
+            justify-around
+            w-full
+            text-xl text-dark
+            dark:text-light
+          "
         >
           <div
-            class="flex justify-center hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full p-3 cursor-pointer transition duration-75"
+            class="
+              flex
+              justify-center
+              hover:bg-darkblue
+              hover:text-blue
+              hover:bg-opacity-20
+              rounded-full
+              p-3
+              cursor-pointer
+              transition
+              duration-75
+            "
             @click="showCreateReplyDialog = true"
           >
             <IconComment :size="20" />
           </div>
           <div
-            class="flex justify-center hover:bg-success hover:text-success hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+            class="
+              flex
+              justify-center
+              hover:bg-success
+              hover:text-success
+              hover:bg-opacity-20
+              rounded-full
+              p-3
+              cursor-pointer
+            "
           >
             <IconRetweet :size="20" />
           </div>
           <div
-            class="flex justify-center hover:bg-danger hover:text-danger hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+            class="
+              flex
+              justify-center
+              hover:bg-danger
+              hover:text-danger
+              hover:bg-opacity-20
+              rounded-full
+              p-3
+              cursor-pointer
+            "
             :class="
               tweet.alreadyLiked
                 ? ['text-danger']
@@ -320,7 +400,16 @@ export default defineComponent({
             />
           </div>
           <div
-            class="flex justify-center hover:bg-darkblue hover:text-darkblue hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+            class="
+              flex
+              justify-center
+              hover:bg-darkblue
+              hover:text-darkblue
+              hover:bg-opacity-20
+              rounded-full
+              p-3
+              cursor-pointer
+            "
           >
             <IconShare :size="20" />
           </div>
@@ -350,7 +439,18 @@ export default defineComponent({
         v-show="
           tweet && tweet.replies && tweet.replies.length > 0 && loadNextBatch
         "
-        class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-light dark:hover:bg-opacity-20 flex cursor-pointer transition-colors duration-75"
+        class="
+          w-full
+          p-4
+          border-b border-lighter
+          dark:border-dark
+          hover:bg-lighter
+          dark:hover:bg-light dark:hover:bg-opacity-20
+          flex
+          cursor-pointer
+          transition-colors
+          duration-75
+        "
       >
         <div class="w-full text-center">
           <LoadingSpinner />

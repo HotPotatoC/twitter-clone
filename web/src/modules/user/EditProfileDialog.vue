@@ -214,14 +214,34 @@ export default defineComponent({
         <button
           v-if="!showCropper"
           @click="dispatch"
-          class="h-10 px-4 text-lightest bg-blue font-semibold focus:outline-none rounded-full transition-colors duration-75"
+          class="
+            h-10
+            px-4
+            text-lightest
+            bg-blue
+            font-semibold
+            focus:outline-none
+            rounded-full
+            transition-colors
+            duration-75
+          "
         >
           Save
         </button>
         <button
           v-else
           @click="updateProfileImage"
-          class="h-10 px-4 text-lightest bg-blue font-semibold focus:outline-none rounded-full transition-colors duration-75"
+          class="
+            h-10
+            px-4
+            text-lightest
+            bg-blue
+            font-semibold
+            focus:outline-none
+            rounded-full
+            transition-colors
+            duration-75
+          "
         >
           Apply
         </button>
@@ -231,7 +251,20 @@ export default defineComponent({
       <div class="w-full px-2 h-48 mb-16 bg-blue relative">
         <button
           @click.prevent="profileImageInput.click()"
-          class="absolute mt-32 overflow-hidden rounded-full w-32 h-32 z-10 bg-dark bg-opacity-30 focus:outline-none flex items-center justify-center"
+          class="
+            absolute
+            mt-32
+            overflow-hidden
+            rounded-full
+            w-32
+            h-32
+            z-10
+            bg-dark bg-opacity-30
+            focus:outline-none
+            flex
+            items-center
+            justify-center
+          "
         >
           <IconCamera :size="24" class="text-white opacity-75" />
         </button>
@@ -243,7 +276,16 @@ export default defineComponent({
           @change="onFileChange"
         />
         <div
-          class="absolute overflow-hidden mt-32 rounded-full w-32 h-32 border-4 border-lightest dark:border-black"
+          class="
+            absolute
+            overflow-hidden
+            mt-32
+            rounded-full
+            w-32
+            h-32
+            border-4 border-lightest
+            dark:border-black
+          "
         >
           <img v-lazy="profile.photoURL" />
         </div>
@@ -252,24 +294,88 @@ export default defineComponent({
         v-model="name"
         type="text"
         placeholder="Name"
-        class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
+        class="
+          w-full
+          px-2
+          py-4
+          my-4
+          border-2 border-lighter
+          text-xl
+          rounded
+          dark:border-dark
+          focus:outline-none
+          dark:bg-black
+          dark:text-light
+          focus:border-blue
+          dark:focus:border-blue
+          transition-colors
+          duration-75
+        "
       />
       <textarea
         v-model="bio"
         placeholder="Bio"
-        class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
+        class="
+          w-full
+          px-2
+          py-4
+          my-4
+          border-2 border-lighter
+          text-xl
+          rounded
+          dark:border-dark
+          focus:outline-none
+          dark:bg-black
+          dark:text-light
+          focus:border-blue
+          dark:focus:border-blue
+          transition-colors
+          duration-75
+        "
       />
       <input
         v-model="location"
         type="text"
         placeholder="Location"
-        class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
+        class="
+          w-full
+          px-2
+          py-4
+          my-4
+          border-2 border-lighter
+          text-xl
+          rounded
+          dark:border-dark
+          focus:outline-none
+          dark:bg-black
+          dark:text-light
+          focus:border-blue
+          dark:focus:border-blue
+          transition-colors
+          duration-75
+        "
       />
       <input
         v-model="website"
         type="text"
         placeholder="Website"
-        class="w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
+        class="
+          w-full
+          px-2
+          py-4
+          my-4
+          border-2 border-lighter
+          text-xl
+          rounded
+          dark:border-dark
+          focus:outline-none
+          dark:bg-black
+          dark:text-light
+          focus:border-blue
+          dark:focus:border-blue
+          transition-colors
+          duration-75
+        "
       />
       <div class="mt-6">
         <span class="font-bold text-2xl dark:text-lightest">Birth date</span>
@@ -277,7 +383,26 @@ export default defineComponent({
       <div class="flex space-x-4">
         <select
           v-model="selectedYear"
-          class="relative appearance-none w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue cursor-pointer transition-colors duration-75"
+          class="
+            relative
+            appearance-none
+            w-full
+            px-2
+            py-4
+            my-4
+            border-2 border-lighter
+            text-xl
+            rounded
+            dark:border-dark
+            focus:outline-none
+            dark:bg-black
+            dark:text-light
+            focus:border-blue
+            dark:focus:border-blue
+            cursor-pointer
+            transition-colors
+            duration-75
+          "
         >
           <option v-for="(year, index) in years" :key="index" :value="year">
             {{ year }}
@@ -285,7 +410,26 @@ export default defineComponent({
         </select>
         <select
           v-model="selectedMonth"
-          class="relative appearance-none w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue cursor-pointer transition-colors duration-75"
+          class="
+            relative
+            appearance-none
+            w-full
+            px-2
+            py-4
+            my-4
+            border-2 border-lighter
+            text-xl
+            rounded
+            dark:border-dark
+            focus:outline-none
+            dark:bg-black
+            dark:text-light
+            focus:border-blue
+            dark:focus:border-blue
+            cursor-pointer
+            transition-colors
+            duration-75
+          "
         >
           <option v-for="(month, index) in months" :key="index" :value="index">
             {{ month }}
@@ -293,7 +437,26 @@ export default defineComponent({
         </select>
         <select
           v-model="selectedDay"
-          class="relative appearance-none w-full px-2 py-4 my-4 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue cursor-pointer transition-colors duration-75"
+          class="
+            relative
+            appearance-none
+            w-full
+            px-2
+            py-4
+            my-4
+            border-2 border-lighter
+            text-xl
+            rounded
+            dark:border-dark
+            focus:outline-none
+            dark:bg-black
+            dark:text-light
+            focus:border-blue
+            dark:focus:border-blue
+            cursor-pointer
+            transition-colors
+            duration-75
+          "
         >
           <option
             v-for="(day, index) in availableDays"

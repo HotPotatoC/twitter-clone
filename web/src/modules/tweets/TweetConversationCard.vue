@@ -128,7 +128,15 @@ export default defineComponent({
 
 <template>
   <div
-    class="w-full p-4 hover:bg-lighter dark:hover:bg-darker dark:hover:bg-opacity-30 cursor-pointer transition-colors duration-75"
+    class="
+      w-full
+      p-4
+      hover:bg-lighter
+      dark:hover:bg-darker dark:hover:bg-opacity-30
+      cursor-pointer
+      transition-colors
+      duration-75
+    "
     @click="
       router.push(
         `/${tweet.repliedTo.authorHandle}/status/${tweet.repliedTo.id}`
@@ -162,7 +170,15 @@ export default defineComponent({
             </p>
           </router-link>
           <div
-            class="text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
+            class="
+              text-gray
+              ml-auto
+              p-2
+              hover:bg-darkblue
+              hover:text-blue
+              hover:bg-opacity-20
+              rounded-full
+            "
           >
             <IconEllipsisH />
           </div>
@@ -237,10 +253,23 @@ export default defineComponent({
         </div>
         <div class="flex items-center justify-between w-full mt-2">
           <div
-            class="flex items-center group text-dark dark:text-light hover:text-blue dark:hover:text-blue"
+            class="
+              flex
+              items-center
+              group
+              text-dark
+              dark:text-light
+              hover:text-blue
+              dark:hover:text-blue
+            "
           >
             <div
-              class="mr-3 p-2 group-hover:bg-darkblue group-hover:bg-opacity-20 rounded-full"
+              class="
+                mr-3
+                p-2
+                group-hover:bg-darkblue group-hover:bg-opacity-20
+                rounded-full
+              "
             >
               <IconComment />
             </div>
@@ -249,10 +278,23 @@ export default defineComponent({
             </p>
           </div>
           <div
-            class="flex items-center group text-dark dark:text-light hover:text-success dark:hover:text-success"
+            class="
+              flex
+              items-center
+              group
+              text-dark
+              dark:text-light
+              hover:text-success
+              dark:hover:text-success
+            "
           >
             <div
-              class="mr-3 p-2 group-hover:bg-success group-hover:bg-opacity-20 rounded-full"
+              class="
+                mr-3
+                p-2
+                group-hover:bg-success group-hover:bg-opacity-20
+                rounded-full
+              "
             >
               <IconRetweet />
             </div>
@@ -265,7 +307,12 @@ export default defineComponent({
             :class="repliedTweetAlreadyLikedClasses"
           >
             <div
-              class="mr-3 p-2 group-hover:bg-danger group-hover:bg-opacity-20 rounded-full"
+              class="
+                mr-3
+                p-2
+                group-hover:bg-danger group-hover:bg-opacity-20
+                rounded-full
+              "
               @click.stop="
                 likeTweet(TweetTypeCode.TWEET, tweet.repliedTo.id.toString())
               "
@@ -279,10 +326,22 @@ export default defineComponent({
             </p>
           </div>
           <div
-            class="flex items-center text-dark dark:text-light hover:text-darkblue dark:hover:text-darkblue"
+            class="
+              flex
+              items-center
+              text-dark
+              dark:text-light
+              hover:text-darkblue
+              dark:hover:text-darkblue
+            "
           >
             <div
-              class="mr-3 p-2 hover:bg-darkblue hover:bg-opacity-20 rounded-full"
+              class="
+                mr-3
+                p-2
+                hover:bg-darkblue hover:bg-opacity-20
+                rounded-full
+              "
             >
               <IconShare />
             </div>
@@ -292,7 +351,17 @@ export default defineComponent({
     </div>
   </div>
   <div
-    class="w-full p-4 border-b border-lighter dark:border-dark hover:bg-lighter dark:hover:bg-darker dark:hover:bg-opacity-30 cursor-pointer transition-colors duration-75"
+    class="
+      w-full
+      p-4
+      border-b border-lighter
+      dark:border-dark
+      hover:bg-lighter
+      dark:hover:bg-darker dark:hover:bg-opacity-30
+      cursor-pointer
+      transition-colors
+      duration-75
+    "
     @click="router.push(`/${tweet.authorHandle}/status/${tweet.id}`)"
   >
     <div class="flex">
@@ -319,7 +388,16 @@ export default defineComponent({
             </p>
           </router-link>
           <div
-            class="text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue dark:hover:text-blue hover:bg-opacity-20 rounded-full"
+            class="
+              text-gray
+              ml-auto
+              p-2
+              hover:bg-darkblue
+              hover:text-blue
+              dark:hover:text-blue
+              hover:bg-opacity-20
+              rounded-full
+            "
           >
             <IconEllipsisH />
           </div>
@@ -387,10 +465,23 @@ export default defineComponent({
         </div>
         <div class="flex items-center justify-between w-full mt-2">
           <div
-            class="flex items-center group text-dark dark:text-light hover:text-blue dark:hover:text-blue"
+            class="
+              flex
+              items-center
+              group
+              text-dark
+              dark:text-light
+              hover:text-blue
+              dark:hover:text-blue
+            "
           >
             <div
-              class="mr-3 p-2 group-hover:bg-darkblue group-hover:bg-opacity-20 rounded-full"
+              class="
+                mr-3
+                p-2
+                group-hover:bg-darkblue group-hover:bg-opacity-20
+                rounded-full
+              "
             >
               <IconComment />
             </div>
@@ -399,10 +490,23 @@ export default defineComponent({
             </p>
           </div>
           <div
-            class="flex items-center group text-dark dark:text-light hover:text-success dark:hover:text-success"
+            class="
+              flex
+              items-center
+              group
+              text-dark
+              dark:text-light
+              hover:text-success
+              dark:hover:text-success
+            "
           >
             <div
-              class="mr-3 p-2 group-hover:bg-success group-hover:bg-opacity-20 rounded-full"
+              class="
+                mr-3
+                p-2
+                group-hover:bg-success group-hover:bg-opacity-20
+                rounded-full
+              "
             >
               <IconRetweet />
             </div>
@@ -415,7 +519,12 @@ export default defineComponent({
             :class="replyAlreadyLikedClasses"
           >
             <div
-              class="mr-3 p-2 group-hover:bg-danger group-hover:bg-opacity-20 rounded-full"
+              class="
+                mr-3
+                p-2
+                group-hover:bg-danger group-hover:bg-opacity-20
+                rounded-full
+              "
               @click.stop="likeTweet(TweetTypeCode.REPLY, tweet.id.toString())"
             >
               <IconHeart :class="replyAlreadyLiked ? 'fill-current' : null" />
@@ -425,10 +534,22 @@ export default defineComponent({
             </p>
           </div>
           <div
-            class="flex items-center text-dark dark:text-light hover:text-darkblue dark:hover:text-darkblue"
+            class="
+              flex
+              items-center
+              text-dark
+              dark:text-light
+              hover:text-darkblue
+              dark:hover:text-darkblue
+            "
           >
             <div
-              class="mr-3 p-2 hover:bg-darkblue hover:bg-opacity-20 rounded-full"
+              class="
+                mr-3
+                p-2
+                hover:bg-darkblue hover:bg-opacity-20
+                rounded-full
+              "
             >
               <IconShare />
             </div>

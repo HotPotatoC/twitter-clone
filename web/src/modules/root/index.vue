@@ -62,14 +62,38 @@ export default defineComponent({
 
       <div class="flex flex-wrap flex-col space-y-6 mt-12">
         <button
-          class="bg-blue text-lightest text-lg rounded-full font-semibold focus:outline-none h-auto p-4 hover:bg-darkblue transition-colors duration-75"
+          class="
+            bg-blue
+            text-lightest text-lg
+            rounded-full
+            font-semibold
+            focus:outline-none
+            h-auto
+            p-4
+            hover:bg-darkblue
+            transition-colors
+            duration-75
+          "
           @click="showRegisterDialog = true"
         >
           Sign Up
         </button>
         <router-link
           to="/login"
-          class="border-2 border-blue dark:text-lightest text-lg rounded-full font-semibold focus:outline-none h-auto p-4 hover:bg-blue hover:bg-opacity-10 transition-colors duration-75 text-center"
+          class="
+            border-2 border-blue
+            dark:text-lightest
+            text-lg
+            rounded-full
+            font-semibold
+            focus:outline-none
+            h-auto
+            p-4
+            hover:bg-blue hover:bg-opacity-10
+            transition-colors
+            duration-75
+            text-center
+          "
         >
           Log in
         </router-link>

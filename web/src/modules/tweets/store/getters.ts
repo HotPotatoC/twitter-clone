@@ -8,9 +8,11 @@ export type Getters = {
   tweetStatus(state: State): TweetAndReplies
   lastStatusReplyItem(state: State): Tweet
   tweetsSearchResults(state: State): Tweet[]
-  tweetImageOverlay(
-    state: State
-  ): { tweet?: Tweet; show: boolean; source: string }
+  tweetImageOverlay(state: State): {
+    tweet?: Tweet
+    show: boolean
+    source: string
+  }
 }
 
 export const getters: GetterTree<State, State> & Getters = {

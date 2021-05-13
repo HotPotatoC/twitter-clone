@@ -124,11 +124,29 @@ export default defineComponent({
             leave-to="opacity-0"
           >
             <div
-              class="inline-block w-full h-full overflow-hidden align-middle transition-all transform"
+              class="
+                inline-block
+                w-full
+                h-full
+                overflow-hidden
+                align-middle
+                transition-all
+                transform
+              "
             >
               <button
                 @click="onClose()"
-                class="absolute top-0 left-0 m-4 p-1 border-none rounded-full focus:outline-none hover:bg-white hover:bg-opacity-20"
+                class="
+                  absolute
+                  top-0
+                  left-0
+                  m-4
+                  p-1
+                  border-none
+                  rounded-full
+                  focus:outline-none
+                  hover:bg-white hover:bg-opacity-20
+                "
               >
                 <IconX :size="26" class="dark:text-white" />
               </button>
@@ -140,7 +158,14 @@ export default defineComponent({
                   />
                 </div>
                 <div
-                  class="w-1/4 h-screen overflow-y-scroll bg-black border-l border-lighter dark:border-darker"
+                  class="
+                    w-1/4
+                    h-screen
+                    overflow-y-scroll
+                    bg-black
+                    border-l border-lighter
+                    dark:border-darker
+                  "
                 >
                   <div class="p-4 border-b border-lighter dark:border-dark">
                     <div class="w-full">
@@ -151,7 +176,11 @@ export default defineComponent({
                         />
                         <router-link :to="`/${tweet.authorHandle}`">
                           <p
-                            class="font-semibold dark:text-lightest hover:underline"
+                            class="
+                              font-semibold
+                              dark:text-lightest
+                              hover:underline
+                            "
                           >
                             {{ tweet.authorName }}
                           </p>
@@ -160,7 +189,16 @@ export default defineComponent({
                           </p>
                         </router-link>
                         <div
-                          class="cursor-pointer text-gray ml-auto p-2 hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full"
+                          class="
+                            cursor-pointer
+                            text-gray
+                            ml-auto
+                            p-2
+                            hover:bg-darkblue
+                            hover:text-blue
+                            hover:bg-opacity-20
+                            rounded-full
+                          "
                         >
                           <IconEllipsisH />
                         </div>
@@ -173,7 +211,18 @@ export default defineComponent({
                         {{ parsedCreatedAt }}
                       </p>
                       <div
-                        class="flex items-center justify-start space-x-12 w-full border-t border-b my-4 py-4 border-lighter dark:border-dark"
+                        class="
+                          flex
+                          items-center
+                          justify-start
+                          space-x-12
+                          w-full
+                          border-t border-b
+                          my-4
+                          py-4
+                          border-lighter
+                          dark:border-dark
+                        "
                       >
                         <div class="flex space-x-2 text-sm">
                           <p class="text-light dark:text-lightest font-bold">
@@ -189,21 +238,57 @@ export default defineComponent({
                         </div>
                       </div>
                       <div
-                        class="flex items-center justify-around w-full text-xl text-dark dark:text-light"
+                        class="
+                          flex
+                          items-center
+                          justify-around
+                          w-full
+                          text-xl text-dark
+                          dark:text-light
+                        "
                       >
                         <div
-                          class="flex justify-center hover:bg-darkblue hover:text-blue hover:bg-opacity-20 rounded-full p-3 cursor-pointer transition duration-75"
+                          class="
+                            flex
+                            justify-center
+                            hover:bg-darkblue
+                            hover:text-blue
+                            hover:bg-opacity-20
+                            rounded-full
+                            p-3
+                            cursor-pointer
+                            transition
+                            duration-75
+                          "
                           @click="showCreateReplyDialog = true"
                         >
                           <IconComment :size="20" />
                         </div>
                         <div
-                          class="flex justify-center hover:bg-success hover:text-success hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+                          class="
+                            flex
+                            justify-center
+                            hover:bg-success
+                            hover:text-success
+                            hover:bg-opacity-20
+                            rounded-full
+                            p-3
+                            cursor-pointer
+                          "
                         >
                           <IconRetweet :size="20" />
                         </div>
                         <div
-                          class="flex justify-center hover:bg-danger hover:text-danger hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+                          class="
+                            flex
+                            justify-center
+                            hover:bg-danger
+                            hover:text-danger
+                            hover:bg-opacity-20
+                            rounded-full
+                            p-3
+                            cursor-pointer
+                          "
                           :class="
                             tweet.alreadyLiked
                               ? ['text-danger']
@@ -221,7 +306,16 @@ export default defineComponent({
                           />
                         </div>
                         <div
-                          class="flex justify-center hover:bg-darkblue hover:text-darkblue hover:bg-opacity-20 rounded-full p-3 cursor-pointer"
+                          class="
+                            flex
+                            justify-center
+                            hover:bg-darkblue
+                            hover:text-darkblue
+                            hover:bg-opacity-20
+                            rounded-full
+                            p-3
+                            cursor-pointer
+                          "
                         >
                           <IconShare :size="20" />
                         </div>

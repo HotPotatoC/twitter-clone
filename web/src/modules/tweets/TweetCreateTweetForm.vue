@@ -71,7 +71,15 @@ export default defineComponent({
       @input="(e) => (tweetContent = e.target.innerText)"
       :contenteditable="true"
       placeholder="What's happening?"
-      class="mt-3 w-full focus:outline-none dark:bg-black dark:text-light whitespace-pre-wrap break-words"
+      class="
+        mt-3
+        w-full
+        focus:outline-none
+        dark:bg-black
+        dark:text-light
+        whitespace-pre-wrap
+        break-words
+      "
     ></div>
     <div
       v-if="tweetAttachments.length > 0"
@@ -88,7 +96,14 @@ export default defineComponent({
           >
             <button
               @click.prevent="removeAttachment(0)"
-              class="absolute m-2 p-1 bg-black bg-opacity-75 rounded-full focus:outline-none"
+              class="
+                absolute
+                m-2
+                p-1
+                bg-black bg-opacity-75
+                rounded-full
+                focus:outline-none
+              "
             >
               <IconX :size="24" class="text-white" />
             </button>
@@ -104,7 +119,14 @@ export default defineComponent({
           >
             <button
               @click.prevent="removeAttachment(1)"
-              class="absolute m-2 p-1 bg-black bg-opacity-75 rounded-full focus:outline-none"
+              class="
+                absolute
+                m-2
+                p-1
+                bg-black bg-opacity-75
+                rounded-full
+                focus:outline-none
+              "
             >
               <IconX :size="24" class="text-white" />
             </button>
@@ -118,7 +140,14 @@ export default defineComponent({
           <div class="relative" v-if="tweetAttachments.length > 2">
             <button
               @click.prevent="removeAttachment(2)"
-              class="absolute m-2 p-1 bg-black bg-opacity-75 rounded-full focus:outline-none"
+              class="
+                absolute
+                m-2
+                p-1
+                bg-black bg-opacity-75
+                rounded-full
+                focus:outline-none
+              "
             >
               <IconX :size="24" class="text-white" />
             </button>
@@ -135,7 +164,14 @@ export default defineComponent({
           >
             <button
               @click.prevent="removeAttachment(1)"
-              class="absolute m-2 p-1 bg-black bg-opacity-75 rounded-full focus:outline-none"
+              class="
+                absolute
+                m-2
+                p-1
+                bg-black bg-opacity-75
+                rounded-full
+                focus:outline-none
+              "
             >
               <IconX :size="24" class="text-white" />
             </button>
@@ -147,7 +183,14 @@ export default defineComponent({
           <div v-if="tweetAttachments.length === 4" class="relative h-48">
             <button
               @click.prevent="removeAttachment(3)"
-              class="absolute m-2 p-1 bg-black bg-opacity-75 rounded-full focus:outline-none"
+              class="
+                absolute
+                m-2
+                p-1
+                bg-black bg-opacity-75
+                rounded-full
+                focus:outline-none
+              "
             >
               <IconX :size="24" class="text-white" />
             </button>
@@ -163,7 +206,14 @@ export default defineComponent({
         <div class="relative">
           <button
             @click.prevent="removeAttachment(0)"
-            class="absolute m-2 p-1 bg-black bg-opacity-75 rounded-full focus:outline-none"
+            class="
+              absolute
+              m-2
+              p-1
+              bg-black bg-opacity-75
+              rounded-full
+              focus:outline-none
+            "
           >
             <IconX :size="24" class="text-white" />
           </button>
@@ -200,7 +250,18 @@ export default defineComponent({
     />
     <button
       type="submit"
-      class="h-10 px-4 font-semibold focus:outline-none rounded-full absolute bottom-0 right-0 transition-colors duration-75"
+      class="
+        h-10
+        px-4
+        font-semibold
+        focus:outline-none
+        rounded-full
+        absolute
+        bottom-0
+        right-0
+        transition-colors
+        duration-75
+      "
       :class="
         tweetContentIsEmpty
           ? ['bg-dark', 'text-light', 'cursor-default']

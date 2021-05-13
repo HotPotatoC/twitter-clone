@@ -59,23 +59,80 @@ export default defineComponent({
         v-model="registerContent.name"
         type="text"
         placeholder="Name"
-        class="w-full px-2 py-4 mb-8 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
+        class="
+          w-full
+          px-2
+          py-4
+          mb-8
+          border-2 border-lighter
+          text-xl
+          rounded
+          dark:border-dark
+          focus:outline-none
+          dark:bg-black
+          dark:text-light
+          focus:border-blue
+          dark:focus:border-blue
+          transition-colors
+          duration-75
+        "
       />
       <input
         v-model="registerContent.email"
         type="email"
         placeholder="Email"
-        class="w-full px-2 py-4 mb-8 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
+        class="
+          w-full
+          px-2
+          py-4
+          mb-8
+          border-2 border-lighter
+          text-xl
+          rounded
+          dark:border-dark
+          focus:outline-none
+          dark:bg-black
+          dark:text-light
+          focus:border-blue
+          dark:focus:border-blue
+          transition-colors
+          duration-75
+        "
       />
       <input
         v-model="registerContent.password"
         type="password"
         placeholder="Password"
-        class="w-full px-2 py-4 mb-8 border-2 border-lighter text-xl rounded dark:border-dark focus:outline-none dark:bg-black dark:text-light focus:border-blue dark:focus:border-blue transition-colors duration-75"
+        class="
+          w-full
+          px-2
+          py-4
+          mb-8
+          border-2 border-lighter
+          text-xl
+          rounded
+          dark:border-dark
+          focus:outline-none
+          dark:bg-black
+          dark:text-light
+          focus:border-blue
+          dark:focus:border-blue
+          transition-colors
+          duration-75
+        "
       />
       <button
         type="submit"
-        class="w-full p-4 text-lg rounded-full font-semibold focus:outline-none transition-colors duration-75"
+        class="
+          w-full
+          p-4
+          text-lg
+          rounded-full
+          font-semibold
+          focus:outline-none
+          transition-colors
+          duration-75
+        "
         :class="
           contentIsEmpty
             ? ['bg-dark', 'text-light', 'cursor-default']

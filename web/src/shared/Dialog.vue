@@ -96,14 +96,34 @@ export default defineComponent({
             leave-to="opacity-0 scale-95"
           >
             <div
-              class="inline-block w-full p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-black shadow-xl rounded-2xl"
+              class="
+                inline-block
+                w-full
+                p-6
+                my-8
+                overflow-hidden
+                text-left
+                align-middle
+                transition-all
+                transform
+                bg-white
+                dark:bg-black
+                shadow-xl
+                rounded-2xl
+              "
               :class="`max-w-${size}`"
             >
               <BaseDialogTitle
                 v-if="closeButton"
                 as="button"
                 @click="onClose()"
-                class="text-lg font-medium leading-6 text-blue focus:outline-none"
+                class="
+                  text-lg
+                  font-medium
+                  leading-6
+                  text-blue
+                  focus:outline-none
+                "
               >
                 <IconX :size="24" />
               </BaseDialogTitle>

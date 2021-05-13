@@ -1,8 +1,7 @@
 {
   "name": "twitter-clone",
-  "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
+  "private": "true",
   "scripts": {
     "web-dev": "cd web && yarn dev",
     "prepare": "husky install"
