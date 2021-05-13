@@ -12,6 +12,10 @@
 
 ---
 
+# Preview
+
+![preview](.github/twitterclone.gif)
+
 # Features ✨
 
 > NOTE: Not all features from twitter are implemented because of how big Twitter is, Only the main features are implemented atm
@@ -29,6 +33,7 @@
 - Like Tweets
 - Follow users
 - Images & Media uploads stored in AWS S3 Buckets
+- Up to 4 images in a single tweet with the same layout as Twitter
 - Crop profile image
 - Edit Profile Details
 - Edit Profile Image
@@ -79,6 +84,6 @@ Check [here](RUNNING_LOCALLY.md) on how to run locally
 
 # Disclaimer
 
-`twitter-clone` is created for educational purposes only.
+twitter-clone is created for educational purposes only.
 
 I do not work for Twitter nor Twitter the company itself has any associations / involvements in this project.
