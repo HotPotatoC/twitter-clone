@@ -8,6 +8,7 @@ type Tweet struct {
 	PhotoURLs      []string  `json:"photo_urls"`
 	FavoritesCount int       `json:"favorites_count"`
 	RepliesCount   int       `json:"replies_count"`
+	RetweetsCount  int       `json:"retweets_count"`
 	CreatedAt      time.Time `json:"created_at"`
 }
 
@@ -20,5 +21,6 @@ type Reply struct {
 	AuthorPhotoURL string   `json:"author_photo_url,omitempty"`
 	FavoritesCount int      `json:"favorites_count"`
 	RepliesCount   int      `json:"replies_count"`
+	RetweetsCount  int      `json:"retweets_count"`
 	AlreadyLiked   bool     `json:"already_liked"`
 }

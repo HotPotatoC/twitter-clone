@@ -11,6 +11,7 @@ import {
   fetchReplies,
   fetchTweet,
   searchTweets,
+  retweet,
 } from '../service'
 import { Tweet } from '../types'
 
@@ -24,6 +25,7 @@ export enum ActionTypes {
   NEW_REPLY = 'NEW_REPLY',
   FAVORITE_TWEET = 'FAVORITE_TWEET',
   TOGGLE_TWEET_IMAGE_OVERLAY = 'TOGGLE_TWEET_IMAGE_OVERLAY',
+  RETWEET = 'RETWEET',
 }
 
 export type Actions = {
@@ -36,7 +38,7 @@ export type Actions = {
   ): Promise<any>
   [ActionTypes.GET_TWEET_STATUS](
     { commit }: AugmentedActionContext<Mutations, State>,
-    payload: string
+    tweetId: string
   ): Promise<any>
   [ActionTypes.LOAD_MORE_REPLIES](
     { commit }: AugmentedActionContext<Mutations, State>,
@@ -44,7 +46,7 @@ export type Actions = {
   ): Promise<any>
   [ActionTypes.SEARCH_TWEETS](
     { commit }: AugmentedActionContext<Mutations, State>,
-    payload: string
+    query: string
   ): Promise<any>
   [ActionTypes.NEW_TWEET](
     { commit }: AugmentedActionContext<Mutations, State>,
@@ -56,11 +58,15 @@ export type Actions = {
   ): Promise<any>
   [ActionTypes.FAVORITE_TWEET](
     { commit }: AugmentedActionContext<Mutations, State>,
-    payload: string
+    tweetId: string
   ): Promise<any>
   [ActionTypes.TOGGLE_TWEET_IMAGE_OVERLAY](
     { commit }: AugmentedActionContext<Mutations, State>,
     payload: { tweet: Tweet; show: boolean; source: string }
+  ): any
+  [ActionTypes.RETWEET](
+    { commit }: AugmentedActionContext<Mutations, State>,
+    tweetId: string
   ): any
 }
 
@@ -173,5 +179,12 @@ export const actions: ActionTree<State, State> & Actions = {
       show,
       source,
     })
+  },
+  async [ActionTypes.RETWEET]({ commit }, tweetId): Promise<any> {
+    try {
+      await retweet(tweetId)
+    } catch (error) {
+      throw error
+    }
   },
 }

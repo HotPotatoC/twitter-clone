@@ -14,6 +14,7 @@ function parseResponseTweetItem(data: TweetJSONSchema): Tweet {
         favoritesCount: data.replied_to.favorites_count,
         repliesCount: data.replied_to.replies_count,
         alreadyLiked: data.replied_to.already_liked,
+        retweetsCount: data.replied_to.retweets_count,
       }
     : undefined
   return {
@@ -24,9 +25,13 @@ function parseResponseTweetItem(data: TweetJSONSchema): Tweet {
     repliedTo,
     favoritesCount: data.favorites_count,
     repliesCount: data.replies_count,
+    retweetsCount: data.retweets_count,
     createdAt: data.created_at,
     alreadyLiked: data.already_liked,
     isReply: data.is_reply,
+    isRetweet: data.is_retweet,
+    retweetAuthorHandle: data.retweet_author_handle,
+    alreadyRetweeted: data.already_retweeted,
     ...data,
   }
 }
@@ -154,6 +159,14 @@ export async function createReply(
 export async function favoriteTweet(tweetId: string): Promise<void> {
   try {
     await axios.post(`/tweets/${tweetId}/favorite`)
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function retweet(tweetId: string): Promise<void> {
+  try {
+    await axios.post(`/tweets/${tweetId}/retweet`)
   } catch (error) {
     throw error
   }

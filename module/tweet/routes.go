@@ -20,6 +20,7 @@ func Routes(r fiber.Router, db database.Database, s3 *aws.S3Bucket, cache cache.
 	r.Get("/:tweetID/replies", authMiddleware.Execute(), buildListTweetRepliesHandler(db))
 	r.Post("/:tweetID/reply", authMiddleware.Execute(), buildCreateReplyHandler(db))
 	r.Post("/:tweetID/favorite", authMiddleware.Execute(), buildFavoriteTweetHandler(db))
+	r.Post("/:tweetID/retweet", authMiddleware.Execute(), buildRetweetHandler(db))
 }
 
 func buildListTweetHandler(db database.Database) fiber.Handler {
@@ -89,6 +90,15 @@ func buildFavoriteTweetHandler(db database.Database) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		service := service.NewFavoriteTweetService(db)
 		action := action.NewFavoriteTweetAction(service)
+
+		return action.Execute(c)
+	}
+}
+
+func buildRetweetHandler(db database.Database) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		service := service.NewRetweetService(db)
+		action := action.NewRetweetAction(service)
 
 		return action.Execute(c)
 	}

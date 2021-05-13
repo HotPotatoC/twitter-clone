@@ -126,7 +126,7 @@ CS = Client Side
 - [x] 'Replying to ...' design Tweet card (CS)
 - [ ] List profile followers and followings (CS)
 - [x] Support for link parsing on Tweet's content (CS)
-- [ ] Retweets (SS & CS)
+- [x] Retweets (SS & CS)
 - [ ] Profile Tweets & replies tab (CS)
 - [ ] List user likes / Profile likes tab (SS & CS)
 - [ ] Profile media tab (CS)
