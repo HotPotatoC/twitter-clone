@@ -2,6 +2,7 @@
 import { computed, defineComponent, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import IconTwitter from '../../icons/IconTwitter.vue'
+import LoadingSpinner from '../../shared/LoadingSpinner.vue'
 import { useStore } from '../../store'
 import { Action } from '../storeActionTypes'
 
@@ -9,6 +10,7 @@ export default defineComponent({
   name: 'Login',
   components: {
     IconTwitter,
+    LoadingSpinner,
   },
   setup() {
     const store = useStore()
@@ -17,6 +19,7 @@ export default defineComponent({
 
     const email = ref('')
     const password = ref('')
+    const loading = ref(false)
 
     const input = reactive({ email, password })
 
@@ -25,7 +28,9 @@ export default defineComponent({
     )
 
     async function authenticate() {
+      loading.value = true
       await store.dispatch(Action.AuthActionTypes.AUTHENTICATE_USER, input)
+      loading.value = false
       if (store.getters['isLoggedIn']) {
         if (route.query && route.query.redirectTo) {
           router.push(route.query.redirectTo as string)
@@ -34,7 +39,7 @@ export default defineComponent({
         }
       }
     }
-    return { input, authenticate, inputEmpty }
+    return { input, loading, authenticate, inputEmpty }
   },
 })
 </script>
@@ -105,24 +110,16 @@ export default defineComponent({
         />
         <button
           type="submit"
-          class="
-            bg-blue
-            text-lightest text-lg
-            rounded-full
-            font-semibold
-            focus:outline-none
-            w-full
-            h-auto
-            p-4
-          "
+          class="bg-blue rounded-full focus:outline-none w-full h-auto p-4"
           :class="
             inputEmpty
-              ? 'opacity-50 cursor-default'
+              ? 'cursor-not-allowed'
               : 'cursor-pointer hover:bg-darkblue'
           "
           :disabled="inputEmpty"
         >
-          Log in
+          <LoadingSpinner v-if="loading" color="white" size="36px" />
+          <span v-else class="text-lightest text-lg font-semibold">Log in</span>
         </button>
         <router-link to="/">
           <span class="text-blue">Sign up for Twitter</span>
