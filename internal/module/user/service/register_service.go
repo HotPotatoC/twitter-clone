@@ -14,7 +14,7 @@ import (
 )
 
 type RegisterInput struct {
-	Handle   string `json:"handle" validate:"required,alpha,excludesall= "`
+	Handle   string `json:"handle" validate:"required,excludesall= !@#$%^&*()\,.?\":{}|<>"`
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
 }
