@@ -7,14 +7,13 @@ import (
 	"log"
 	"path/filepath"
 
-	"github.com/HotPotatoC/twitter-clone/internal/aws"
-	"github.com/HotPotatoC/twitter-clone/internal/cache"
-	"github.com/HotPotatoC/twitter-clone/internal/config"
-	"github.com/HotPotatoC/twitter-clone/internal/database"
-	"github.com/HotPotatoC/twitter-clone/internal/logger"
-	"github.com/HotPotatoC/twitter-clone/internal/version"
-	"github.com/HotPotatoC/twitter-clone/internal/webserver"
-	"github.com/HotPotatoC/twitter-clone/server"
+	"github.com/HotPotatoC/twitter-clone/internal/common/aws"
+	"github.com/HotPotatoC/twitter-clone/internal/common/cache"
+	"github.com/HotPotatoC/twitter-clone/internal/common/config"
+	"github.com/HotPotatoC/twitter-clone/internal/common/database"
+	"github.com/HotPotatoC/twitter-clone/internal/common/logger"
+	"github.com/HotPotatoC/twitter-clone/internal/common/webserver"
+	"github.com/HotPotatoC/twitter-clone/internal/server"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2"
@@ -91,8 +90,6 @@ func main() {
 	})
 
 	server := server.New(webserver, s3, db, cache, logger, &server.Config{
-		Version: version.Version,
-		BuildID: version.BuildID,
 		AppName: config.GetString("APP_NAME", "twitter-clone"),
 		Host:    config.GetString("APP_HOST", "127.0.0.1"),
 		Port:    config.GetString("APP_PORT", "5000"),
