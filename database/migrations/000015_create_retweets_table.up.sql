@@ -9,6 +9,6 @@ ALTER TABLE "retweets"
 ALTER TABLE "retweets"
     ADD CONSTRAINT "retweets_id_tweet_foreign" FOREIGN KEY ("id_tweet") REFERENCES "tweets" ("id") MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE "retweets"
-    ADD CONSTRAINT "retweets_id_user_foreign" FOREIGN KEY ("id_user") REFERENCES "tweets" ("id") MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT "retweets_id_user_foreign" FOREIGN KEY ("id_user") REFERENCES "users" ("id") MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
 COMMIT;
 

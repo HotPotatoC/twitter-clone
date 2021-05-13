@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/HotPotatoC/twitter-clone/internal/common/bcrypt"
+	"github.com/HotPotatoC/twitter-clone/internal/common/config"
 	"github.com/HotPotatoC/twitter-clone/internal/common/database"
 	"github.com/HotPotatoC/twitter-clone/internal/common/token"
 	"github.com/HotPotatoC/twitter-clone/internal/common/validator"
@@ -52,8 +53,8 @@ func (s registerService) Execute(input RegisterInput) (*token.AccessToken, *toke
 	}
 
 	var id int64
-	err = s.db.QueryRow("INSERT INTO users(name, handle, email, password, created_at) VALUES($1, $1, $2, $3, $4) RETURNING id",
-		input.Handle, input.Email, hash, time.Now()).Scan(&id)
+	err = s.db.QueryRow("INSERT INTO users(name, handle, email, password, created_at, photo_url) VALUES($1, $1, $2, $3, $4, $5) RETURNING id",
+		input.Handle, input.Email, hash, time.Now(), config.GetString("DEFAULT_AVATAR_URL", "")).Scan(&id)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "service.registerService.Execute")
 	}

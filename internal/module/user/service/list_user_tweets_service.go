@@ -314,7 +314,7 @@ func (s listUserTweetsService) buildSQLQuery(withCursor bool) string {
 	`)
 
 	if withCursor {
-		queryBuilder.WriteString("AND __result.created_at < $3")
+		queryBuilder.WriteString("WHERE __result.created_at < $3")
 	}
 
 	queryBuilder.WriteString(`

@@ -14,17 +14,17 @@ export default defineComponent({
   },
   emit: ['close', 'dispatch'],
   setup(props, { emit }) {
-    const name = ref('')
+    const handle = ref('')
     const email = ref('')
     const password = ref('')
     const registerContent = reactive({
-      name,
+      handle,
       email,
       password,
     })
 
     const contentIsEmpty = computed(
-      () => name.value === '' || email.value === '' || password.value === ''
+      () => handle.value === '' || email.value === '' || password.value === ''
     )
 
     function close() {
@@ -56,9 +56,9 @@ export default defineComponent({
 
     <form @submit.prevent="dispatch" class="w-full mb-6">
       <input
-        v-model="registerContent.name"
+        v-model="registerContent.handle"
         type="text"
-        placeholder="Name"
+        placeholder="Username"
         class="
           w-full
           px-2

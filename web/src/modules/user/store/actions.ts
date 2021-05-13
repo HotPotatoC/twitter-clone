@@ -27,7 +27,7 @@ export enum ActionTypes {
 export type Actions = {
   [ActionTypes.REGISTER_ACCOUNT](
     { commit }: AugmentedActionContext<Mutations, State>,
-    payload: { name: string; email: string; password: string }
+    payload: { handle: string; email: string; password: string }
   ): Promise<void>
   [ActionTypes.GET_PROFILE_DETAILS](
     { commit }: AugmentedActionContext<Mutations, State>,
@@ -62,10 +62,10 @@ export type Actions = {
 export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.REGISTER_ACCOUNT](
     { commit },
-    { name, email, password }
+    { handle, email, password }
   ): Promise<void> {
     try {
-      await registerAccount({ name, email, password })
+      await registerAccount({ handle, email, password })
     } catch (error) {
       return error
     }

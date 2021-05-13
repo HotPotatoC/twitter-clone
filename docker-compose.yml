@@ -50,6 +50,7 @@ services:
       - redis
   migrate:
     image: migrate/migrate
+    restart: on-failure
     command:
       [
         "-path",

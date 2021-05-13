@@ -125,20 +125,30 @@ export default defineComponent({
     })
 
     async function loadTweets() {
-      if (initialLoadDone.value && store.getters['profileTweets'].length > 0) {
-        const lastItem = store.getters['lastProfileTweet']
-        await store.dispatch(Action.UserActionTypes.LOAD_MORE_PROFILE_TWEETS, {
-          handle: handle.value,
-          cursor: lastItem.createdAt,
-        })
-      } else {
-        await store.dispatch(
-          Action.UserActionTypes.GET_PROFILE_TWEETS,
-          handle.value
-        )
-      }
+      try {
+        if (
+          initialLoadDone.value &&
+          store.getters['profileTweets'].length > 0
+        ) {
+          const lastItem = store.getters['lastProfileTweet']
+          await store.dispatch(
+            Action.UserActionTypes.LOAD_MORE_PROFILE_TWEETS,
+            {
+              handle: handle.value,
+              cursor: lastItem.createdAt,
+            }
+          )
+        } else {
+          await store.dispatch(
+            Action.UserActionTypes.GET_PROFILE_TWEETS,
+            handle.value
+          )
+        }
 
-      tweets.value = store.getters['profileTweets']
+        tweets.value = store.getters['profileTweets']
+      } catch (error) {
+        initialLoadDone.value = true
+      }
     }
 
     async function updateProfile(payload: ProfileDetails) {

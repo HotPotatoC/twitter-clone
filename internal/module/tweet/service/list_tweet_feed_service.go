@@ -316,10 +316,11 @@ func (s listTweetFeedService) buildSQLQuery(withCursor bool) string {
 			is_retweet,
 			__retweet_author.handle,
 			already_retweeted
-	) __result`)
+	) __result
+	`)
 
 	if withCursor {
-		queryBuilder.WriteString("AND __result.created_at < $2")
+		queryBuilder.WriteString("WHERE __result.created_at < $2")
 	}
 
 	queryBuilder.WriteString(`

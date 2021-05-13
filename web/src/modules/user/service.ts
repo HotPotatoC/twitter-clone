@@ -7,18 +7,18 @@ import {
 } from './types'
 
 type RegisterPayload = {
-  name: string
+  handle: string
   email: string
   password: string
 }
 
 export async function registerAccount({
-  name,
+  handle,
   email,
   password,
 }: RegisterPayload) {
   try {
-    await axios.post('/users/register', { name, email, password })
+    await axios.post('/users/register', { handle, email, password })
   } catch (error) {
     throw error
   }

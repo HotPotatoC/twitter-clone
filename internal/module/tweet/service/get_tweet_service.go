@@ -6,6 +6,7 @@ import (
 
 	"github.com/HotPotatoC/twitter-clone/internal/common/database"
 	"github.com/HotPotatoC/twitter-clone/internal/module/tweet/entity"
+	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 )
 
@@ -107,7 +108,6 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 		__replied_tweet.reply_count,
 		__replied_tweet.favorite_count
 	FROM __tweets
-		INNER JOIN follows ON follows.followed_id = __tweets.author_id
 		LEFT JOIN (
 			SELECT
 				replies.id_reply,
@@ -147,6 +147,9 @@ func (s getTweetService) Execute(userID, tweetID int64) (GetTweetOutput, error) 
 		&repliedTweetReplyCount,
 		&repliedTweetFavoriteCount)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return GetTweetOutput{}, entity.ErrTweetDoesNotExist
+		}
 		return GetTweetOutput{}, errors.Wrap(err, "service.getTweetService.Execute")
 	}
 
