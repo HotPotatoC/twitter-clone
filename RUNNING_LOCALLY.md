@@ -1,4 +1,3 @@
-
 # Installation - Running locally 💻
 
 Here you will understand how to run and setup the development environment for twitterclone

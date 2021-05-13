@@ -1,7 +1,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/HotPotatoC/heiver">
-    <img src=".github/Twitter-clone.png" alt="Logo">
+    <img src=".github/assets/Twitter-clone.png" alt="Logo">
   </a>
 
   <h3 align="center">Twitter Clone</h3>
@@ -16,7 +16,9 @@
 
 # Preview
 
-![preview](.github/twitterclone.gif)
+![preview](.github/assets/twitterclone.gif)
+
+*For more check out some screenshots [here](SCREENSHOTS.md)*
 
 # Features ✨
 
@@ -25,6 +27,7 @@
 - Modular Architecture
 - Database migration tool using [migrate](https://github.com/golang-migrate/migrate)
 - Golang Hot-reloading using [air](https://github.com/cosmtrek/air)
+- Supports dark-mode and light-mode with [TailwindCSS](http://tailwindcs.com/)
 - Database seeding script using NodeJS
 - Authentication using JWT Refresh token flow and Redis for token blacklisting
 - Strongly typed Vuex store
