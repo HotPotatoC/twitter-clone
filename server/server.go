@@ -18,6 +18,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/helmet/v2"
 	"go.uber.org/zap"
 )
 
@@ -71,6 +72,8 @@ func (s *Server) initMiddlewares() {
 		AllowCredentials: true,
 		AllowHeaders:     "Content-Type",
 	}))
+
+	s.webserver.Engine().Use(helmet.New())
 
 	s.webserver.Engine().Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed,
