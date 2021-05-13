@@ -14,16 +14,11 @@
 # Testing
 *.test
 *.tmp
-tmp
-
-# configs
-*.env
-!.env.example
 
 *.key
 *.crt
 *.pem
 
+.husky
+.github
 node_modules
-
-postgres.session.sql

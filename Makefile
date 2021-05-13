@@ -5,7 +5,7 @@ BUILD=$(shell git rev-parse HEAD)
 GO=go
 GOOSS=darwin linux windows freebsd netbsd openbsd dragonfly
 GOARCHS=386 arm arm64 amd64
-LDFLAGS=-ldflags="-s -w -X 'version.Version=${VERSION}' -X 'version.Build=${BUILD}'"
+LDFLAGS=-ldflags="-s -w -X"
 BINARY_DIR=.bin
 
 .DEFAULT_GOAL := help
@@ -45,8 +45,8 @@ run: ## Runs the backend server
 	@$(GO) run cmd/rest/main.go
 
 .PHONY: dev
-dev: ## Runs the backend server with hot-reload (Must have reflex installed https://github.com/cespare/reflex)
-	@reflex -c configs/reflex.conf
+dev: ## Runs the backend server with hot-reload (Must have air installed https://github.com/cosmtrek/air)
+	@air -c configs/.air.toml
 
 .PHONY: build-rest
 build-rest: ## Compiles the rest api server

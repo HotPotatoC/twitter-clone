@@ -1,0 +1,82 @@
+version: "3"
+
+volumes:
+  postgres_data:
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: twitterclone
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-tier
+    ports:
+      - 5432:5432
+  redis:
+    image: redis:latest
+    networks:
+      - app-tier
+    ports:
+      - 6379:6379
+  rest:
+    build:
+      context: .
+      dockerfile: build/rest/Dockerfile
+    env_file: configs/.env
+    environment:
+      APP_HOST: rest
+      DB_HOST: db
+      REDIS_ADDR: redis:6379
+    volumes:
+      - .:/usr/src/rest
+    networks:
+      - app-tier
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+      - redis
+    links:
+      - db
+      - redis
+  migrate:
+    image: migrate/migrate
+    command:
+      [
+        "-path",
+        "migrations",
+        "-database",
+        "postgres://postgres:postgres@db:5432/twitterclone?sslmode=disable",
+        "up",
+      ]
+    volumes:
+      - ./database/migrations:/migrations
+    networks:
+      - app-tier
+    links:
+      - db
+  web:
+    build:
+      context: .
+      dockerfile: build/web/Dockerfile
+    environment:
+      API_URL: http://rest:5000
+    volumes:
+      - ./web:/usr/src/web
+    networks:
+      - app-tier
+    ports:
+      - 3000:3000
+    depends_on:
+      - rest
+    links:
+      - rest
