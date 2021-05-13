@@ -8,6 +8,8 @@
 
   <p align="center">A Twitter clone created with Golang, PostgreSQL, Redis, VueJS and Vite with support for dark mode and light mode using TailwindCSS
   </p>
+
+  <p align="center">Status: Some features are yet to be implemented</p>
 </p>
 
 ---
