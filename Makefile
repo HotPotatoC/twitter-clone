@@ -40,6 +40,14 @@ install: ## Installs the package
 install-deps: ## Install dependencies
 	@$(GO) mod download
 
+.PHONY: run
+run: ## Runs the backend server
+	@$(GO) run cmd/rest/main.go
+
+.PHONY: dev
+dev: ## Runs the backend server with hot-reload (Must have reflex installed https://github.com/cespare/reflex)
+	@reflex -c configs/reflex.conf
+
 .PHONY: build-rest
 build-rest: ## Compiles the rest api server
 	@$(GO) build $(LDFLAGS) -v -o $(BINARY_DIR)/$(APP_NAME)-$(VERSION)_server cmd/rest/main.go
