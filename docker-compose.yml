@@ -21,12 +21,14 @@ services:
       - app-tier
     ports:
       - 5432:5432
+
   redis:
     image: redis:latest
     networks:
       - app-tier
     ports:
       - 6379:6379
+
   rest:
     build:
       context: .
@@ -48,6 +50,7 @@ services:
     links:
       - db
       - redis
+
   migrate:
     image: migrate/migrate
     restart: on-failure
@@ -65,6 +68,7 @@ services:
       - app-tier
     links:
       - db
+
   web:
     build:
       context: .
