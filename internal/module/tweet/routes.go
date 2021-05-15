@@ -12,7 +12,6 @@ import (
 
 func Routes(r fiber.Router, db database.Database, s3 *aws.S3Bucket, cache cache.Cache) {
 	authMiddleware := middleware.NewAuthMiddleware()
-	r.Get("/", buildListTweetHandler(db))
 	r.Get("/feed", authMiddleware.Execute(), buildListTweetFeedHandler(db))
 	r.Get("/search", authMiddleware.Execute(), buildSearchTweetHandler(db))
 	r.Get("/:tweetID", authMiddleware.Execute(), buildGetTweetHandler(db))
@@ -21,15 +20,6 @@ func Routes(r fiber.Router, db database.Database, s3 *aws.S3Bucket, cache cache.
 	r.Post("/:tweetID/reply", authMiddleware.Execute(), buildCreateReplyHandler(db))
 	r.Post("/:tweetID/favorite", authMiddleware.Execute(), buildFavoriteTweetHandler(db))
 	r.Post("/:tweetID/retweet", authMiddleware.Execute(), buildRetweetHandler(db))
-}
-
-func buildListTweetHandler(db database.Database) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		service := service.NewListTweetService(db)
-		action := action.NewListTweetAction(service)
-
-		return action.Execute(c)
-	}
 }
 
 func buildListTweetFeedHandler(db database.Database) fiber.Handler {
