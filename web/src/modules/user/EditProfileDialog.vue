@@ -287,7 +287,7 @@ export default defineComponent({
             dark:border-black
           "
         >
-          <img v-lazy="profile.photoURL" />
+          <img v-lazy="profile.photoURL" class="w-32 h-32" />
         </div>
       </div>
       <input
