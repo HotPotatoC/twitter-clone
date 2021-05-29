@@ -82,7 +82,7 @@ export default defineComponent({
           to="/login"
           class="
             border-2 border-blue
-            dark:text-lightest
+            text-blue
             text-lg
             rounded-full
             font-semibold
