@@ -1,5 +1,0 @@
-BEGIN;
-ALTER TABLE IF EXISTS "users"
-    DROP COLUMN handle;
-COMMIT;
-

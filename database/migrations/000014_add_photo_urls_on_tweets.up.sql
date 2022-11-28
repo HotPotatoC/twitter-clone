@@ -1,5 +1,0 @@
-BEGIN;
-ALTER TABLE IF EXISTS "tweets"
-    ADD COLUMN photo_urls TEXT[4] NULL;
-COMMIT;
-
