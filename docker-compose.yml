@@ -6,13 +6,15 @@ services:
   database:
     image: postgres:latest
     container_name: twc-postgres_database
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
     restart: always
     volumes:
-      - ./master:/var/lib/postgresql/data
-      - ./postgresql/postgres.conf:/etc/postgresql/postgresql.conf
-      - ./postgresql/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - postgres-data-master:/var/lib/postgresql/data
     ports:
-      - "127.0.0.1:5432:5432"
+      - 5432:5432
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=twitter
@@ -23,14 +25,12 @@ services:
     container_name: twc-postgres_database-slave
     restart: always
     volumes:
-      - ./data_slave:/var/lib/postgresql/data
-      - ./postgresql/postgres.conf:/etc/postgresql/postgresql.conf
-      - ./postgresql/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - postgres-data-slave:/var/lib/postgresql/data
     ports:
-      - "127.0.0.1:5433:5432"
+      - 5433:5432
     environment:
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=twitter
+      - POSTGRES_DB=twitter_slave
     depends_on:
       - database
     networks:
@@ -38,3 +38,8 @@ services:
 
 networks:
   database-network:
+    driver: bridge
+
+volumes:
+  postgres-data-master:
+  postgres-data-slave:

@@ -21,12 +21,13 @@ An attempt to recreate one of the largest social networking application Twitter.
 3. Kafka (Pub/Sub)
 4. Apache Spark (Analytics)
 5. PostgreSQL (Main Database)
-6. Redis (Caching)
-7. Docker (Containerization)
-8. Nginx (Load Balancer)
-9. GraphQL (Edge Server / Frontend for Backend)
-10. ElasticSearch (Searching & Indexing)
-11. Firebase Cloud Messenger (Notification Service)
+6. PgPool II (Database Load Balancer)
+7. Redis (Caching)
+8. Docker (Containerization)
+9. Nginx (Load Balancer)
+10. GraphQL (Edge Server / Frontend for Backend)
+11. ElasticSearch (Searching & Indexing)
+12. Firebase Cloud Messenger (Notification Service)
 
 ## System Design
 
@@ -46,3 +47,7 @@ An attempt to recreate one of the largest social networking application Twitter.
 2. Notifications
 
 ### Database Schema
+
+# How to run locally
+
+Check [here](RUNNING_LOCALLY.md) on how to run locally
