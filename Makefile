@@ -7,6 +7,8 @@ help: ## Show help message
 start: ## Start containers
 	docker-compose up -d
 
+fresh-start: docker-reset start _trigger_delay db-setup-logical-replication ## Start containers with fresh data
+
 stop: ## Stops the containers
 	docker-compose down
 
@@ -14,7 +16,10 @@ docker-reset: ## Reset the containers (deletes containers and volumes)
 	./reset_containers.sh
 
 db-sync-replica-schema: ## Sync replica schema (pg_dump)
-	./postgresql/sync_replica_schema.sh
+	./pg_sync_replica_schema.sh
 
 db-setup-logical-replication: ## Setup postgresql logical replication
-	./postgresql/setup_logical_replication.sh
+	./pg_setup_logical_replication.sh
+
+_trigger_delay:
+	sleep 1

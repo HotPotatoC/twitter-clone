@@ -13,6 +13,7 @@ services:
     restart: always
     volumes:
       - postgres-data-master:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
     environment:
@@ -23,11 +24,17 @@ services:
   database-slave:
     image: postgres:latest
     container_name: twc-postgres_database-slave
+    command:
+      - "postgres"
+      - "-c"
+      - "port=5433"
+      - "-c"
+      - "wal_level=logical"
     restart: always
     volumes:
       - postgres-data-slave:/var/lib/postgresql/data
     ports:
-      - 5433:5432
+      - 5433:5433
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=twitter_slave
