@@ -45,6 +45,7 @@ An attempt to recreate one of the largest social networking application Twitter.
 ### Optional Requirements
 1. Metrics and analytics
 2. Notifications
+3. Observability & Monitoring (Prometheus, Grafana, Jaeger, etc)
 
 ### Database Schema
 
