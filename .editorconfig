@@ -1,0 +1,11 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*.proto]
+indent_style = space
+indent_size = 2
+
+[Makefile]
+indent_style = tab

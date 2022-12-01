@@ -1,0 +1,13 @@
+go 1.19
+
+use (
+	./analytics
+	./auth
+	./edge
+	./media
+	./notifications
+	./search
+	./timeline
+	./tweet
+	./user
+)

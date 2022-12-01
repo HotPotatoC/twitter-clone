@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package hotpotatoc.twitter_clone.user;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "rpc/user";
+
+// UserService service supports user management
+service UserService {
+  // FindUserByID finds a user by id
+  rpc FindUserByID(FindUserByIDRequest) returns (FindUserByIDResponse);
+
+  // FindUserByEmail finds a user by email
+  rpc FindUserByEmail(FindUserByEmailRequest) returns (FindUserByEmailResponse);
+
+  // CreateUser creates a new user
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+
+  // DeleteUser deletes an existing user
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+// FindUserByIDRequest request body for FindUserByID
+message FindUserByIDRequest {
+  int64 user_id = 1;
+}
+
+// FindUserByIDResponse response body for FindUserByID
+message FindUserByIDResponse {
+  User user = 1;
+}
+
+// FindUserByEmailRequest request body for FindUserByEmail
+message FindUserByEmailRequest {
+  string email = 1;
+}
+
+// FindUserByEmailResponse response body for FindUserByEmail
+message FindUserByEmailResponse {
+  User user = 1;
+}
+
+// CreateUserRequest request body for CreateUser
+message CreateUserRequest {
+  string name = 1;
+  string screen_name = 2;
+  string password_hash = 3;
+  string email = 4;
+  string bio = 5;
+  string location = 6;
+  string website = 7;
+  string profile_image_url = 8;
+  string profile_banner_url = 9;
+  string birth_date = 10;
+}
+
+// CreateUserResponse response body for CreateUser
+message CreateUserResponse {
+  User user = 1;
+}
+
+// DeleteUserRequest request body for DeleteUser
+message DeleteUserRequest {
+  int64 user_id = 1;
+}
+
+// DeleteUserResponse response body for DeleteUser
+message DeleteUserResponse {
+  bool success = 1;
+}
+
+// User represents the user model
+message User {
+  int64 user_id = 1;
+  string name = 2;
+  string screen_name = 3;
+  string password_hash = 4;
+  string email = 5;
+  string bio = 6;
+  string location = 7;
+  string website = 8;
+  string profile_image_url = 9;
+  string profile_banner_url = 10;
+  google.protobuf.Timestamp birth_date = 11;
+  int32 followers_count = 12;
+  int32 followings_count = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+}
