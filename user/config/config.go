@@ -20,7 +20,7 @@ func New() *Config {
 	c := new(Config)
 
 	c.App = AppConfig{
-		Address: LookupEnv("ADDRESS", fmt.Sprintf(":%d", LookupEnv("PORT", 8000))),
+		Address: fmt.Sprintf(":%d", LookupEnv("PORT", 7000)),
 	}
 
 	c.Clients = ClientsConfig{

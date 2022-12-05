@@ -4,14 +4,16 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/HotPotatoC/twitter-clone/user/rpc/user"
+	_ "github.com/joho/godotenv/autoload"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var (
-	client = user.NewUserServiceProtobufClient("http://localhost:8000", &http.Client{})
+	client = user.NewUserServiceProtobufClient("http://localhost:"+os.Getenv("PORT"), &http.Client{})
 	ctx    = context.Background()
 )
 

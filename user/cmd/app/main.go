@@ -43,7 +43,7 @@ func main() {
 	group, groupCtx := errgroup.WithContext(ctx)
 
 	group.Go(func() error {
-		logger.M.Info("starting user server")
+		logger.M.Info("starting user server on " + server.Addr)
 		return server.ListenAndServe()
 	})
 
