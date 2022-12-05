@@ -23,7 +23,7 @@ service UserService {
 
 // FindUserByIDRequest request body for FindUserByID
 message FindUserByIDRequest {
-  int64 user_id = 1;
+  string user_id = 1;
 }
 
 // FindUserByIDResponse response body for FindUserByID
@@ -45,14 +45,14 @@ message FindUserByEmailResponse {
 message CreateUserRequest {
   string name = 1;
   string screen_name = 2;
-  string password_hash = 3;
+  string password = 3;
   string email = 4;
   string bio = 5;
   string location = 6;
   string website = 7;
   string profile_image_url = 8;
   string profile_banner_url = 9;
-  string birth_date = 10;
+  google.protobuf.Timestamp birth_date = 10;
 }
 
 // CreateUserResponse response body for CreateUser
@@ -62,7 +62,7 @@ message CreateUserResponse {
 
 // DeleteUserRequest request body for DeleteUser
 message DeleteUserRequest {
-  int64 user_id = 1;
+  string user_id = 1;
 }
 
 // DeleteUserResponse response body for DeleteUser
@@ -72,7 +72,7 @@ message DeleteUserResponse {
 
 // User represents the user model
 message User {
-  int64 user_id = 1;
+  string user_id = 1;
   string name = 2;
   string screen_name = 3;
   string password_hash = 4;

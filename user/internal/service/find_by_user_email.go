@@ -7,5 +7,5 @@ import (
 )
 
 func (s *service) FindUserByEmail(ctx context.Context, email string) (models.User, error) {
-	return models.User{}, nil
+	return s.repository.FindUserByEmail(ctx, email)
 }

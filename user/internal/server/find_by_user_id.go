@@ -19,7 +19,7 @@ func (h *handler) FindUserByID(ctx context.Context, req *user.FindUserByIDReques
 	if err != nil {
 		switch {
 		case errors.Is(err, pgx.ErrNoRows):
-			return nil, twirp.NotFoundError(fmt.Sprintf("User with id %d does not exists", req.GetUserId()))
+			return nil, twirp.NotFoundError(fmt.Sprintf("User with id %s does not exists", req.GetUserId()))
 		default:
 			return nil, twirp.InternalErrorWith(err)
 		}
@@ -31,7 +31,7 @@ func (h *handler) FindUserByID(ctx context.Context, req *user.FindUserByIDReques
 }
 
 func validateFindUserByIDRequest(ctx context.Context, req *user.FindUserByIDRequest) error {
-	if req.GetUserId() == 0 {
+	if req.GetUserId() == "" {
 		return twirp.RequiredArgumentError("user_id")
 	}
 

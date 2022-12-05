@@ -13,7 +13,7 @@ import (
 
 // User represents a generic user
 type User struct {
-	ID               int64     `json:"id"`
+	ID               string    `json:"id"`
 	Name             string    `json:"name"`
 	ScreenName       string    `json:"screen_name"`
 	PasswordHash     string    `json:"password_hash"`
