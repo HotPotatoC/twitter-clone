@@ -22,4 +22,4 @@ db-setup-logical-replication: ## Setup postgresql logical replication
 	./pg_setup_logical_replication.sh
 
 _trigger_delay:
-	sleep 1
+	sleep 2
