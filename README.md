@@ -2,8 +2,6 @@
 
 An attempt to recreate one of the largest social networking application Twitter.
 
-Track the development progress [here](https://twitter.com/juanwmv/status/1596736405316960261?s=20&t=RWhqOxhx9YquJQ5Slwccyw)
-
 > Note: This is my first attempt at developing a distributed system, so any feedback would be greatly appreciated.
 
 ## Services
